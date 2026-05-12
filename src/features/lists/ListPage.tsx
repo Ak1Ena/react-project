@@ -45,7 +45,7 @@ const ListPage: FC = () => {
           ) : (
             <div className="list-grid">
               {filteredEntries.map((entry) => {
-                const game = getGame(entry.gameId);
+                const game = getGame(entry.gameid);
                 return game ? (
                   <ListEntryCard key={entry.id} entry={entry} game={game} />
                 ) : null;

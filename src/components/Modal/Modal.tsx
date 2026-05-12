@@ -52,7 +52,7 @@ const EditEntryForm: FC<{ data: any; onClose: () => void }> = ({ data, onClose }
 
   return (
     <form onSubmit={handleSubmit} className="edit-entry-form">
-      <h2>Edit Entry: {data.game.title}</h2>
+      <h2>Edit Entry: {data.game.name}</h2>
       <div className="form-group">
         <label>Personal Rating (0-10)</label>
         <input 

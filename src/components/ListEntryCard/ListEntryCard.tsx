@@ -32,11 +32,11 @@ const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
   return (
     <div className="list-entry-card">
       <div className="list-entry-image">
-        <img src={game.coverImage} alt={game.title} />
+        <img src={game.image} alt={game.name} />
       </div>
       <div className="list-entry-content">
         <div className="list-entry-header">
-          <h3>{game.title}</h3>
+          <h3>{game.name}</h3>
           <div className="list-entry-actions">
             <button onClick={handleEditNotes} title="Edit Notes/Rating">
               <Edit3 size={18} />

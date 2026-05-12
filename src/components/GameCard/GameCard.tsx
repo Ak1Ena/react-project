@@ -11,7 +11,7 @@ const GameCard: FC<GameCardProps> = ({ game }) => {
   return (
     <div className="game-card">
       <Link to={`/games/${game.id}`} className="game-card-image-link">
-        <img src={game.coverImage} alt={game.title} className="game-card-image" />
+        <img src={game.image} alt={game.name} className="game-card-image" />
         <div className="game-card-rating">
           <Star size={16} fill="currentColor" />
           <span>{game.rating}</span>
@@ -19,15 +19,15 @@ const GameCard: FC<GameCardProps> = ({ game }) => {
       </Link>
       <div className="game-card-content">
         <h3 className="game-card-title">
-          <Link to={`/games/${game.id}`}>{game.title}</Link>
+          <Link to={`/games/${game.id}`}>{game.name}</Link>
         </h3>
         <div className="game-card-info">
-          <span className="game-card-genre">{game.genre}</span>
+          <span className="game-card-genre">{game.genre.join(', ')}</span>
         </div>
         <div className="game-card-details">
           <div className="game-card-detail">
             <Monitor size={14} />
-            <span>{game.platform}</span>
+            <span>{game.platforms.join(', ')}</span>
           </div>
           <div className="game-card-detail">
             <Calendar size={14} />

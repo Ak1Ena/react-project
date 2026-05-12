@@ -11,13 +11,14 @@ const AddGamePage: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const [formData, setFormData] = useState({
-    title: '',
-    genre: 'Action',
-    platform: '',
+    name: '',
+    genre: ['Action'],
+    platforms: [] as string[],
     releaseYear: new Date().getFullYear(),
     rating: 0,
-    coverImage: '',
+    image: '',
     description: '',
+    appid: Math.floor(Math.random() * 1000000), // Random appid for now
   });
 
   const [loading, setLoading] = useState(false);
@@ -26,10 +27,16 @@ const AddGamePage: FC = () => {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: name === 'releaseYear' || name === 'rating' ? Number(value) : value,
-    }));
+    if (name === 'genre') {
+      setFormData((prev) => ({ ...prev, genre: [value] }));
+    } else if (name === 'platforms') {
+      setFormData((prev) => ({ ...prev, platforms: value.split(',').map(p => p.trim()) }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: name === 'releaseYear' || name === 'rating' ? Number(value) : value,
+      }));
+    }
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -58,13 +65,13 @@ const AddGamePage: FC = () => {
         <form onSubmit={handleSubmit} className="add-game-form">
           <div className="form-grid">
             <div className="form-group">
-              <label htmlFor="title">Game Title*</label>
+              <label htmlFor="name">Game Title*</label>
               <input
                 type="text"
-                id="title"
-                name="title"
+                id="name"
+                name="name"
                 required
-                value={formData.title}
+                value={formData.name}
                 onChange={handleChange}
                 placeholder="e.g. Elden Ring"
               />
@@ -72,7 +79,7 @@ const AddGamePage: FC = () => {
 
             <div className="form-group">
               <label htmlFor="genre">Genre*</label>
-              <select id="genre" name="genre" value={formData.genre} onChange={handleChange}>
+              <select id="genre" name="genre" value={formData.genre[0]} onChange={handleChange}>
                 {genres.map((g) => (
                   <option key={g} value={g}>{g}</option>
                 ))}
@@ -80,13 +87,13 @@ const AddGamePage: FC = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="platform">Platforms*</label>
+              <label htmlFor="platforms">Platforms* (comma separated)</label>
               <input
                 type="text"
-                id="platform"
-                name="platform"
+                id="platforms"
+                name="platforms"
                 required
-                value={formData.platform}
+                value={formData.platforms.join(', ')}
                 onChange={handleChange}
                 placeholder="e.g. PC, PS5, Xbox"
               />
@@ -121,13 +128,13 @@ const AddGamePage: FC = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="coverImage">Cover Image URL*</label>
+              <label htmlFor="image">Cover Image URL*</label>
               <input
                 type="url"
-                id="coverImage"
-                name="coverImage"
+                id="image"
+                name="image"
                 required
-                value={formData.coverImage}
+                value={formData.image}
                 onChange={handleChange}
                 placeholder="https://example.com/image.jpg"
               />

@@ -18,15 +18,15 @@ const HomePage: FC = () => {
 
   const filteredGames = games
     .filter((game) => {
-      const matchesSearch = game.title.toLowerCase().includes(filters.searchQuery.toLowerCase());
-      const matchesGenre = filters.genre === 'All' || game.genre === filters.genre;
-      const matchesPlatform = filters.platform === 'All' || game.platform.includes(filters.platform);
+      const matchesSearch = game.name.toLowerCase().includes(filters.searchQuery.toLowerCase());
+      const matchesGenre = filters.genre === 'All' || game.genre.includes(filters.genre);
+      const matchesPlatform = filters.platform === 'All' || game.platforms.some(p => p.includes(filters.platform));
       return matchesSearch && matchesGenre && matchesPlatform;
     })
     .sort((a, b) => {
       switch (filters.sortBy) {
-        case 'title-asc': return a.title.localeCompare(b.title);
-        case 'title-desc': return b.title.localeCompare(a.title);
+        case 'title-asc': return a.name.localeCompare(b.name);
+        case 'title-desc': return b.name.localeCompare(a.name);
         case 'rating-desc': return b.rating - a.rating;
         case 'rating-asc': return a.rating - b.rating;
         case 'year-desc': return b.releaseYear - a.releaseYear;

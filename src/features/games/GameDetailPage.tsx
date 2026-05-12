@@ -31,16 +31,17 @@ const GameDetailPage: FC = () => {
     return <div className="loading">Loading game details...</div>;
   }
 
-  const existingEntry = entries.find((e) => e.gameId === game.id);
+  const existingEntry = entries.find((e) => e.gameid === game.id);
 
   const handleAddToList = () => {
     dispatch(addToList({
-      gameId: game.id,
+      gameid: game.id,
+      userid: 'user-1', // Placeholder userid
       status: selectedStatus,
       notes: '',
       personalRating: 0,
     })).then(() => {
-      dispatch(showToast({ message: `${game.title} added to your ${selectedStatus} list!`, type: 'success' }));
+      dispatch(showToast({ message: `${game.name} added to your ${selectedStatus} list!`, type: 'success' }));
     });
   };
 
@@ -54,12 +55,12 @@ const GameDetailPage: FC = () => {
       <div className="game-detail-container">
         <div className="game-detail-header">
           <div className="game-detail-cover">
-            <img src={game.coverImage} alt={game.title} />
+            <img src={game.image} alt={game.name} />
           </div>
           <div className="game-detail-info">
-            <h1>{game.title}</h1>
+            <h1>{game.name}</h1>
             <div className="game-detail-badges">
-              <span className="badge-genre">{game.genre}</span>
+              <span className="badge-genre">{game.genre.join(', ')}</span>
               <div className="badge-rating">
                 <Star size={16} fill="currentColor" />
                 <span>{game.rating}</span>
@@ -69,7 +70,7 @@ const GameDetailPage: FC = () => {
             <div className="game-detail-meta">
               <div className="meta-item">
                 <Monitor size={18} />
-                <span>{game.platform}</span>
+                <span>{game.platforms.join(', ')}</span>
               </div>
               <div className="meta-item">
                 <Calendar size={18} />
