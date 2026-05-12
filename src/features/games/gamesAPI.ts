@@ -21,15 +21,9 @@ export const fetchGames = async () => {
 };
 
 export const fetchGameById = async (id: string) => {
+  // eslint-disable-next-line no-useless-catch
   try {
     // First try fetching by primary ID
-    const response = await gameMockApi.get<Game>(`/api/v1/games/${id}`);
-    return {
-      ...response.data,
-      id: response.data.id || response.data.appid?.toString()
-    };
-  } catch (error) {
-    // If that fails, try searching by appid query parameter
     const response = await gameMockApi.get<Game[]>(`/api/v1/games?appid=${id}`);
     if (response.data && response.data.length > 0) {
       return {
@@ -37,6 +31,9 @@ export const fetchGameById = async (id: string) => {
         id: response.data[0].id || response.data[0].appid?.toString()
       };
     }
+  } catch (error) {
+    // If that fails, try searching by appid query parameter
+    console.warn(`Game with appid ${id} not found, trying fallback search by appid query...`);
     throw error;
   }
 };

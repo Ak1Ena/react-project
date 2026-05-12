@@ -19,10 +19,19 @@ const FilterBar: FC = () => {
   const filters = useSelector((state: RootState) => state.filters);
   const games = useSelector(selectGames);
 
-  const genres = ['All', 'Action', 'RPG', 'FPS', 'Strategy', 'Adventure', 'Sports', 'Simulation'];
-  const platforms = ['All', 'PC', 'PS5', 'Xbox', 'Switch', 'Mobile'];
+  const genresList = useMemo(() => {
+    const allGenres = games.flatMap(g => g.genre || []);
+    const uniqueGenres = Array.from(new Set(allGenres));
+    return ['All', ...uniqueGenres.sort()];
+  }, [games]);
+
+  const platformsList = useMemo(() => {
+    const allPlatforms = games.flatMap(g => g.platforms || []);
+    const uniquePlatforms = Array.from(new Set(allPlatforms));
+    return ['All', ...uniquePlatforms.sort()];
+  }, [games]);
   
-  const years = useMemo(() => {
+  const yearsList = useMemo(() => {
     const uniqueYears = Array.from(new Set(games.map(g => g.releaseYear.toString())));
     return ['All', ...uniqueYears.sort((a, b) => b.localeCompare(a))];
   }, [games]);
@@ -49,7 +58,7 @@ const FilterBar: FC = () => {
         <div className={styles.filterGroup}>
           <label>Genre</label>
           <select value={filters.genre} onChange={(e) => dispatch(setGenre(e.target.value))}>
-            {genres.map((g) => (
+            {genresList.map((g) => (
               <option key={g} value={g}>{g}</option>
             ))}
           </select>
@@ -58,7 +67,7 @@ const FilterBar: FC = () => {
         <div className={styles.filterGroup}>
           <label>Platform</label>
           <select value={filters.platform} onChange={(e) => dispatch(setPlatform(e.target.value))}>
-            {platforms.map((p) => (
+            {platformsList.map((p) => (
               <option key={p} value={p}>{p}</option>
             ))}
           </select>
@@ -67,7 +76,7 @@ const FilterBar: FC = () => {
         <div className={styles.filterGroup}>
           <label>Year</label>
           <select value={filters.year} onChange={(e) => dispatch(setYear(e.target.value))}>
-            {years.map((y) => (
+            {yearsList.map((y) => (
               <option key={y} value={y}>{y}</option>
             ))}
           </select>

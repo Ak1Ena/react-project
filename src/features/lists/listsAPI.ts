@@ -13,7 +13,11 @@ export interface ListEntry {
 }
 
 export const fetchListEntries = async () => {
-  const response = await gameMockApi.get<ListEntry[]>('/api/v1/lists');
+  if(JSON.parse(localStorage.getItem('user') as string) === null) {
+    return [];
+  }
+  const user = JSON.parse(localStorage.getItem('user') as string);
+  const response = await gameMockApi.get<ListEntry[]>(`/api/v1/lists/?userid=${user.id}`);
   return response.data;
 };
 

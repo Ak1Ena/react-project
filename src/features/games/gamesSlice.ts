@@ -66,9 +66,9 @@ const gamesSlice = createSlice({
       .addCase(fetchGameById.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(fetchGameById.fulfilled, (state, action: PayloadAction<Game>) => {
+      .addCase(fetchGameById.fulfilled, (state, action: PayloadAction<Game | undefined>) => {
         state.status = 'succeeded';
-        state.selectedGame = action.payload;
+        state.selectedGame = action.payload ?? null;
       })
       .addCase(fetchGameById.rejected, (state, action) => {
         state.status = 'failed';
