@@ -1,12 +1,20 @@
 import axios from 'axios';
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://67bc8202ed715aa51d0f507b.mockapi.io/api/v1';
+const GAME_BASE_URL = import.meta.env.REACT_APP_GAME_API_URL 
+const USER_BASE_URL = import.meta.env.REACT_APP_USER_API_URL
 
-const mockApi = axios.create({
-  baseURL: BASE_URL,
+export const usermockApi = axios.create({
+  baseURL: USER_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-export default mockApi;
+const gameMockApi = axios.create({
+  baseURL: GAME_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+export default {gameMockApi, usermockApi};
