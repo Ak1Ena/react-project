@@ -14,22 +14,47 @@ export interface Game {
 
 export const fetchGames = async () => {
   const response = await gameMockApi.get<Game[]>('/api/v1/games');
-  return response.data;
+  return response.data.map(game => ({
+    ...game,
+    id: game.id || game.appid?.toString()
+  }));
 };
 
 export const fetchGameById = async (id: string) => {
-  const response = await gameMockApi.get<Game>(`/api/v1/games/${id}`);
-  return response.data;
+  try {
+    // First try fetching by primary ID
+    const response = await gameMockApi.get<Game>(`/api/v1/games/${id}`);
+    return {
+      ...response.data,
+      id: response.data.id || response.data.appid?.toString()
+    };
+  } catch (error) {
+    // If that fails, try searching by appid query parameter
+    const response = await gameMockApi.get<Game[]>(`/api/v1/games?appid=${id}`);
+    if (response.data && response.data.length > 0) {
+      return {
+        ...response.data[0],
+        id: response.data[0].id || response.data[0].appid?.toString()
+      };
+    }
+    throw error;
+  }
 };
 
 export const createGame = async (game: Omit<Game, 'id'>) => {
   const response = await gameMockApi.post<Game>('/api/v1/games', game);
-  return response.data;
+  return {
+    ...response.data,
+    id: response.data.id || response.data.appid?.toString()
+  };
 };
 
 export const updateGame = async (id: string, game: Partial<Game>) => {
   const response = await gameMockApi.put<Game>(`/api/v1/games/${id}`, game);
-  return response.data;
+  return {
+    ...response.data,
+    id: response.data.id || response.data.appid?.toString()
+  };
 };
 
 export const deleteGame = async (id: string) => {
