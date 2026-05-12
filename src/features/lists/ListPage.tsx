@@ -43,7 +43,7 @@ const ListPage: FC = () => {
         <div className={styles.listContainer}>
           {filteredEntries.length === 0 ? (
             <div className={styles.emptyState}>
-              <p>No games in your {currentStatus} list yet.</p>
+              <p>No games in your {currentStatus ? currentStatus.charAt(0).toUpperCase() + currentStatus.slice(1) : ''} list yet.</p>
               <NavLink to="/" className={styles.btnPrimary}>Browse Games</NavLink>
             </div>
           ) : (

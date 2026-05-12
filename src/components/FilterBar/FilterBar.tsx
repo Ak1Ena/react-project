@@ -1,4 +1,4 @@
-import { type FC } from 'react';
+import { useMemo, type FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Search, X } from 'lucide-react';
 import type { RootState } from '../../app/store';
@@ -6,17 +6,26 @@ import {
   setSearchQuery,
   setGenre,
   setPlatform,
+  setYear,
+  setMinRating,
   setSortBy,
   resetFilters,
 } from '../../features/filters/filtersSlice';
+import { selectGames } from '../../features/games/gamesSlice';
 import styles from './FilterBar.module.css';
 
 const FilterBar: FC = () => {
   const dispatch = useDispatch();
   const filters = useSelector((state: RootState) => state.filters);
+  const games = useSelector(selectGames);
 
   const genres = ['All', 'Action', 'RPG', 'FPS', 'Strategy', 'Adventure', 'Sports', 'Simulation'];
   const platforms = ['All', 'PC', 'PS5', 'Xbox', 'Switch', 'Mobile'];
+  
+  const years = useMemo(() => {
+    const uniqueYears = Array.from(new Set(games.map(g => g.releaseYear.toString())));
+    return ['All', ...uniqueYears.sort((a, b) => b.localeCompare(a))];
+  }, [games]);
 
   return (
     <div className={styles.filterBar}>
@@ -53,6 +62,28 @@ const FilterBar: FC = () => {
               <option key={p} value={p}>{p}</option>
             ))}
           </select>
+        </div>
+
+        <div className={styles.filterGroup}>
+          <label>Year</label>
+          <select value={filters.year} onChange={(e) => dispatch(setYear(e.target.value))}>
+            {years.map((y) => (
+              <option key={y} value={y}>{y}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className={styles.filterGroup}>
+          <label>Min Rating: {filters.minRating}</label>
+          <input
+            type="range"
+            min="0"
+            max="10"
+            step="0.5"
+            value={filters.minRating}
+            onChange={(e) => dispatch(setMinRating(Number(e.target.value)))}
+            className={styles.ratingRange}
+          />
         </div>
 
         <div className={styles.filterGroup}>

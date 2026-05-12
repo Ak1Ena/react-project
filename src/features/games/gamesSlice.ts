@@ -129,7 +129,9 @@ export const selectFilteredGames = createSelector(
         const matchesSearch = game.name.toLowerCase().includes(filters.searchQuery.toLowerCase());
         const matchesGenre = filters.genre === 'All' || game.genre.includes(filters.genre);
         const matchesPlatform = filters.platform === 'All' || game.platforms.some(p => p.includes(filters.platform));
-        return matchesSearch && matchesGenre && matchesPlatform;
+        const matchesYear = filters.year === 'All' || game.releaseYear.toString() === filters.year;
+        const matchesRating = game.rating >= filters.minRating;
+        return matchesSearch && matchesGenre && matchesPlatform && matchesYear && matchesRating;
       })
       .sort((a, b) => {
         switch (filters.sortBy) {

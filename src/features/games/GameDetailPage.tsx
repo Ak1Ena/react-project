@@ -7,6 +7,7 @@ import { fetchGameById, clearSelectedGame } from './gamesSlice';
 import { addToList, fetchListEntries } from '../lists/listsSlice';
 import type { ListStatus } from '../lists/listsAPI';
 import { showToast } from '../ui/uiSlice';
+import { selectCurrentUser } from '../auth/authSlice';
 import styles from './GameDetailPage.module.css';
 
 const GameDetailPage: FC = () => {
@@ -15,6 +16,7 @@ const GameDetailPage: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { selectedGame: game, status } = useSelector((state: RootState) => state.games);
   const { entries } = useSelector((state: RootState) => state.lists);
+  const currentUser = useSelector(selectCurrentUser);
   
   const [selectedStatus, setSelectedStatus] = useState<ListStatus>('backlog');
 
@@ -39,9 +41,14 @@ const GameDetailPage: FC = () => {
   const existingEntry = entries.find((e) => e.gameid === game.id);
 
   const handleAddToList = () => {
+    if (!currentUser) {
+      dispatch(showToast({ message: 'Please log in to add games to your list.', type: 'error' }));
+      return;
+    }
+
     dispatch(addToList({
       gameid: game.id,
-      userid: 'user-1', // Placeholder userid
+      userid: currentUser.id,
       status: selectedStatus,
       notes: '',
       personalRating: 0,

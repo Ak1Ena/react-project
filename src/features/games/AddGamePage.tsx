@@ -10,7 +10,7 @@ const AddGamePage: FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const [formData, setFormData] = useState(() => ({
+  const [formData, setFormData] = useState({
     name: '',
     genre: ['Action'] as string[],
     platforms: [] as string[],
@@ -18,8 +18,7 @@ const AddGamePage: FC = () => {
     rating: 0,
     image: '',
     description: '',
-    appid: Math.floor(Math.random() * 1000000), // Random appid for now
-  }));
+  });
 
   const [loading, setLoading] = useState(false);
 
@@ -30,7 +29,7 @@ const AddGamePage: FC = () => {
     if (name === 'genre') {
       setFormData((prev) => ({ ...prev, genre: [value] }));
     } else if (name === 'platforms') {
-      setFormData((prev) => ({ ...prev, platforms: value.split(',').map(p => p.trim()) }));
+      setFormData((prev) => ({ ...prev, platforms: value.split(',').map(p => p.trim()).filter(Boolean) }));
     } else {
       setFormData((prev) => ({
         ...prev,
@@ -43,7 +42,11 @@ const AddGamePage: FC = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await dispatch(createGame(formData)).unwrap();
+      const gameData = {
+        ...formData,
+        appid: Math.floor(Date.now() / 1000) + Math.floor(Math.random() * 1000),
+      };
+      await dispatch(createGame(gameData)).unwrap();
       dispatch(showToast({ message: 'Game added successfully to catalog!', type: 'success' }));
       navigate('/');
     } catch {

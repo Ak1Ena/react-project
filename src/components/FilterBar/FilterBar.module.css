@@ -68,6 +68,12 @@
   min-width: 150px;
 }
 
+.ratingRange {
+  width: 150px;
+  height: 36px;
+  cursor: pointer;
+}
+
 .resetButton {
   padding: 8px 16px;
   color: var(--error);
