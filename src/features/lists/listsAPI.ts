@@ -4,8 +4,8 @@ export type ListStatus = 'playing' | 'completed' | 'backlog' | 'wishlist';
 
 export interface ListEntry {
   id: string;
-  gameid: string;
-  userid: string;
+  gameId: string;
+  userId: string;
   status: ListStatus;
   notes: string;
   personalRating: number;
@@ -13,7 +13,7 @@ export interface ListEntry {
 }
 
 export const fetchListEntries = async (userId: string) => {
-  const response = await gameMockApi.get<ListEntry[]>(`/api/v1/lists/?userid=${userId}`);
+  const response = await gameMockApi.get<ListEntry[]>(`/api/v1/lists/?userId=${userId}`);
   return response.data;
 };
 

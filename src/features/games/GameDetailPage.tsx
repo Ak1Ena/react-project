@@ -38,7 +38,7 @@ const GameDetailPage: FC = () => {
     return <div className={styles.loading}>Loading game details...</div>;
   }
 
-  const existingEntry = entries.find((e) => e.gameid === game.id);
+  const existingEntry = entries.find((e) => e.gameId === game.id);
 
   const handleAddToList = () => {
     if (!currentUser) {
@@ -47,8 +47,8 @@ const GameDetailPage: FC = () => {
     }
 
     dispatch(addToList({
-      gameid: game.id,
-      userid: currentUser.id,
+      gameId: game.id,
+      userId: currentUser.id,
       status: selectedStatus,
       notes: '',
       personalRating: 0,
