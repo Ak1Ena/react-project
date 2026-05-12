@@ -6,6 +6,7 @@ import type { ListEntry, ListStatus } from '../../features/lists/listsAPI';
 import { removeFromList, updateListEntry } from '../../features/lists/listsSlice';
 import type { AppDispatch } from '../../app/store';
 import { openModal } from '../../features/ui/uiSlice';
+import styles from './ListEntryCard.module.css';
 
 interface ListEntryCardProps {
   entry: ListEntry;
@@ -30,25 +31,25 @@ const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
   };
 
   return (
-    <div className="list-entry-card">
-      <div className="list-entry-image">
+    <div className={styles.listEntryCard}>
+      <div className={styles.listEntryImage}>
         <img src={game.image} alt={game.name} />
       </div>
-      <div className="list-entry-content">
-        <div className="list-entry-header">
+      <div className={styles.listEntryContent}>
+        <div className={styles.listEntryHeader}>
           <h3>{game.name}</h3>
-          <div className="list-entry-actions">
+          <div className={styles.listEntryActions}>
             <button onClick={handleEditNotes} title="Edit Notes/Rating">
               <Edit3 size={18} />
             </button>
-            <button onClick={handleRemove} className="remove-btn" title="Remove from list">
+            <button onClick={handleRemove} className={styles.removeBtn} title="Remove from list">
               <Trash2 size={18} />
             </button>
           </div>
         </div>
         
-        <div className="list-entry-meta">
-          <div className="list-entry-status-select">
+        <div className={styles.listEntryMeta}>
+          <div className={styles.listEntryStatusSelect}>
             <MoveRight size={14} />
             <select value={entry.status} onChange={handleStatusChange}>
               <option value="playing">Playing</option>
@@ -57,19 +58,19 @@ const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
               <option value="wishlist">Wishlist</option>
             </select>
           </div>
-          <div className="list-entry-personal-rating">
+          <div className={styles.listEntryPersonalRating}>
             <Star size={14} fill={entry.personalRating > 0 ? "currentColor" : "none"} />
             <span>{entry.personalRating || 'No rating'}/10</span>
           </div>
         </div>
 
         {entry.notes && (
-          <p className="list-entry-notes">
+          <p className={styles.listEntryNotes}>
             {entry.notes}
           </p>
         )}
         
-        <div className="list-entry-date">
+        <div className={styles.listEntryDate}>
           Added on {new Date(entry.dateAdded).toLocaleDateString()}
         </div>
       </div>

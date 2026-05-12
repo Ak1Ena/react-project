@@ -9,6 +9,7 @@ import {
   setSortBy,
   resetFilters,
 } from '../../features/filters/filtersSlice';
+import styles from './FilterBar.module.css';
 
 const FilterBar: FC = () => {
   const dispatch = useDispatch();
@@ -18,25 +19,25 @@ const FilterBar: FC = () => {
   const platforms = ['All', 'PC', 'PS5', 'Xbox', 'Switch', 'Mobile'];
 
   return (
-    <div className="filter-bar">
-      <div className="search-input-wrapper">
-        <Search className="search-icon" size={20} />
+    <div className={styles.filterBar}>
+      <div className={styles.searchInputWrapper}>
+        <Search className={styles.searchIcon} size={20} />
         <input
           type="text"
           placeholder="Search games..."
           value={filters.searchQuery}
           onChange={(e) => dispatch(setSearchQuery(e.target.value))}
-          className="search-input"
+          className={styles.searchInput}
         />
         {filters.searchQuery && (
-          <button onClick={() => dispatch(setSearchQuery(''))} className="clear-search">
+          <button onClick={() => dispatch(setSearchQuery(''))} className={styles.clearSearch}>
             <X size={16} />
           </button>
         )}
       </div>
 
-      <div className="filters-controls">
-        <div className="filter-group">
+      <div className={styles.filtersControls}>
+        <div className={styles.filterGroup}>
           <label>Genre</label>
           <select value={filters.genre} onChange={(e) => dispatch(setGenre(e.target.value))}>
             {genres.map((g) => (
@@ -45,7 +46,7 @@ const FilterBar: FC = () => {
           </select>
         </div>
 
-        <div className="filter-group">
+        <div className={styles.filterGroup}>
           <label>Platform</label>
           <select value={filters.platform} onChange={(e) => dispatch(setPlatform(e.target.value))}>
             {platforms.map((p) => (
@@ -54,7 +55,7 @@ const FilterBar: FC = () => {
           </select>
         </div>
 
-        <div className="filter-group">
+        <div className={styles.filterGroup}>
           <label>Sort By</label>
           <select value={filters.sortBy} onChange={(e) => dispatch(setSortBy(e.target.value))}>
             <option value="title-asc">Title (A-Z)</option>
@@ -66,7 +67,7 @@ const FilterBar: FC = () => {
           </select>
         </div>
 
-        <button onClick={() => dispatch(resetFilters())} className="reset-button">
+        <button onClick={() => dispatch(resetFilters())} className={styles.resetButton}>
           Reset
         </button>
       </div>

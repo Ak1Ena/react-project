@@ -4,6 +4,7 @@ import type { RootState, AppDispatch } from '../app/store';
 import { fetchGames } from '../features/games/gamesSlice';
 import GameGrid from '../components/GameGrid/GameGrid';
 import FilterBar from '../components/FilterBar/FilterBar';
+import styles from './HomePage.module.css';
 
 const HomePage: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -36,15 +37,15 @@ const HomePage: FC = () => {
     });
 
   return (
-    <div className="home-page">
-      <header className="page-header">
+    <div className={styles.homePage}>
+      <header className={styles.pageHeader}>
         <h1>Explore Games</h1>
         <p>Discover your next favorite game and add it to your collection.</p>
       </header>
       
       <FilterBar />
       
-      {status === 'failed' && <div className="error-message">{error}</div>}
+      {status === 'failed' && <div className={styles.errorMessage}>{error}</div>}
       
       <GameGrid games={filteredGames} loading={status === 'loading'} />
     </div>

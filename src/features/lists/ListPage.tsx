@@ -5,6 +5,7 @@ import type { RootState, AppDispatch } from '../../app/store';
 import { fetchListEntries } from './listsSlice';
 import { fetchGames } from '../games/gamesSlice';
 import ListEntryCard from '../../components/ListEntryCard/ListEntryCard';
+import styles from './ListPage.module.css';
 
 const ListPage: FC = () => {
   const { status: currentStatus } = useParams<{ status: string }>();
@@ -22,28 +23,28 @@ const ListPage: FC = () => {
   const getGame = (gameId: string) => games.find((g) => g.id === gameId);
 
   return (
-    <div className="list-page">
-      <header className="page-header">
+    <div className={styles.listPage}>
+      <header className={styles.pageHeader}>
         <h1>My Personal Lists</h1>
-        <div className="list-tabs">
-          <NavLink to="/my-list/playing" className={({ isActive }) => isActive ? 'tab active' : 'tab'}>Playing</NavLink>
-          <NavLink to="/my-list/completed" className={({ isActive }) => isActive ? 'tab active' : 'tab'}>Completed</NavLink>
-          <NavLink to="/my-list/backlog" className={({ isActive }) => isActive ? 'tab active' : 'tab'}>Backlog</NavLink>
-          <NavLink to="/my-list/wishlist" className={({ isActive }) => isActive ? 'tab active' : 'tab'}>Wishlist</NavLink>
+        <div className={styles.listTabs}>
+          <NavLink to="/my-list/playing" className={({ isActive }) => isActive ? `${styles.tab} ${styles.active}` : styles.tab}>Playing</NavLink>
+          <NavLink to="/my-list/completed" className={({ isActive }) => isActive ? `${styles.tab} ${styles.active}` : styles.tab}>Completed</NavLink>
+          <NavLink to="/my-list/backlog" className={({ isActive }) => isActive ? `${styles.tab} ${styles.active}` : styles.tab}>Backlog</NavLink>
+          <NavLink to="/my-list/wishlist" className={({ isActive }) => isActive ? `${styles.tab} ${styles.active}` : styles.tab}>Wishlist</NavLink>
         </div>
       </header>
 
       {(listStatus === 'loading' || gamesStatus === 'loading') ? (
-        <div className="loading">Loading your list...</div>
+        <div className={styles.loading}>Loading your list...</div>
       ) : (
-        <div className="list-container">
+        <div className={styles.listContainer}>
           {filteredEntries.length === 0 ? (
-            <div className="empty-state">
+            <div className={styles.emptyState}>
               <p>No games in your {currentStatus} list yet.</p>
-              <NavLink to="/" className="btn-primary">Browse Games</NavLink>
+              <NavLink to="/" className={styles.btnPrimary}>Browse Games</NavLink>
             </div>
           ) : (
-            <div className="list-grid">
+            <div className={styles.listGrid}>
               {filteredEntries.map((entry) => {
                 const game = getGame(entry.gameid);
                 return game ? (

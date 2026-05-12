@@ -1,0 +1,99 @@
+.listEntryCard {
+  background-color: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: flex;
+  overflow: hidden;
+}
+
+.listEntryImage {
+  width: 120px;
+}
+
+.listEntryImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.listEntryContent {
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.listEntryHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.listEntryHeader h3 {
+  font-size: 1.1rem;
+}
+
+.listEntryActions {
+  display: flex;
+  gap: 8px;
+}
+
+.listEntryActions button {
+  color: var(--text-secondary);
+  transition: color 0.2s;
+}
+
+.listEntryActions button:hover {
+  color: var(--primary);
+}
+
+.removeBtn:hover {
+  color: var(--error);
+}
+
+.listEntryMeta {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.listEntryStatusSelect {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.875rem;
+}
+
+.listEntryStatusSelect select {
+  border: none;
+  background: none;
+  font-weight: 600;
+  color: var(--primary);
+  padding: 2px 4px;
+}
+
+.listEntryPersonalRating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.875rem;
+  color: #f59e0b;
+  font-weight: 600;
+}
+
+.listEntryNotes {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  background-color: var(--bg);
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  font-style: italic;
+}
+
+.listEntryDate {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: auto;
+}

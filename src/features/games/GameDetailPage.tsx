@@ -7,6 +7,7 @@ import { fetchGameById, clearSelectedGame } from './gamesSlice';
 import { addToList, fetchListEntries } from '../lists/listsSlice';
 import type { ListStatus } from '../lists/listsAPI';
 import { showToast } from '../ui/uiSlice';
+import styles from './GameDetailPage.module.css';
 
 const GameDetailPage: FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -28,7 +29,7 @@ const GameDetailPage: FC = () => {
   }, [id, dispatch]);
 
   if (status === 'loading' || !game) {
-    return <div className="loading">Loading game details...</div>;
+    return <div className={styles.loading}>Loading game details...</div>;
   }
 
   const existingEntry = entries.find((e) => e.gameid === game.id);
@@ -46,60 +47,60 @@ const GameDetailPage: FC = () => {
   };
 
   return (
-    <div className="game-detail-page">
-      <button onClick={() => navigate(-1)} className="back-button">
+    <div className={styles.gameDetailPage}>
+      <button onClick={() => navigate(-1)} className={styles.backButton}>
         <ChevronLeft size={20} />
         Back
       </button>
 
-      <div className="game-detail-container">
-        <div className="game-detail-header">
-          <div className="game-detail-cover">
+      <div className={styles.gameDetailContainer}>
+        <div className={styles.gameDetailHeader}>
+          <div className={styles.gameDetailCover}>
             <img src={game.image} alt={game.name} />
           </div>
-          <div className="game-detail-info">
+          <div className={styles.gameDetailInfo}>
             <h1>{game.name}</h1>
-            <div className="game-detail-badges">
-              <span className="badge-genre">{game.genre.join(', ')}</span>
-              <div className="badge-rating">
+            <div className={styles.gameDetailBadges}>
+              <span className={styles.badgeGenre}>{game.genre.join(', ')}</span>
+              <div className={styles.badgeRating}>
                 <Star size={16} fill="currentColor" />
                 <span>{game.rating}</span>
               </div>
             </div>
             
-            <div className="game-detail-meta">
-              <div className="meta-item">
+            <div className={styles.gameDetailMeta}>
+              <div className={styles.metaItem}>
                 <Monitor size={18} />
                 <span>{game.platforms.join(', ')}</span>
               </div>
-              <div className="meta-item">
+              <div className={styles.metaItem}>
                 <Calendar size={18} />
                 <span>{game.releaseYear}</span>
               </div>
             </div>
 
-            <div className="game-detail-actions">
+            <div className={styles.gameDetailActions}>
               {existingEntry ? (
-                <div className="already-in-list">
+                <div className={styles.alreadyInList}>
                   <Check size={20} />
                   <span>Already in your {existingEntry.status} list</span>
-                  <button onClick={() => navigate(`/my-list/${existingEntry.status}`)} className="btn-link">
+                  <button onClick={() => navigate(`/my-list/${existingEntry.status}`)} className={styles.btnLink}>
                     View in list
                   </button>
                 </div>
               ) : (
-                <div className="add-to-list-control">
+                <div className={styles.addToListControl}>
                   <select 
                     value={selectedStatus} 
                     onChange={(e) => setSelectedStatus(e.target.value as ListStatus)}
-                    className="status-select"
+                    className={styles.statusSelect}
                   >
                     <option value="playing">Playing</option>
                     <option value="completed">Completed</option>
                     <option value="backlog">Backlog</option>
                     <option value="wishlist">Wishlist</option>
                   </select>
-                  <button onClick={handleAddToList} className="btn-primary">
+                  <button onClick={handleAddToList} className={styles.btnPrimary}>
                     <Plus size={20} />
                     Add to List
                   </button>
@@ -109,8 +110,8 @@ const GameDetailPage: FC = () => {
           </div>
         </div>
 
-        <div className="game-detail-body">
-          <section className="game-description">
+        <div className={styles.gameDetailBody}>
+          <section className={styles.gameDescription}>
             <h2>Description</h2>
             <p>{game.description}</p>
           </section>
