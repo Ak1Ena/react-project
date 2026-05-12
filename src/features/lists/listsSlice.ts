@@ -16,9 +16,23 @@ const initialState: ListsState = {
   error: null,
 };
 
-export const fetchListEntries = createAsyncThunk('lists/fetchListEntries', async () => {
-  return await listsAPI.fetchListEntries();
-});
+export const fetchListEntries = createAsyncThunk(
+  'lists/fetchListEntries',
+  async (_, { getState, rejectWithValue }) => {
+    const state = getState() as RootState;
+    const user = state.auth.user;
+
+    if (!user) {
+      return rejectWithValue('User not authenticated');
+    }
+
+    try {
+      return await listsAPI.fetchListEntries(user.id);
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'Failed to fetch list entries');
+    }
+  }
+);
 
 export const addToList = createAsyncThunk(
   'lists/addToList',
