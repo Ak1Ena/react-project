@@ -4,6 +4,13 @@ import { X } from 'lucide-react';
 import type { RootState, AppDispatch } from '../../app/store';
 import { closeModal } from '../../features/ui/uiSlice';
 import { updateListEntry } from '../../features/lists/listsSlice';
+import type { Game } from '../../features/games/gamesAPI';
+import type { ListEntry } from '../../features/lists/listsAPI';
+
+interface EditEntryData {
+  entry: ListEntry;
+  game: Game;
+}
 import styles from './Modal.module.css';
 
 const Modal: FC = () => {
@@ -19,7 +26,7 @@ const Modal: FC = () => {
   const renderContent = () => {
     switch (modalType) {
       case 'EDIT_ENTRY':
-        return <EditEntryForm data={modalData} onClose={handleClose} />;
+        return <EditEntryForm data={modalData as EditEntryData} onClose={handleClose} />;
       default:
         return <div>Unknown modal type</div>;
     }
@@ -37,7 +44,7 @@ const Modal: FC = () => {
   );
 };
 
-const EditEntryForm: FC<{ data: any; onClose: () => void }> = ({ data, onClose }) => {
+const EditEntryForm: FC<{ data: EditEntryData; onClose: () => void }> = ({ data, onClose }) => {
   const dispatch = useDispatch<AppDispatch>();
   const [notes, setNotes] = useState(data.entry.notes || '');
   const [rating, setRating] = useState(data.entry.personalRating || 0);

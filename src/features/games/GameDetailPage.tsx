@@ -28,6 +28,10 @@ const GameDetailPage: FC = () => {
     };
   }, [id, dispatch]);
 
+  if (status === 'failed') {
+    return <div className={styles.errorMessage}>Failed to load game details.</div>;
+  }
+
   if (status === 'loading' || !game) {
     return <div className={styles.loading}>Loading game details...</div>;
   }

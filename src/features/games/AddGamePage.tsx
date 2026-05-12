@@ -10,16 +10,16 @@ const AddGamePage: FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState(() => ({
     name: '',
-    genre: ['Action'],
+    genre: ['Action'] as string[],
     platforms: [] as string[],
     releaseYear: new Date().getFullYear(),
     rating: 0,
     image: '',
     description: '',
     appid: Math.floor(Math.random() * 1000000), // Random appid for now
-  });
+  }));
 
   const [loading, setLoading] = useState(false);
 
@@ -46,7 +46,7 @@ const AddGamePage: FC = () => {
       await dispatch(createGame(formData)).unwrap();
       dispatch(showToast({ message: 'Game added successfully to catalog!', type: 'success' }));
       navigate('/');
-    } catch (error) {
+    } catch {
       dispatch(showToast({ message: 'Failed to add game. Please try again.', type: 'error' }));
     } finally {
       setLoading(false);

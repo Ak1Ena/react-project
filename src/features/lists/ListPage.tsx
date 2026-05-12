@@ -2,7 +2,7 @@ import { useEffect, type FC } from 'react';
 import { useParams, NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState, AppDispatch } from '../../app/store';
-import { fetchListEntries } from './listsSlice';
+import { fetchListEntries, selectEntriesByStatus } from './listsSlice';
 import { fetchGames } from '../games/gamesSlice';
 import ListEntryCard from '../../components/ListEntryCard/ListEntryCard';
 import styles from './ListPage.module.css';
@@ -10,7 +10,8 @@ import styles from './ListPage.module.css';
 const ListPage: FC = () => {
   const { status: currentStatus } = useParams<{ status: string }>();
   const dispatch = useDispatch<AppDispatch>();
-  const { entries, status: listStatus } = useSelector((state: RootState) => state.lists);
+  const filteredEntries = useSelector((state: RootState) => selectEntriesByStatus(state, currentStatus));
+  const { status: listStatus } = useSelector((state: RootState) => state.lists);
   const { items: games, status: gamesStatus } = useSelector((state: RootState) => state.games);
 
   useEffect(() => {
@@ -18,8 +19,6 @@ const ListPage: FC = () => {
     if (gamesStatus === 'idle') dispatch(fetchGames());
   }, [listStatus, gamesStatus, dispatch]);
 
-  const filteredEntries = entries.filter((entry) => entry.status === currentStatus);
-  
   const getGame = (gameId: string) => games.find((g) => g.id === gameId);
 
   return (
@@ -33,6 +32,10 @@ const ListPage: FC = () => {
           <NavLink to="/my-list/wishlist" className={({ isActive }) => isActive ? `${styles.tab} ${styles.active}` : styles.tab}>Wishlist</NavLink>
         </div>
       </header>
+
+      {(listStatus === 'failed' || gamesStatus === 'failed') && (
+        <div className={styles.errorMessage}>Failed to load your list. Please try again.</div>
+      )}
 
       {(listStatus === 'loading' || gamesStatus === 'loading') ? (
         <div className={styles.loading}>Loading your list...</div>
