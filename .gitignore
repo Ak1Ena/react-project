@@ -22,4 +22,5 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-.envdataset/games.csv
+.env
+dataset/games.csv
