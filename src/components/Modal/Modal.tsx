@@ -1,9 +1,9 @@
 import { useState, type FC, type FormEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { X } from 'lucide-react';
-import type { RootState, AppDispatch } from '../app/store';
-import { closeModal } from '../features/ui/uiSlice';
-import { updateListEntry } from '../features/lists/listsSlice';
+import type { RootState, AppDispatch } from '../../app/store';
+import { closeModal } from '../../features/ui/uiSlice';
+import { updateListEntry } from '../../features/lists/listsSlice';
 
 const Modal: FC = () => {
   const dispatch = useDispatch<AppDispatch>();

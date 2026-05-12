@@ -1,7 +1,7 @@
 import { type FC } from 'react';
 import { Link } from 'react-router-dom';
 import { Star, Calendar, Monitor } from 'lucide-react';
-import type { Game } from '../features/games/gamesAPI';
+import type { Game } from '../../features/games/gamesAPI';
 
 interface GameCardProps {
   game: Game;

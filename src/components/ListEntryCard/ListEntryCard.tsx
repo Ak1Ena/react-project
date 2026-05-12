@@ -1,11 +1,11 @@
 import { type FC } from 'react';
 import { useDispatch } from 'react-redux';
 import { Star, Trash2, Edit3, MoveRight } from 'lucide-react';
-import type { Game } from '../features/games/gamesAPI';
-import type { ListEntry, ListStatus } from '../features/lists/listsAPI';
-import { removeFromList, updateListEntry } from '../features/lists/listsSlice';
-import type { AppDispatch } from '../app/store';
-import { openModal } from '../features/ui/uiSlice';
+import type { Game } from '../../features/games/gamesAPI';
+import type { ListEntry, ListStatus } from '../../features/lists/listsAPI';
+import { removeFromList, updateListEntry } from '../../features/lists/listsSlice';
+import type { AppDispatch } from '../../app/store';
+import { openModal } from '../../features/ui/uiSlice';
 
 interface ListEntryCardProps {
   entry: ListEntry;

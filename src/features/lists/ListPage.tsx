@@ -1,10 +1,10 @@
 import { useEffect, type FC } from 'react';
 import { useParams, NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import type { RootState, AppDispatch } from '../app/store';
-import { fetchListEntries } from '../features/lists/listsSlice';
-import { fetchGames } from '../features/games/gamesSlice';
-import ListEntryCard from '../components/ListEntryCard';
+import type { RootState, AppDispatch } from '../../app/store';
+import { fetchListEntries } from './listsSlice';
+import { fetchGames } from '../games/gamesSlice';
+import ListEntryCard from '../../components/ListEntryCard/ListEntryCard';
 
 const ListPage: FC = () => {
   const { status: currentStatus } = useParams<{ status: string }>();

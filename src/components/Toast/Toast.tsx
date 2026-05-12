@@ -1,8 +1,8 @@
 import { useEffect, type FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { X, CheckCircle, AlertCircle, Info } from 'lucide-react';
-import type { RootState } from '../app/store';
-import { clearToast } from '../features/ui/uiSlice';
+import type { RootState } from '../../app/store';
+import { clearToast } from '../../features/ui/uiSlice';
 
 const Toast: FC = () => {
   const dispatch = useDispatch();

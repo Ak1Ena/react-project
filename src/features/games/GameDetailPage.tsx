@@ -2,11 +2,11 @@ import { useEffect, useState, type FC } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Star, Calendar, Monitor, ChevronLeft, Plus, Check } from 'lucide-react';
-import type { RootState, AppDispatch } from '../app/store';
-import { fetchGameById, clearSelectedGame } from '../features/games/gamesSlice';
-import { addToList, fetchListEntries } from '../features/lists/listsSlice';
-import type { ListStatus } from '../features/lists/listsAPI';
-import { showToast } from '../features/ui/uiSlice';
+import type { RootState, AppDispatch } from '../../app/store';
+import { fetchGameById, clearSelectedGame } from './gamesSlice';
+import { addToList, fetchListEntries } from '../lists/listsSlice';
+import type { ListStatus } from '../lists/listsAPI';
+import { showToast } from '../ui/uiSlice';
 
 const GameDetailPage: FC = () => {
   const { id } = useParams<{ id: string }>();

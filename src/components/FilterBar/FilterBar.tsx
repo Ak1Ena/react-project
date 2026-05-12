@@ -1,14 +1,14 @@
 import { type FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Search, X } from 'lucide-react';
-import type { RootState } from '../app/store';
+import type { RootState } from '../../app/store';
 import {
   setSearchQuery,
   setGenre,
   setPlatform,
   setSortBy,
   resetFilters,
-} from '../features/filters/filtersSlice';
+} from '../../features/filters/filtersSlice';
 
 const FilterBar: FC = () => {
   const dispatch = useDispatch();

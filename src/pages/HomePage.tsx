@@ -2,8 +2,8 @@ import { useEffect, type FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState, AppDispatch } from '../app/store';
 import { fetchGames } from '../features/games/gamesSlice';
-import GameGrid from '../components/GameGrid';
-import FilterBar from '../components/FilterBar';
+import GameGrid from '../components/GameGrid/GameGrid';
+import FilterBar from '../components/FilterBar/FilterBar';
 
 const HomePage: FC = () => {
   const dispatch = useDispatch<AppDispatch>();

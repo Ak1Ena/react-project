@@ -1,6 +1,6 @@
 import { type FC } from 'react';
-import GameCard from './GameCard';
-import type { Game } from '../features/games/gamesAPI';
+import GameCard from '../GameCard/GameCard';
+import type { Game } from '../../features/games/gamesAPI';
 
 interface GameGridProps {
   games: Game[];

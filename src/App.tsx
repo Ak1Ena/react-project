@@ -1,7 +1,7 @@
-import Navbar from './components/Navbar';
+import Navbar from './components/Navbar/Navbar';
 import AppRoutes from './routes/AppRoutes';
-import Modal from './components/Modal';
-import Toast from './components/Toast';
+import Modal from './components/Modal/Modal';
+import Toast from './components/Toast/Toast';
 import './App.css';
 
 function App() {
