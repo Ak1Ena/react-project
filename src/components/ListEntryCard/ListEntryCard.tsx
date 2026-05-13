@@ -1,6 +1,6 @@
-import { type FC } from 'react';
+import { type FC, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Star, Trash2, Edit3, MoveRight } from 'lucide-react';
+import { Star, Trash2, Edit3, MoveRight, Save } from 'lucide-react';
 import type { Game } from '../../features/games/gamesAPI';
 import type { ListEntry, ListStatus } from '../../features/lists/listsAPI';
 import { removeFromList, updateListEntry } from '../../features/lists/listsSlice';
@@ -15,6 +15,9 @@ interface ListEntryCardProps {
 
 const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
   const dispatch = useDispatch<AppDispatch>();
+  const [hoverRating, setHoverRating] = useState(0);
+  const [reviewInput, setReviewInput] = useState(entry.review || '');
+  const [isEditingReview, setIsEditingReview] = useState(!entry.review);
 
   const handleRemove = () => {
     if (window.confirm('Are you sure you want to remove this game from your list?')) {
@@ -26,8 +29,19 @@ const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
     dispatch(updateListEntry({ id: entry.id, entry: { status: e.target.value as ListStatus } }));
   };
 
+  const handleRatingChange = (newRating: number) => {
+    dispatch(updateListEntry({ id: entry.id, entry: { personalRating: newRating } }));
+  };
+
   const handleEditNotes = () => {
     dispatch(openModal({ type: 'EDIT_ENTRY', data: { entry, game } }));
+  };
+
+  const handlePostReview = () => {
+    if (reviewInput?.trim()) {
+      dispatch(updateListEntry({ id: entry.id, entry: { review: reviewInput } }));
+      setIsEditingReview(false);
+    }
   };
 
   return (
@@ -58,17 +72,70 @@ const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
               <option value="wishlist">Wishlist</option>
             </select>
           </div>
-          <div className={styles.listEntryPersonalRating}>
-            <Star size={14} fill={entry.personalRating > 0 ? "currentColor" : "none"} />
-            <span>{entry.personalRating || 'No rating'}/10</span>
+          <div className={styles.listEntryStarRating}>
+            {[...Array(10)].map((_, index) => {
+              const starValue = index + 1;
+              return (
+                <button
+                  key={index}
+                  type="button"
+                  className={styles.starButton}
+                  onClick={() => handleRatingChange(starValue)}
+                  onMouseEnter={() => setHoverRating(starValue)}
+                  onMouseLeave={() => setHoverRating(0)}
+                  title={`Rate ${starValue}/10`}
+                >
+                  <Star 
+                    size={16} 
+                    fill={(hoverRating || entry.personalRating) >= starValue ? "#f59e0b" : "none"}
+                    color={(hoverRating || entry.personalRating) >= starValue ? "#f59e0b" : "var(--text-secondary)"}
+                  />
+                </button>
+              );
+            })}
+            <span className={styles.ratingText}>{entry.personalRating || 0}/10</span>
           </div>
         </div>
 
-        {entry.notes && (
-          <p className={styles.listEntryNotes}>
-            {entry.notes}
-          </p>
-        )}
+        <div className={styles.listEntryDetails}>
+          {entry.notes && (
+            <p className={styles.listEntryNotes}>
+              <strong>Notes:</strong> {entry.notes}
+            </p>
+          )}
+          
+          <div className={styles.listEntryReviewSection}>
+            {isEditingReview ? (
+              <div className={styles.reviewInputWrapper}>
+                <textarea 
+                  value={reviewInput}
+                  onChange={(e) => setReviewInput(e.target.value)}
+                  placeholder="Write a review..."
+                  className={styles.inlineReviewTextarea}
+                  rows={3}
+                />
+                <button 
+                  onClick={handlePostReview} 
+                  className={styles.postReviewBtn}
+                  disabled={!reviewInput?.trim()}
+                >
+                  <Save size={14} />
+                  Post Review
+                </button>
+              </div>
+            ) : (
+              <div className={styles.listEntryReview}>
+                <div className={styles.reviewBlockHeader}>
+                  <h4>Review:</h4>
+                  <button onClick={() => setIsEditingReview(true)} className={styles.editReviewInlineBtn}>
+                    <Edit3 size={12} />
+                  </button>
+                </div>
+                <p>{entry.review}</p>
+              </div>
+            )}
+          </div>
+        </div>
         
         <div className={styles.listEntryDate}>
           Added on {new Date(entry.dateAdded).toLocaleDateString()}

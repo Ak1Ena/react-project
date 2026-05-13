@@ -7,7 +7,7 @@
 }
 
 .listEntryImage {
-  width: 120px;
+  width: 180px;
 }
 
 .listEntryImage img {
@@ -27,11 +27,11 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .listEntryHeader h3 {
-  font-size: 1.1rem;
+  font-size: 1.25rem;
 }
 
 .listEntryActions {
@@ -54,8 +54,9 @@
 
 .listEntryMeta {
   display: flex;
-  gap: 16px;
-  margin-bottom: 12px;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
 .listEntryStatusSelect {
@@ -63,6 +64,10 @@
   align-items: center;
   gap: 4px;
   font-size: 0.875rem;
+  background-color: var(--bg);
+  padding: 4px 12px;
+  border-radius: 9999px;
+  width: fit-content;
 }
 
 .listEntryStatusSelect select {
@@ -73,13 +78,108 @@
   padding: 2px 4px;
 }
 
-.listEntryPersonalRating {
+.listEntryStarRating {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
+}
+
+.starButton {
+  padding: 2px;
+  transition: transform 0.1s;
+  display: flex;
+  align-items: center;
+}
+
+.starButton:hover {
+  transform: scale(1.2);
+}
+
+.saveBtn:hover {
+  color: var(--success) !important;
+}
+
+.cancelBtn:hover {
+  color: var(--error) !important;
+}
+
+.ratingText {
   font-size: 0.875rem;
   color: #f59e0b;
-  font-weight: 600;
+  font-weight: 700;
+  margin-left: 8px;
+}
+
+.listEntryDetails {
+  margin-bottom: 12px;
+}
+
+.listEntryReviewSection {
+  margin-top: 12px;
+}
+
+.reviewInputWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background-color: var(--bg);
+  padding: 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.inlineReviewTextarea {
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  width: 100%;
+  resize: vertical;
+  min-height: 80px;
+}
+
+.postReviewBtn {
+  align-self: flex-end;
+  background-color: var(--primary);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.2s;
+}
+
+.postReviewBtn:hover:not(:disabled) {
+  background-color: var(--primary-hover);
+}
+
+.postReviewBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.reviewBlockHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.editReviewInlineBtn {
+  color: var(--text-secondary);
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.editReviewInlineBtn:hover {
+  color: var(--primary);
+  background-color: var(--bg);
 }
 
 .listEntryNotes {
@@ -88,8 +188,24 @@
   background-color: var(--bg);
   padding: 8px;
   border-radius: 4px;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   font-style: italic;
+}
+
+.listEntryReview {
+  font-size: 0.9rem;
+  color: var(--text);
+  background-color: var(--bg);
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.listEntryReview h4 {
+  font-size: 0.8rem;
+  margin-bottom: 4px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
 }
 
 .listEntryDate {

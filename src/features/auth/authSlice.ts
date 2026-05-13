@@ -6,6 +6,7 @@ import type { RootState } from '../../app/store';
 
 interface AuthState {
   user: User | null;
+  users: User[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }
@@ -14,6 +15,7 @@ const savedUser = localStorage.getItem('user');
 
 const initialState: AuthState = {
   user: savedUser ? JSON.parse(savedUser) : null,
+  users: [],
   status: 'idle',
   error: null,
 };
@@ -33,6 +35,18 @@ export const register = createAsyncThunk(
     const user = await authAPI.registerUser(userData);
     localStorage.setItem('user', JSON.stringify(user));
     return user;
+  }
+);
+
+export const fetchAllUsers = createAsyncThunk(
+  'auth/fetchAllUsers',
+  async (_, { rejectWithValue }) => {
+    try {
+      return await authAPI.fetchUsers();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to fetch users';
+      return rejectWithValue(message);
+    }
   }
 );
 
@@ -75,6 +89,9 @@ const authSlice = createSlice({
       .addCase(register.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message || 'Registration failed';
+      })
+      .addCase(fetchAllUsers.fulfilled, (state, action: PayloadAction<User[]>) => {
+        state.users = action.payload;
       });
   },
 });

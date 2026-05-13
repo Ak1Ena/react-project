@@ -44,6 +44,20 @@
   font-size: 0.875rem;
 }
 
+.starRating {
+  display: flex;
+  gap: 4px;
+}
+
+.starButton {
+  padding: 4px;
+  transition: transform 0.1s;
+}
+
+.starButton:hover {
+  transform: scale(1.1);
+}
+
 .formGroup input,
 .formGroup textarea {
   padding: 10px 12px;

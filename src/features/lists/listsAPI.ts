@@ -8,12 +8,18 @@ export interface ListEntry {
   userId: string;
   status: ListStatus;
   notes: string;
+  review: string;
   personalRating: number;
   dateAdded: string;
 }
 
 export const fetchListEntries = async (userId: string) => {
   const response = await gameMockApi.get<ListEntry[]>(`/api/v1/lists/?userId=${userId}`);
+  return response.data;
+};
+
+export const fetchEntriesByGameId = async (gameId: string) => {
+  const response = await gameMockApi.get<ListEntry[]>(`/api/v1/lists/?gameId=${gameId}`);
   return response.data;
 };
 

@@ -6,12 +6,14 @@ import type { RootState } from '../../app/store';
 
 interface ListsState {
   entries: ListEntry[];
+  publicReviews: ListEntry[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }
 
 const initialState: ListsState = {
   entries: [],
+  publicReviews: [],
   status: 'idle',
   error: null,
 };
@@ -30,6 +32,18 @@ export const fetchListEntries = createAsyncThunk(
       return await listsAPI.fetchListEntries(user.id);
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to fetch list entries';
+      return rejectWithValue(message);
+    }
+  }
+);
+
+export const fetchGameReviews = createAsyncThunk(
+  'lists/fetchGameReviews',
+  async (gameId: string, { rejectWithValue }) => {
+    try {
+      return await listsAPI.fetchEntriesByGameId(gameId);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to fetch game reviews';
       return rejectWithValue(message);
     }
   }
@@ -71,6 +85,17 @@ const listsSlice = createSlice({
         state.status = 'failed';
         state.error = action.error.message || 'Failed to fetch list entries';
       })
+      .addCase(fetchGameReviews.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchGameReviews.fulfilled, (state, action: PayloadAction<ListEntry[]>) => {
+        state.status = 'succeeded';
+        state.publicReviews = action.payload;
+      })
+      .addCase(fetchGameReviews.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message || 'Failed to fetch game reviews';
+      })
       .addCase(addToList.pending, (state) => {
         state.status = 'loading';
       })
@@ -82,8 +107,8 @@ const listsSlice = createSlice({
         state.status = 'failed';
         state.error = action.error.message || 'Failed to add entry to list';
       })
-      .addCase(updateListEntry.pending, (state) => {
-        state.status = 'loading';
+      .addCase(updateListEntry.pending, () => {
+        // Do nothing to status to avoid global loading UI for single item updates
       })
       .addCase(updateListEntry.fulfilled, (state, action: PayloadAction<ListEntry>) => {
         state.status = 'succeeded';
@@ -96,8 +121,8 @@ const listsSlice = createSlice({
         state.status = 'failed';
         state.error = action.error.message || 'Failed to update list entry';
       })
-      .addCase(removeFromList.pending, (state) => {
-        state.status = 'loading';
+      .addCase(removeFromList.pending, () => {
+        // Do nothing to status to avoid global loading UI
       })
       .addCase(removeFromList.fulfilled, (state, action: PayloadAction<string>) => {
         state.status = 'succeeded';
