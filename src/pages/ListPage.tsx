@@ -1,9 +1,11 @@
-import { useEffect, type FC } from 'react';
+import { useEffect, type FC, useState } from 'react';
 import { useParams, NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { RefreshCw, Loader2 } from 'lucide-react';
 import type { RootState, AppDispatch } from '../app/store';
-import { fetchListEntries, selectEntriesByStatus } from '../features/lists/listsSlice';
+import { fetchListEntries, selectEntriesByStatus, syncSteamLibrary } from '../features/lists/listsSlice';
 import { fetchGames } from '../features/games/gamesSlice';
+import { showToast } from '../features/ui/uiSlice';
 import ListEntryCard from '../components/ListEntryCard/ListEntryCard';
 import styles from './ListPage.module.css';
 
@@ -14,6 +16,8 @@ const ListPage: FC = () => {
   const { status: listStatus } = useSelector((state: RootState) => state.lists);
   const { items: games, status: gamesStatus } = useSelector((state: RootState) => state.games);
 
+  const [syncing, setSyncing] = useState(false);
+
   useEffect(() => {
     if (listStatus === 'idle') dispatch(fetchListEntries());
     if (gamesStatus === 'idle') dispatch(fetchGames());
@@ -21,10 +25,36 @@ const ListPage: FC = () => {
 
   const getGame = (gameId: string) => games.find((g) => g.id === gameId);
 
+  const handleSteamSync = async () => {
+    const steamInput = window.prompt('Enter your Steam ID or Vanity URL name:');
+    if (!steamInput) return;
+
+    setSyncing(true);
+    try {
+      const count = await dispatch(syncSteamLibrary(steamInput)).unwrap();
+      dispatch(showToast({ message: `Successfully synced ${count} games from Steam!`, type: 'success' }));
+    } catch (error) {
+      dispatch(showToast({ message: typeof error === 'string' ? error : 'Steam sync failed', type: 'error' }));
+    } finally {
+      setSyncing(false);
+    }
+  };
+
   return (
     <div className={styles.listPage}>
       <header className={styles.pageHeader}>
-        <h1>My Personal Lists</h1>
+        <div className={styles.titleRow}>
+          <h1>My Personal Lists</h1>
+          <button 
+            onClick={handleSteamSync} 
+            disabled={syncing} 
+            className={styles.steamSyncBtn}
+            title="Import from Steam"
+          >
+            {syncing ? <Loader2 className="animate-spin" size={18} /> : <RefreshCw size={18} />}
+            <span>{syncing ? 'Syncing...' : 'Sync Steam'}</span>
+          </button>
+        </div>
         <div className={styles.listTabs}>
           <NavLink to="/my-list/playing" className={({ isActive }) => isActive ? `${styles.tab} ${styles.active}` : styles.tab}>Playing</NavLink>
           <NavLink to="/my-list/completed" className={({ isActive }) => isActive ? `${styles.tab} ${styles.active}` : styles.tab}>Completed</NavLink>

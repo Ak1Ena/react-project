@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk, createSelector } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit';
 import * as listsAPI from './listsAPI';
 import type { ListEntry } from './listsAPI';
+import * as steamAPI from '../steam/steamAPI';
 import type { RootState } from '../../app/store';
 
 interface ListsState {
@@ -67,6 +68,53 @@ export const removeFromList = createAsyncThunk('lists/removeFromList', async (id
   await listsAPI.removeFromList(id);
   return id;
 });
+
+export const syncSteamLibrary = createAsyncThunk(
+  'lists/syncSteamLibrary',
+  async (steamInput: string, { getState, dispatch, rejectWithValue }) => {
+    const state = getState() as RootState;
+    const user = state.auth.user;
+    if (!user) return rejectWithValue('User not authenticated');
+
+    try {
+      let steamId = steamInput;
+      // If it looks like a vanity URL name (not all digits), resolve it
+      if (!/^\d+$/.test(steamInput)) {
+        steamId = await steamAPI.resolveVanityURL(steamInput);
+      }
+
+      const steamGames = await steamAPI.getOwnedGames(steamId);
+      const existingEntries = state.lists.entries;
+      
+      // Filter out games already in list
+      const newGamesToSync = steamGames.filter(
+        sg => !existingEntries.some(ee => ee.gameId === sg.appid.toString())
+      );
+
+      // To keep it simple and avoid hitting rate limits or creating too many requests, 
+      // we'll only sync the top 10 played games that are new
+      const topGames = [...newGamesToSync]
+        .sort((a, b) => b.playtime_forever - a.playtime_forever)
+        .slice(0, 10);
+
+      for (const sg of topGames) {
+        await dispatch(addToList({
+          gameId: sg.appid.toString(),
+          userId: user.id,
+          status: sg.playtime_forever > 0 ? 'playing' : 'backlog',
+          notes: `Synced from Steam. Playtime: ${Math.round(sg.playtime_forever / 60)}h`,
+          review: '',
+          personalRating: 0,
+        }));
+      }
+
+      return topGames.length;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Steam sync failed';
+      return rejectWithValue(message);
+    }
+  }
+);
 
 const listsSlice = createSlice({
   name: 'lists',
