@@ -15,9 +15,8 @@ interface ListEntryCardProps {
 const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
   const dispatch = useDispatch<AppDispatch>();
   const [hoverRating, setHoverRating] = useState(0);
-  const [isEditing, setIsEditing] = useState(false);
-  const [tempNotes, setTempNotes] = useState(entry.notes);
-  const [tempReview, setTempReview] = useState(entry.review);
+  const [reviewInput, setReviewInput] = useState(entry.review);
+  const [isEditingReview, setIsEditingReview] = useState(!entry.review);
 
   const handleRemove = () => {
     if (window.confirm('Are you sure you want to remove this game from your list?')) {
@@ -33,18 +32,15 @@ const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
     dispatch(updateListEntry({ id: entry.id, entry: { personalRating: newRating } }));
   };
 
-  const handleSave = () => {
-    dispatch(updateListEntry({ 
-      id: entry.id, 
-      entry: { notes: tempNotes, review: tempReview } 
-    }));
-    setIsEditing(false);
+  const handleEditNotes = () => {
+    dispatch(openModal({ type: 'EDIT_ENTRY', data: { entry, game } }));
   };
 
-  const handleCancel = () => {
-    setTempNotes(entry.notes);
-    setTempReview(entry.review);
-    setIsEditing(false);
+  const handlePostReview = () => {
+    if (reviewInput.trim()) {
+      dispatch(updateListEntry({ id: entry.id, entry: { review: reviewInput } }));
+      setIsEditingReview(false);
+    }
   };
 
   return (
@@ -56,20 +52,9 @@ const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
         <div className={styles.listEntryHeader}>
           <h3>{game.name}</h3>
           <div className={styles.listEntryActions}>
-            {isEditing ? (
-              <>
-                <button onClick={handleSave} className={styles.saveBtn} title="Save Changes">
-                  <Save size={18} />
-                </button>
-                <button onClick={handleCancel} className={styles.cancelBtn} title="Cancel">
-                  <X size={18} />
-                </button>
-              </>
-            ) : (
-              <button onClick={() => setIsEditing(true)} title="Edit Notes/Review">
-                <Edit3 size={18} />
-              </button>
-            )}
+            <button onClick={handleEditNotes} title="Edit Notes/Rating">
+              <Edit3 size={18} />
+            </button>
             <button onClick={handleRemove} className={styles.removeBtn} title="Remove from list">
               <Trash2 size={18} />
             </button>
@@ -112,42 +97,43 @@ const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
         </div>
 
         <div className={styles.listEntryDetails}>
-          {isEditing ? (
-            <div className={styles.inlineEditFields}>
-              <div className={styles.fieldGroup}>
-                <label>Notes</label>
-                <input 
-                  value={tempNotes} 
-                  onChange={(e) => setTempNotes(e.target.value)} 
-                  placeholder="Personal notes..."
-                />
-              </div>
-              <div className={styles.fieldGroup}>
-                <label>Review</label>
+          {entry.notes && (
+            <p className={styles.listEntryNotes}>
+              <strong>Notes:</strong> {entry.notes}
+            </p>
+          )}
+          
+          <div className={styles.listEntryReviewSection}>
+            {isEditingReview ? (
+              <div className={styles.reviewInputWrapper}>
                 <textarea 
-                  value={tempReview} 
-                  onChange={(e) => setTempReview(e.target.value)} 
-                  placeholder="Write your review..."
+                  value={reviewInput}
+                  onChange={(e) => setReviewInput(e.target.value)}
+                  placeholder="Write a review..."
+                  className={styles.inlineReviewTextarea}
                   rows={3}
                 />
+                <button 
+                  onClick={handlePostReview} 
+                  className={styles.postReviewBtn}
+                  disabled={!reviewInput.trim()}
+                >
+                  <Save size={14} />
+                  Post Review
+                </button>
               </div>
-            </div>
-          ) : (
-            <>
-              {entry.notes && (
-                <p className={styles.listEntryNotes}>
-                  <strong>Notes:</strong> {entry.notes}
-                </p>
-              )}
-              
-              {entry.review && (
-                <div className={styles.listEntryReview}>
+            ) : (
+              <div className={styles.listEntryReview}>
+                <div className={styles.reviewBlockHeader}>
                   <h4>Review:</h4>
-                  <p>{entry.review}</p>
+                  <button onClick={() => setIsEditingReview(true)} className={styles.editReviewInlineBtn}>
+                    <Edit3 size={12} />
+                  </button>
                 </div>
-              )}
-            </>
-          )}
+                <p>{entry.review}</p>
+              </div>
+            )}
+          </div>
         </div>
         
         <div className={styles.listEntryDate}>

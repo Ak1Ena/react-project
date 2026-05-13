@@ -47,7 +47,6 @@ const Modal: FC = () => {
 const EditEntryForm: FC<{ data: EditEntryData; onClose: () => void }> = ({ data, onClose }) => {
   const dispatch = useDispatch<AppDispatch>();
   const [notes, setNotes] = useState(data.entry.notes || '');
-  const [review, setReview] = useState(data.entry.review || '');
   const [rating, setRating] = useState(data.entry.personalRating || 0);
   const [hoverRating, setHoverRating] = useState(0);
 
@@ -55,7 +54,7 @@ const EditEntryForm: FC<{ data: EditEntryData; onClose: () => void }> = ({ data,
     e.preventDefault();
     dispatch(updateListEntry({ 
       id: data.entry.id, 
-      entry: { notes, review, personalRating: Number(rating) } 
+      entry: { notes, personalRating: Number(rating) } 
     }));
     onClose();
   };
@@ -93,16 +92,7 @@ const EditEntryForm: FC<{ data: EditEntryData; onClose: () => void }> = ({ data,
           value={notes} 
           onChange={(e) => setNotes(e.target.value)}
           placeholder="Personal notes..."
-          rows={2}
-        />
-      </div>
-      <div className={styles.formGroup}>
-        <label>Review</label>
-        <textarea 
-          value={review} 
-          onChange={(e) => setReview(e.target.value)}
-          placeholder="What did you think of the game?"
-          rows={4}
+          rows={3}
         />
       </div>
       <div className={styles.formActions}>

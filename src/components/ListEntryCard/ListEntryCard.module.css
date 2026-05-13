@@ -109,31 +109,21 @@
   margin-bottom: 12px;
 }
 
-.inlineEditFields {
+.listEntryReviewSection {
+  margin-top: 12px;
+}
+
+.reviewInputWrapper {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
   background-color: var(--bg);
   padding: 12px;
   border-radius: var(--radius);
   border: 1px solid var(--border);
 }
 
-.fieldGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.fieldGroup label {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-}
-
-.fieldGroup input,
-.fieldGroup textarea {
+.inlineReviewTextarea {
   padding: 8px;
   border: 1px solid var(--border);
   border-radius: 4px;
@@ -141,10 +131,50 @@
   color: var(--text-primary);
   font-size: 0.9rem;
   width: 100%;
+  resize: vertical;
+  min-height: 80px;
 }
 
-.fieldGroup textarea {
-  resize: vertical;
+.postReviewBtn {
+  align-self: flex-end;
+  background-color: var(--primary);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.2s;
+}
+
+.postReviewBtn:hover:not(:disabled) {
+  background-color: var(--primary-hover);
+}
+
+.postReviewBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.reviewBlockHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.editReviewInlineBtn {
+  color: var(--text-secondary);
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.editReviewInlineBtn:hover {
+  color: var(--primary);
+  background-color: var(--bg);
 }
 
 .listEntryNotes {
