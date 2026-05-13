@@ -24,7 +24,7 @@ export const fetchGameById = async (id: string) => {
   // eslint-disable-next-line no-useless-catch
   try {
     // First try fetching by primary ID
-    const response = await gameMockApi.get<Game[]>(`/api/v1/games?appid=${id}`);
+    const response = await gameMockApi.get<Game[]>(`/api/v1/games?id=${id}`);
     if (response.data && response.data.length > 0) {
       return {
         ...response.data[0],
