@@ -28,8 +28,9 @@ export const fetchListEntries = createAsyncThunk(
 
     try {
       return await listsAPI.fetchListEntries(user.id);
-    } catch (error: any) {
-      return rejectWithValue(error.message || 'Failed to fetch list entries');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to fetch list entries';
+      return rejectWithValue(message);
     }
   }
 );

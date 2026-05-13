@@ -3,11 +3,11 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAppSelector } from '../hooks/redux';
 import { selectCurrentUser } from '../features/auth/authSlice';
 import HomePage from '../pages/HomePage';
-import GameDetailPage from '../features/games/GameDetailPage';
-import ListPage from '../features/lists/ListPage';
-import AddGamePage from '../features/games/AddGamePage';
-import LoginPage from '../features/auth/LoginPage';
-import RegisterPage from '../features/auth/RegisterPage';
+import GameDetailPage from '../pages/GameDetailPage';
+import ListPage from '../pages/ListPage';
+import AddGamePage from '../pages/AddGamePage';
+import LoginPage from '../pages/LoginPage';
+import RegisterPage from '../pages/RegisterPage';
 
 interface RouteProps {
   children: ReactNode;

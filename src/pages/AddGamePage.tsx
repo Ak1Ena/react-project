@@ -2,9 +2,9 @@ import { useState, type FC, type ChangeEvent, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { ChevronLeft, Save } from 'lucide-react';
-import type { AppDispatch } from '../../app/store';
-import { createGame } from './gamesSlice';
-import { showToast } from '../ui/uiSlice';
+import type { AppDispatch } from '../app/store';
+import { createGame } from '../features/games/gamesSlice';
+import { showToast } from '../features/ui/uiSlice';
 
 const AddGamePage: FC = () => {
   const navigate = useNavigate();

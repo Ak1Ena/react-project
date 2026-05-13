@@ -2,8 +2,8 @@ import { useState, type FC, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { UserPlus } from 'lucide-react';
-import type { AppDispatch } from '../../app/store';
-import { register, selectAuthStatus, selectAuthError, clearError } from './authSlice';
+import type { AppDispatch } from '../app/store';
+import { register, selectAuthStatus, selectAuthError, clearError } from '../features/auth/authSlice';
 import styles from './Auth.module.css';
 
 const RegisterPage: FC = () => {

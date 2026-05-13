@@ -2,8 +2,8 @@ import { useState, type FC, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { LogIn } from 'lucide-react';
-import type { AppDispatch } from '../../app/store';
-import { login, selectAuthStatus, selectAuthError, clearError } from './authSlice';
+import type { AppDispatch } from '../app/store';
+import { login, selectAuthStatus, selectAuthError, clearError } from '../features/auth/authSlice';
 import styles from './Auth.module.css';
 
 const LoginPage: FC = () => {
