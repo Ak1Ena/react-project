@@ -7,7 +7,7 @@
 }
 
 .listEntryImage {
-  width: 120px;
+  width: 180px;
 }
 
 .listEntryImage img {
@@ -27,11 +27,11 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .listEntryHeader h3 {
-  font-size: 1.1rem;
+  font-size: 1.25rem;
 }
 
 .listEntryActions {
@@ -54,8 +54,9 @@
 
 .listEntryMeta {
   display: flex;
-  gap: 16px;
-  margin-bottom: 12px;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
 .listEntryStatusSelect {
@@ -63,6 +64,10 @@
   align-items: center;
   gap: 4px;
   font-size: 0.875rem;
+  background-color: var(--bg);
+  padding: 4px 12px;
+  border-radius: 9999px;
+  width: fit-content;
 }
 
 .listEntryStatusSelect select {
