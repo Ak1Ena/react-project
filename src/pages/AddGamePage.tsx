@@ -1,10 +1,12 @@
 import { useState, type FC, type ChangeEvent, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { ChevronLeft, Save } from 'lucide-react';
+import { ChevronLeft, Save, Search, Loader2 } from 'lucide-react';
 import type { AppDispatch } from '../app/store';
 import { createGame } from '../features/games/gamesSlice';
 import { showToast } from '../features/ui/uiSlice';
+import { getGameDetails } from '../features/steam/steamAPI';
+import styles from './AddGamePage.module.css';
 
 const AddGamePage: FC = () => {
   const navigate = useNavigate();
@@ -21,6 +23,8 @@ const AddGamePage: FC = () => {
   });
 
   const [loading, setLoading] = useState(false);
+  const [steamId, setSteamId] = useState('');
+  const [fetchingSteam, setFetchingSteam] = useState(false);
 
   const genres = ['Action', 'RPG', 'FPS', 'Strategy', 'Adventure', 'Sports', 'Simulation'];
 
@@ -35,6 +39,45 @@ const AddGamePage: FC = () => {
         ...prev,
         [name]: name === 'releaseYear' || name === 'rating' ? Number(value) : value,
       }));
+    }
+  };
+
+  const handleFetchSteam = async () => {
+    if (!steamId) {
+      dispatch(showToast({ message: 'Please enter a Steam App ID', type: 'error' }));
+      return;
+    }
+
+    setFetchingSteam(true);
+    try {
+      const details = await getGameDetails(Number(steamId));
+      
+      const steamGenres = details.genres?.map(g => g.description) || [];
+      const primaryGenre = genres.find(g => steamGenres.includes(g)) || steamGenres[0] || 'Action';
+      
+      const steamPlatforms = [];
+      if (details.platforms.windows) steamPlatforms.push('PC');
+      if (details.platforms.mac) steamPlatforms.push('Mac');
+      if (details.platforms.linux) steamPlatforms.push('Linux');
+
+      const releaseYear = details.release_date?.date ? new Date(details.release_date.date).getFullYear() : new Date().getFullYear();
+
+      setFormData({
+        name: details.name,
+        genre: [primaryGenre],
+        platforms: steamPlatforms,
+        releaseYear,
+        rating: 0,
+        image: details.header_image,
+        description: details.short_description || details.about_the_game?.replace(/<[^>]*>?/gm, '').substring(0, 300) + '...',
+      });
+
+      dispatch(showToast({ message: `Imported ${details.name} from Steam!`, type: 'success' }));
+    } catch (error) {
+      console.error(error);
+      dispatch(showToast({ message: 'Failed to fetch Steam data. Check the App ID.', type: 'error' }));
+    } finally {
+      setFetchingSteam(false);
     }
   };
 
@@ -57,17 +100,44 @@ const AddGamePage: FC = () => {
   };
 
   return (
-    <div className="add-game-page">
-      <button onClick={() => navigate(-1)} className="back-button">
+    <div className={styles.addGamePage}>
+      <button onClick={() => navigate(-1)} className={styles.backButton}>
         <ChevronLeft size={20} />
         Back
       </button>
 
-      <div className="form-container">
+      <div className={styles.formContainer}>
         <h1>Add New Game to Catalog</h1>
-        <form onSubmit={handleSubmit} className="add-game-form">
-          <div className="form-grid">
-            <div className="form-group">
+
+        <div className={styles.steamImportSection}>
+          <div className={styles.formGroup}>
+            <label>Quick Import from Steam</label>
+            <div className={styles.steamInputGroup}>
+              <input 
+                type="text" 
+                placeholder="Steam App ID (e.g. 1245620)" 
+                value={steamId}
+                onChange={(e) => setSteamId(e.target.value)}
+              />
+              <button 
+                type="button" 
+                onClick={handleFetchSteam} 
+                disabled={fetchingSteam}
+                className={styles.btnSteam}
+              >
+                {fetchingSteam ? <Loader2 className="animate-spin" size={18} /> : <Search size={18} />}
+                {fetchingSteam ? 'Fetching...' : 'Fetch Data'}
+              </button>
+            </div>
+            <p className={styles.helperText}>Enter the numeric App ID from the Steam store URL.</p>
+          </div>
+        </div>
+
+        <div className={styles.divider}><span>OR FILL MANUALLY</span></div>
+
+        <form onSubmit={handleSubmit} className={styles.addGameForm}>
+          <div className={styles.formGrid}>
+            <div className={styles.formGroup}>
               <label htmlFor="name">Game Title*</label>
               <input
                 type="text"
@@ -80,7 +150,7 @@ const AddGamePage: FC = () => {
               />
             </div>
 
-            <div className="form-group">
+            <div className={styles.formGroup}>
               <label htmlFor="genre">Genre*</label>
               <select id="genre" name="genre" value={formData.genre[0]} onChange={handleChange}>
                 {genres.map((g) => (
@@ -89,7 +159,7 @@ const AddGamePage: FC = () => {
               </select>
             </div>
 
-            <div className="form-group">
+            <div className={styles.formGroup}>
               <label htmlFor="platforms">Platforms* (comma separated)</label>
               <input
                 type="text"
@@ -102,7 +172,7 @@ const AddGamePage: FC = () => {
               />
             </div>
 
-            <div className="form-group">
+            <div className={styles.formGroup}>
               <label htmlFor="releaseYear">Release Year*</label>
               <input
                 type="number"
@@ -116,7 +186,7 @@ const AddGamePage: FC = () => {
               />
             </div>
 
-            <div className="form-group">
+            <div className={styles.formGroup}>
               <label htmlFor="rating">Base Rating (0-10)</label>
               <input
                 type="number"
@@ -130,7 +200,7 @@ const AddGamePage: FC = () => {
               />
             </div>
 
-            <div className="form-group">
+            <div className={styles.formGroup}>
               <label htmlFor="image">Cover Image URL*</label>
               <input
                 type="url"
@@ -144,7 +214,7 @@ const AddGamePage: FC = () => {
             </div>
           </div>
 
-          <div className="form-group full-width">
+          <div className={`${styles.formGroup} ${styles.fullWidth}`}>
             <label htmlFor="description">Description</label>
             <textarea
               id="description"
@@ -156,11 +226,11 @@ const AddGamePage: FC = () => {
             />
           </div>
 
-          <div className="form-actions">
-            <button type="button" onClick={() => navigate(-1)} className="btn-secondary">
+          <div className={styles.formActions}>
+            <button type="button" onClick={() => navigate(-1)} className={styles.btnSecondary}>
               Cancel
             </button>
-            <button type="submit" disabled={loading} className="btn-primary">
+            <button type="submit" disabled={loading} className={styles.btnPrimary}>
               <Save size={20} />
               {loading ? 'Saving...' : 'Save Game'}
             </button>
