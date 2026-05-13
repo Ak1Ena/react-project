@@ -1,11 +1,12 @@
-import { type FC, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { Star, Trash2, Edit3, MoveRight, Save } from 'lucide-react';
+import { type FC, useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Star, Trash2, Edit3, MoveRight, Save, Trophy, Clock } from 'lucide-react';
 import type { Game } from '../../features/games/gamesAPI';
 import type { ListEntry, ListStatus } from '../../features/lists/listsAPI';
 import { removeFromList, updateListEntry } from '../../features/lists/listsSlice';
-import type { AppDispatch } from '../../app/store';
+import { fetchGameAchievements } from '../../features/steam/steamSlice';
 import { openModal } from '../../features/ui/uiSlice';
+import type { AppDispatch, RootState } from '../../app/store';
 import styles from './ListEntryCard.module.css';
 
 interface ListEntryCardProps {
@@ -15,6 +16,7 @@ interface ListEntryCardProps {
 
 const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
   const dispatch = useDispatch<AppDispatch>();
+  const { steamId, achievements } = useSelector((state: RootState) => state.steam);
   const [hoverRating, setHoverRating] = useState(0);
   const [reviewInput, setReviewInput] = useState(entry.review || '');
   const [isEditingReview, setIsEditingReview] = useState(!entry.review);
@@ -43,6 +45,14 @@ const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
       setIsEditingReview(false);
     }
   };
+
+  const gameAchievements = achievements[game.id || entry.gameId];
+
+  useEffect(() => {
+    if (steamId && (game.id || entry.gameId)) {
+      dispatch(fetchGameAchievements({ steamId, appId: game.id || entry.gameId }));
+    }
+  }, [steamId, game.id, entry.gameId, dispatch]);
 
   return (
     <div className={styles.listEntryCard}>
@@ -96,6 +106,21 @@ const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
             <span className={styles.ratingText}>{entry.personalRating || 0}/10</span>
           </div>
         </div>
+
+        {gameAchievements && (
+          <div className={styles.steamStats}>
+            <div className={styles.statItem} title="Achievement Progress">
+              <Trophy size={14} className={styles.trophyIcon} />
+              <span>{gameAchievements.achieved} / {gameAchievements.total} achievements</span>
+            </div>
+            {entry.notes?.includes('Playtime:') && (
+              <div className={styles.statItem} title="Steam Playtime">
+                <Clock size={14} className={styles.clockIcon} />
+                <span>{entry.notes.split('Playtime: ')[1]}</span>
+              </div>
+            )}
+          </div>
+        )}
 
         <div className={styles.listEntryDetails}>
           {entry.notes && (
