@@ -18,6 +18,11 @@ export const fetchListEntries = async (userId: string) => {
   return response.data;
 };
 
+export const fetchEntriesByGameId = async (gameId: string) => {
+  const response = await gameMockApi.get<ListEntry[]>(`/api/v1/lists/?gameId=${gameId}`);
+  return response.data;
+};
+
 export const addToList = async (entry: Omit<ListEntry, 'id' | 'dateAdded'>) => {
   const newEntry = {
     ...entry,

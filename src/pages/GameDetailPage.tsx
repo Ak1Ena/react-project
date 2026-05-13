@@ -4,10 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Star, Calendar, Monitor, ChevronLeft, Plus, Check } from 'lucide-react';
 import type { RootState, AppDispatch } from '../app/store';
 import { fetchGameById, clearSelectedGame } from '../features/games/gamesSlice';
-import { addToList, fetchListEntries } from '../features/lists/listsSlice';
+import { addToList, fetchListEntries, fetchGameReviews } from '../features/lists/listsSlice';
 import type { ListStatus } from '../features/lists/listsAPI';
 import { showToast } from '../features/ui/uiSlice';
-import { selectCurrentUser } from '../features/auth/authSlice';
+import { selectCurrentUser, fetchAllUsers } from '../features/auth/authSlice';
 import styles from './GameDetailPage.module.css';
 
 const GameDetailPage: FC = () => {
@@ -15,7 +15,8 @@ const GameDetailPage: FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const { selectedGame: game, status } = useSelector((state: RootState) => state.games);
-  const { entries } = useSelector((state: RootState) => state.lists);
+  const { entries, publicReviews } = useSelector((state: RootState) => state.lists);
+  const { users } = useSelector((state: RootState) => state.auth);
   const currentUser = useSelector(selectCurrentUser);
   
   const [selectedStatus, setSelectedStatus] = useState<ListStatus>('backlog');
@@ -24,6 +25,8 @@ const GameDetailPage: FC = () => {
     if (id) {
       dispatch(fetchGameById(id));
       dispatch(fetchListEntries());
+      dispatch(fetchGameReviews(id));
+      dispatch(fetchAllUsers());
     }
     return () => {
       dispatch(clearSelectedGame());
@@ -55,8 +58,11 @@ const GameDetailPage: FC = () => {
       personalRating: 0,
     })).then(() => {
       dispatch(showToast({ message: `${game.name} added to your ${selectedStatus} list!`, type: 'success' }));
+      dispatch(fetchGameReviews(game.id));
     });
   };
+
+  const reviewsWithText = publicReviews.filter(r => r.review && r.review.trim().length > 0);
 
   return (
     <div className={styles.gameDetailPage}>
@@ -126,6 +132,32 @@ const GameDetailPage: FC = () => {
           <section className={styles.gameDescription}>
             <h2>Description</h2>
             <p>{game.description}</p>
+          </section>
+
+          <section className={styles.gameReviews}>
+            <h2>Community Reviews ({reviewsWithText.length})</h2>
+            {reviewsWithText.length > 0 ? (
+              <div className={styles.reviewsList}>
+                {reviewsWithText.map((review) => {
+                  const reviewer = users.find(u => u.id === review.userId);
+                  return (
+                    <div key={review.id} className={styles.reviewCard}>
+                      <div className={styles.reviewHeader}>
+                        <span className={styles.reviewerName}>{reviewer?.username || 'Unknown User'}</span>
+                        <div className={styles.reviewerRating}>
+                          <Star size={14} fill={review.personalRating > 0 ? "currentColor" : "none"} />
+                          <span>{review.personalRating}/10</span>
+                        </div>
+                      </div>
+                      <p className={styles.reviewText}>{review.review}</p>
+                      <span className={styles.reviewDate}>{new Date(review.dateAdded).toLocaleDateString()}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <p className={styles.noReviews}>No reviews yet. Be the first to review this game!</p>
+            )}
           </section>
         </div>
       </div>

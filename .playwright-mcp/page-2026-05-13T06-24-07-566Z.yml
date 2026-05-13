@@ -1,0 +1,62 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e5]:
+      - link "GameLib" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - img [ref=e7]
+        - generic [ref=e9]: GameLib
+      - generic [ref=e10]:
+        - link "Browse" [ref=e11] [cursor=pointer]:
+          - /url: /
+          - img [ref=e12]
+          - generic [ref=e15]: Browse
+        - link "My Lists" [ref=e16] [cursor=pointer]:
+          - /url: /my-list/playing
+          - img [ref=e17]
+          - generic [ref=e20]: My Lists
+        - link "Add Game" [ref=e21] [cursor=pointer]:
+          - /url: /add-game
+          - img [ref=e22]
+          - generic [ref=e24]: Add Game
+        - generic [ref=e26]:
+          - generic [ref=e27]:
+            - img [ref=e28]
+            - generic [ref=e31]: testuser
+          - button "Logout" [ref=e32] [cursor=pointer]:
+            - img [ref=e33]
+  - main [ref=e36]:
+    - generic [ref=e37]:
+      - generic [ref=e38]:
+        - heading "Explore Games" [level=1] [ref=e39]
+        - paragraph [ref=e40]: Discover your next favorite game and add it to your collection.
+      - generic [ref=e41]:
+        - generic [ref=e42]:
+          - img [ref=e43]
+          - textbox "Search games..." [ref=e46]
+        - generic [ref=e47]:
+          - generic [ref=e48]:
+            - generic [ref=e49]: Genre
+            - combobox [ref=e50]:
+              - option "All" [selected]
+          - generic [ref=e51]:
+            - generic [ref=e52]: Platform
+            - combobox [ref=e53]:
+              - option "All" [selected]
+          - generic [ref=e54]:
+            - generic [ref=e55]: Year
+            - combobox [ref=e56]:
+              - option "All" [selected]
+          - generic [ref=e57]:
+            - generic [ref=e58]: "Min Rating: 0"
+            - slider [ref=e59] [cursor=pointer]: "0"
+          - generic [ref=e60]:
+            - generic [ref=e61]: Sort By
+            - combobox [ref=e62]:
+              - option "Title (A-Z)" [selected]
+              - option "Title (Z-A)"
+              - option "Rating (High to Low)"
+              - option "Rating (Low to High)"
+              - option "Release Year (Newest)"
+              - option "Release Year (Oldest)"
+          - button "Reset" [ref=e63] [cursor=pointer]
+      - generic [ref=e64]: No games found.

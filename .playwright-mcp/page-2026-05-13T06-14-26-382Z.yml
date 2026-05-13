@@ -1,0 +1,78 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e5]:
+      - link "GameLib" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - img [ref=e7]
+        - generic [ref=e9]: GameLib
+      - generic [ref=e10]:
+        - link "Browse" [ref=e11] [cursor=pointer]:
+          - /url: /
+          - img [ref=e12]
+          - generic [ref=e15]: Browse
+        - link "My Lists" [ref=e16] [cursor=pointer]:
+          - /url: /my-list/playing
+          - img [ref=e17]
+          - generic [ref=e20]: My Lists
+        - link "Add Game" [ref=e21] [cursor=pointer]:
+          - /url: /add-game
+          - img [ref=e22]
+          - generic [ref=e24]: Add Game
+        - generic [ref=e50]:
+          - generic [ref=e51]:
+            - img [ref=e52]
+            - generic [ref=e55]: testuser
+          - button "Logout" [ref=e56] [cursor=pointer]:
+            - img [ref=e57]
+  - main [ref=e31]:
+    - generic [ref=e2136]:
+      - generic [ref=e2137]:
+        - heading "My Personal Lists" [level=1] [ref=e2138]
+        - generic [ref=e2139]:
+          - link "Playing" [ref=e2140] [cursor=pointer]:
+            - /url: /my-list/playing
+          - link "Completed" [ref=e2141] [cursor=pointer]:
+            - /url: /my-list/completed
+          - link "Backlog" [ref=e2142] [cursor=pointer]:
+            - /url: /my-list/backlog
+          - link "Wishlist" [ref=e2143] [cursor=pointer]:
+            - /url: /my-list/wishlist
+      - generic [ref=e2146]:
+        - img "7 Days to Die" [ref=e2148]
+        - generic [ref=e2149]:
+          - generic [ref=e2150]:
+            - heading "7 Days to Die" [level=3] [ref=e2151]
+            - generic [ref=e2152]:
+              - button "Edit Notes/Rating" [active] [ref=e2153] [cursor=pointer]:
+                - img [ref=e2154]
+              - button "Remove from list" [ref=e2156] [cursor=pointer]:
+                - img [ref=e2157]
+          - generic [ref=e2160]:
+            - generic [ref=e2161]:
+              - img [ref=e2162]
+              - combobox [ref=e2164]:
+                - option "Playing"
+                - option "Completed"
+                - option "Backlog" [selected]
+                - option "Wishlist"
+            - generic [ref=e2165]:
+              - img [ref=e2166]
+              - generic [ref=e2168]: No rating/10
+          - generic [ref=e2169]: Added on 5/13/2026
+  - generic [ref=e2171]:
+    - button [ref=e2172] [cursor=pointer]:
+      - img [ref=e2173]
+    - generic [ref=e2176]:
+      - 'heading "Edit Entry: 7 Days to Die" [level=2] [ref=e2177]'
+      - generic [ref=e2178]:
+        - generic [ref=e2179]: Personal Rating (0-10)
+        - spinbutton [ref=e2180]: "0"
+      - generic [ref=e2181]:
+        - generic [ref=e2182]: Notes
+        - textbox "Personal notes..." [ref=e2183]
+      - generic [ref=e2184]:
+        - generic [ref=e2185]: Review
+        - textbox "What did you think of the game?" [ref=e2186]
+      - generic [ref=e2187]:
+        - button "Cancel" [ref=e2188] [cursor=pointer]
+        - button "Save Changes" [ref=e2189] [cursor=pointer]
