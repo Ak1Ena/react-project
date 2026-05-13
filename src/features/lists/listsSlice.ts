@@ -107,8 +107,8 @@ const listsSlice = createSlice({
         state.status = 'failed';
         state.error = action.error.message || 'Failed to add entry to list';
       })
-      .addCase(updateListEntry.pending, (state) => {
-        state.status = 'loading';
+      .addCase(updateListEntry.pending, () => {
+        // Do nothing to status to avoid global loading UI for single item updates
       })
       .addCase(updateListEntry.fulfilled, (state, action: PayloadAction<ListEntry>) => {
         state.status = 'succeeded';
@@ -121,8 +121,8 @@ const listsSlice = createSlice({
         state.status = 'failed';
         state.error = action.error.message || 'Failed to update list entry';
       })
-      .addCase(removeFromList.pending, (state) => {
-        state.status = 'loading';
+      .addCase(removeFromList.pending, () => {
+        // Do nothing to status to avoid global loading UI
       })
       .addCase(removeFromList.fulfilled, (state, action: PayloadAction<string>) => {
         state.status = 'succeeded';
