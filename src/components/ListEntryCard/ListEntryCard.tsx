@@ -1,4 +1,4 @@
-import { type FC } from 'react';
+import { type FC, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Star, Trash2, Edit3, MoveRight } from 'lucide-react';
 import type { Game } from '../../features/games/gamesAPI';
@@ -15,6 +15,7 @@ interface ListEntryCardProps {
 
 const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
   const dispatch = useDispatch<AppDispatch>();
+  const [hoverRating, setHoverRating] = useState(0);
 
   const handleRemove = () => {
     if (window.confirm('Are you sure you want to remove this game from your list?')) {
@@ -28,6 +29,10 @@ const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
 
   const handleEditNotes = () => {
     dispatch(openModal({ type: 'EDIT_ENTRY', data: { entry, game } }));
+  };
+
+  const handleRatingChange = (newRating: number) => {
+    dispatch(updateListEntry({ id: entry.id, entry: { personalRating: newRating } }));
   };
 
   return (
@@ -58,9 +63,28 @@ const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
               <option value="wishlist">Wishlist</option>
             </select>
           </div>
-          <div className={styles.listEntryPersonalRating}>
-            <Star size={14} fill={entry.personalRating > 0 ? "currentColor" : "none"} />
-            <span>{entry.personalRating || 'No rating'}/10</span>
+          <div className={styles.listEntryStarRating}>
+            {[...Array(10)].map((_, index) => {
+              const starValue = index + 1;
+              return (
+                <button
+                  key={index}
+                  type="button"
+                  className={styles.starButton}
+                  onClick={() => handleRatingChange(starValue)}
+                  onMouseEnter={() => setHoverRating(starValue)}
+                  onMouseLeave={() => setHoverRating(0)}
+                  title={`Rate ${starValue}/10`}
+                >
+                  <Star 
+                    size={16} 
+                    fill={(hoverRating || entry.personalRating) >= starValue ? "#f59e0b" : "none"}
+                    color={(hoverRating || entry.personalRating) >= starValue ? "#f59e0b" : "var(--text-secondary)"}
+                  />
+                </button>
+              );
+            })}
+            <span className={styles.ratingText}>{entry.personalRating || 0}/10</span>
           </div>
         </div>
 

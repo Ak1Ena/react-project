@@ -73,13 +73,28 @@
   padding: 2px 4px;
 }
 
-.listEntryPersonalRating {
+.listEntryStarRating {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
+}
+
+.starButton {
+  padding: 2px;
+  transition: transform 0.1s;
+  display: flex;
+  align-items: center;
+}
+
+.starButton:hover {
+  transform: scale(1.2);
+}
+
+.ratingText {
   font-size: 0.875rem;
   color: #f59e0b;
-  font-weight: 600;
+  font-weight: 700;
+  margin-left: 8px;
 }
 
 .listEntryNotes {

@@ -1,6 +1,6 @@
 import { useState, type FC, type FormEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { X } from 'lucide-react';
+import { X, Star } from 'lucide-react';
 import type { RootState, AppDispatch } from '../../app/store';
 import { closeModal } from '../../features/ui/uiSlice';
 import { updateListEntry } from '../../features/lists/listsSlice';
@@ -49,6 +49,7 @@ const EditEntryForm: FC<{ data: EditEntryData; onClose: () => void }> = ({ data,
   const [notes, setNotes] = useState(data.entry.notes || '');
   const [review, setReview] = useState(data.entry.review || '');
   const [rating, setRating] = useState(data.entry.personalRating || 0);
+  const [hoverRating, setHoverRating] = useState(0);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -63,15 +64,28 @@ const EditEntryForm: FC<{ data: EditEntryData; onClose: () => void }> = ({ data,
     <form onSubmit={handleSubmit} className={styles.editEntryForm}>
       <h2>Edit Entry: {data.game.name}</h2>
       <div className={styles.formGroup}>
-        <label>Personal Rating (0-10)</label>
-        <input 
-          type="number" 
-          min="0" 
-          max="10" 
-          step="0.5"
-          value={rating} 
-          onChange={(e) => setRating(Number(e.target.value))} 
-        />
+        <label>Personal Rating ({rating}/10)</label>
+        <div className={styles.starRating}>
+          {[...Array(10)].map((_, index) => {
+            const starValue = index + 1;
+            return (
+              <button
+                key={index}
+                type="button"
+                className={styles.starButton}
+                onClick={() => setRating(starValue)}
+                onMouseEnter={() => setHoverRating(starValue)}
+                onMouseLeave={() => setHoverRating(0)}
+              >
+                <Star 
+                  size={24} 
+                  fill={(hoverRating || rating) >= starValue ? "#f59e0b" : "none"}
+                  color={(hoverRating || rating) >= starValue ? "#f59e0b" : "var(--text-secondary)"}
+                />
+              </button>
+            );
+          })}
+        </div>
       </div>
       <div className={styles.formGroup}>
         <label>Notes</label>
