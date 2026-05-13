@@ -1,11 +1,10 @@
 import { type FC, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Star, Trash2, Edit3, MoveRight } from 'lucide-react';
+import { Star, Trash2, Edit3, MoveRight, Save, X } from 'lucide-react';
 import type { Game } from '../../features/games/gamesAPI';
 import type { ListEntry, ListStatus } from '../../features/lists/listsAPI';
 import { removeFromList, updateListEntry } from '../../features/lists/listsSlice';
 import type { AppDispatch } from '../../app/store';
-import { openModal } from '../../features/ui/uiSlice';
 import styles from './ListEntryCard.module.css';
 
 interface ListEntryCardProps {
@@ -16,6 +15,9 @@ interface ListEntryCardProps {
 const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
   const dispatch = useDispatch<AppDispatch>();
   const [hoverRating, setHoverRating] = useState(0);
+  const [isEditing, setIsEditing] = useState(false);
+  const [tempNotes, setTempNotes] = useState(entry.notes);
+  const [tempReview, setTempReview] = useState(entry.review);
 
   const handleRemove = () => {
     if (window.confirm('Are you sure you want to remove this game from your list?')) {
@@ -27,12 +29,22 @@ const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
     dispatch(updateListEntry({ id: entry.id, entry: { status: e.target.value as ListStatus } }));
   };
 
-  const handleEditNotes = () => {
-    dispatch(openModal({ type: 'EDIT_ENTRY', data: { entry, game } }));
-  };
-
   const handleRatingChange = (newRating: number) => {
     dispatch(updateListEntry({ id: entry.id, entry: { personalRating: newRating } }));
+  };
+
+  const handleSave = () => {
+    dispatch(updateListEntry({ 
+      id: entry.id, 
+      entry: { notes: tempNotes, review: tempReview } 
+    }));
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    setTempNotes(entry.notes);
+    setTempReview(entry.review);
+    setIsEditing(false);
   };
 
   return (
@@ -44,9 +56,20 @@ const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
         <div className={styles.listEntryHeader}>
           <h3>{game.name}</h3>
           <div className={styles.listEntryActions}>
-            <button onClick={handleEditNotes} title="Edit Notes/Rating">
-              <Edit3 size={18} />
-            </button>
+            {isEditing ? (
+              <>
+                <button onClick={handleSave} className={styles.saveBtn} title="Save Changes">
+                  <Save size={18} />
+                </button>
+                <button onClick={handleCancel} className={styles.cancelBtn} title="Cancel">
+                  <X size={18} />
+                </button>
+              </>
+            ) : (
+              <button onClick={() => setIsEditing(true)} title="Edit Notes/Review">
+                <Edit3 size={18} />
+              </button>
+            )}
             <button onClick={handleRemove} className={styles.removeBtn} title="Remove from list">
               <Trash2 size={18} />
             </button>
@@ -88,18 +111,44 @@ const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
           </div>
         </div>
 
-        {entry.notes && (
-          <p className={styles.listEntryNotes}>
-            <strong>Notes:</strong> {entry.notes}
-          </p>
-        )}
-        
-        {entry.review && (
-          <div className={styles.listEntryReview}>
-            <h4>Review:</h4>
-            <p>{entry.review}</p>
-          </div>
-        )}
+        <div className={styles.listEntryDetails}>
+          {isEditing ? (
+            <div className={styles.inlineEditFields}>
+              <div className={styles.fieldGroup}>
+                <label>Notes</label>
+                <input 
+                  value={tempNotes} 
+                  onChange={(e) => setTempNotes(e.target.value)} 
+                  placeholder="Personal notes..."
+                />
+              </div>
+              <div className={styles.fieldGroup}>
+                <label>Review</label>
+                <textarea 
+                  value={tempReview} 
+                  onChange={(e) => setTempReview(e.target.value)} 
+                  placeholder="Write your review..."
+                  rows={3}
+                />
+              </div>
+            </div>
+          ) : (
+            <>
+              {entry.notes && (
+                <p className={styles.listEntryNotes}>
+                  <strong>Notes:</strong> {entry.notes}
+                </p>
+              )}
+              
+              {entry.review && (
+                <div className={styles.listEntryReview}>
+                  <h4>Review:</h4>
+                  <p>{entry.review}</p>
+                </div>
+              )}
+            </>
+          )}
+        </div>
         
         <div className={styles.listEntryDate}>
           Added on {new Date(entry.dateAdded).toLocaleDateString()}

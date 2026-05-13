@@ -90,11 +90,61 @@
   transform: scale(1.2);
 }
 
+.saveBtn:hover {
+  color: var(--success) !important;
+}
+
+.cancelBtn:hover {
+  color: var(--error) !important;
+}
+
 .ratingText {
   font-size: 0.875rem;
   color: #f59e0b;
   font-weight: 700;
   margin-left: 8px;
+}
+
+.listEntryDetails {
+  margin-bottom: 12px;
+}
+
+.inlineEditFields {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background-color: var(--bg);
+  padding: 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fieldGroup label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.fieldGroup input,
+.fieldGroup textarea {
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+.fieldGroup textarea {
+  resize: vertical;
 }
 
 .listEntryNotes {
