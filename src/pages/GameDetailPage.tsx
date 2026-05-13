@@ -51,6 +51,7 @@ const GameDetailPage: FC = () => {
       userId: currentUser.id,
       status: selectedStatus,
       notes: '',
+      review: '',
       personalRating: 0,
     })).then(() => {
       dispatch(showToast({ message: `${game.name} added to your ${selectedStatus} list!`, type: 'success' }));

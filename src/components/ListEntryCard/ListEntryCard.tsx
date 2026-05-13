@@ -66,8 +66,15 @@ const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
 
         {entry.notes && (
           <p className={styles.listEntryNotes}>
-            {entry.notes}
+            <strong>Notes:</strong> {entry.notes}
           </p>
+        )}
+        
+        {entry.review && (
+          <div className={styles.listEntryReview}>
+            <h4>Review:</h4>
+            <p>{entry.review}</p>
+          </div>
         )}
         
         <div className={styles.listEntryDate}>

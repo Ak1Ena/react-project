@@ -88,8 +88,24 @@
   background-color: var(--bg);
   padding: 8px;
   border-radius: 4px;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   font-style: italic;
+}
+
+.listEntryReview {
+  font-size: 0.9rem;
+  color: var(--text);
+  background-color: var(--bg);
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.listEntryReview h4 {
+  font-size: 0.8rem;
+  margin-bottom: 4px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
 }
 
 .listEntryDate {

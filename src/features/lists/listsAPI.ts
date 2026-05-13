@@ -8,6 +8,7 @@ export interface ListEntry {
   userId: string;
   status: ListStatus;
   notes: string;
+  review: string;
   personalRating: number;
   dateAdded: string;
 }
