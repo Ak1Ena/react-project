@@ -1,13 +1,23 @@
 import { type FC } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Gamepad2, ListChecks, PlusCircle, Home, LogIn, User, LogOut } from 'lucide-react';
+import { Gamepad2, ListChecks, PlusCircle, Home, LogIn, User, LogOut, Link2 } from 'lucide-react';
 import { selectCurrentUser, logout } from '../../features/auth/authSlice';
+import { linkSteamAccount, logoutSteam } from '../../features/steam/steamSlice';
+import type { AppDispatch, RootState } from '../../app/store';
 import styles from './Navbar.module.css';
 
 const Navbar: FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const user = useSelector(selectCurrentUser);
+  const { steamId, summary } = useSelector((state: RootState) => state.steam);
+
+  const handleLinkSteam = () => {
+    const input = window.prompt('Enter your Steam ID or Vanity URL name:');
+    if (input) {
+      dispatch(linkSteamAccount(input));
+    }
+  };
 
   return (
     <nav className={styles.navbar}>
@@ -34,6 +44,23 @@ const Navbar: FC = () => {
 
           {user ? (
             <div className={styles.userMenu}>
+              {steamId ? (
+                <div className={styles.steamInfo} title={`Connected to Steam: ${summary?.personaname || steamId}`}>
+                  <img 
+                    src={summary?.avatarfull || 'https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg'} 
+                    alt="Steam Avatar" 
+                    className={styles.steamAvatar}
+                    onClick={() => { if(window.confirm('Disconnect Steam?')) dispatch(logoutSteam()) }}
+                  />
+                  {summary?.gameextrainfo && (
+                    <span className={styles.playingDot} title={`Playing: ${summary.gameextrainfo}`}></span>
+                  )}
+                </div>
+              ) : (
+                <button onClick={handleLinkSteam} className={styles.linkSteamBtn} title="Connect Steam Account">
+                  <Link2 size={20} />
+                </button>
+              )}
               <div className={styles.userInfo}>
                 <User size={20} />
                 <span>{user.username}</span>

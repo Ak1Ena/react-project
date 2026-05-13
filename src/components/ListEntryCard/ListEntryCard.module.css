@@ -110,6 +110,33 @@
   margin-left: 8px;
 }
 
+.steamStats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 10px;
+  background-color: #1b2838; /* Steam Dark */
+  border-radius: var(--radius);
+  color: #c7d5e0; /* Steam Light Blue Text */
+}
+
+.statItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.trophyIcon {
+  color: #f59e0b;
+}
+
+.clockIcon {
+  color: #6366f1;
+}
+
 .listEntryDetails {
   margin-bottom: 12px;
 }
