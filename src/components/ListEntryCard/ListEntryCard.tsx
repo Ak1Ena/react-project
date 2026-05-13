@@ -1,10 +1,11 @@
 import { type FC, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Star, Trash2, Edit3, MoveRight, Save, X } from 'lucide-react';
+import { Star, Trash2, Edit3, MoveRight, Save } from 'lucide-react';
 import type { Game } from '../../features/games/gamesAPI';
 import type { ListEntry, ListStatus } from '../../features/lists/listsAPI';
 import { removeFromList, updateListEntry } from '../../features/lists/listsSlice';
 import type { AppDispatch } from '../../app/store';
+import { openModal } from '../../features/ui/uiSlice';
 import styles from './ListEntryCard.module.css';
 
 interface ListEntryCardProps {
@@ -15,7 +16,7 @@ interface ListEntryCardProps {
 const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
   const dispatch = useDispatch<AppDispatch>();
   const [hoverRating, setHoverRating] = useState(0);
-  const [reviewInput, setReviewInput] = useState(entry.review);
+  const [reviewInput, setReviewInput] = useState(entry.review || '');
   const [isEditingReview, setIsEditingReview] = useState(!entry.review);
 
   const handleRemove = () => {
@@ -37,7 +38,7 @@ const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
   };
 
   const handlePostReview = () => {
-    if (reviewInput.trim()) {
+    if (reviewInput?.trim()) {
       dispatch(updateListEntry({ id: entry.id, entry: { review: reviewInput } }));
       setIsEditingReview(false);
     }
@@ -116,7 +117,7 @@ const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
                 <button 
                   onClick={handlePostReview} 
                   className={styles.postReviewBtn}
-                  disabled={!reviewInput.trim()}
+                  disabled={!reviewInput?.trim()}
                 >
                   <Save size={14} />
                   Post Review
