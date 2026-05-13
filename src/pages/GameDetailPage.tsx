@@ -143,7 +143,12 @@ const GameDetailPage: FC = () => {
                   return (
                     <div key={review.id} className={styles.reviewCard}>
                       <div className={styles.reviewHeader}>
-                        <span className={styles.reviewerName}>{reviewer?.username || 'Unknown User'}</span>
+                        <div className={styles.reviewerInfo}>
+                          <span className={styles.reviewerName}>{reviewer?.username || 'Unknown User'}</span>
+                          <span className={`${styles.statusBadge} ${styles['status' + review.status.charAt(0).toUpperCase() + review.status.slice(1)]}`}>
+                            {review.status}
+                          </span>
+                        </div>
                         <div className={styles.reviewerRating}>
                           <Star size={14} fill={review.personalRating > 0 ? "currentColor" : "none"} />
                           <span>{review.personalRating}/10</span>
