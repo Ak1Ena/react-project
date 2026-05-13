@@ -1,0 +1,86 @@
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
+import * as authAPI from './authAPI';
+import type { User } from './authAPI';
+import type { RootState } from '../../app/store';
+
+interface AuthState {
+  user: User | null;
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  error: string | null;
+}
+
+const savedUser = localStorage.getItem('user');
+
+const initialState: AuthState = {
+  user: savedUser ? JSON.parse(savedUser) : null,
+  status: 'idle',
+  error: null,
+};
+
+export const login = createAsyncThunk(
+  'auth/login',
+  async (credentials: Pick<User, 'username' | 'password'>) => {
+    const user = await authAPI.loginUser(credentials);
+    localStorage.setItem('user', JSON.stringify(user));
+    return user;
+  }
+);
+
+export const register = createAsyncThunk(
+  'auth/register',
+  async (userData: Omit<User, 'id'>) => {
+    const user = await authAPI.registerUser(userData);
+    localStorage.setItem('user', JSON.stringify(user));
+    return user;
+  }
+);
+
+const authSlice = createSlice({
+  name: 'auth',
+  initialState,
+  reducers: {
+    logout: (state) => {
+      state.user = null;
+      state.status = 'idle';
+      state.error = null;
+      localStorage.removeItem('user');
+    },
+    clearError: (state) => {
+      state.error = null;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(login.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(login.fulfilled, (state, action: PayloadAction<User>) => {
+        state.status = 'succeeded';
+        state.user = action.payload;
+      })
+      .addCase(login.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message || 'Login failed';
+      })
+      .addCase(register.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(register.fulfilled, (state, action: PayloadAction<User>) => {
+        state.status = 'succeeded';
+        state.user = action.payload;
+      })
+      .addCase(register.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message || 'Registration failed';
+      });
+  },
+});
+
+export const { logout, clearError } = authSlice.actions;
+export const selectCurrentUser = (state: RootState) => state.auth.user;
+export const selectAuthStatus = (state: RootState) => state.auth.status;
+export const selectAuthError = (state: RootState) => state.auth.error;
+export default authSlice.reducer;

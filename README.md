@@ -50,12 +50,12 @@ This keeps the experience realistic (like Steam or Metacritic) while still demon
 
 | Category | Technology |
 |----------|-----------|
-| Frontend Framework | React |
+| Frontend Framework | React (TypeScript) |
 | State Management | Redux Toolkit |
 | Routing | React Router |
 | HTTP Client | Axios |
 | Mock Backend | MockAPI |
-| Styling | Tailwind CSS / Material UI / CSS Modules |
+| Styling | CSS Modules |
 
 ## 📁 Project Structure
 
@@ -65,52 +65,49 @@ game-library-browser/
 │   └── index.html
 ├── src/
 │   ├── api/
-│   │   └── mockApi.js          # Axios instance & API helpers
+│   │   └── mockApi.ts          # Axios instances & API helpers
 │   ├── app/
-│   │   └── store.js            # Redux store configuration
+│   │   └── store.ts            # Redux store configuration
 │   ├── features/
 │   │   ├── games/
-│   │   │   ├── gamesSlice.js
-│   │   │   └── gamesAPI.js
+│   │   │   ├── gamesSlice.ts
+│   │   │   ├── gamesAPI.ts
+│   │   │   ├── GameDetailPage.tsx
+│   │   │   └── AddGamePage.tsx
 │   │   ├── lists/
-│   │   │   ├── listsSlice.js
-│   │   │   └── listsAPI.js
+│   │   │   ├── listsSlice.ts
+│   │   │   ├── listsAPI.ts
+│   │   │   └── ListPage.tsx
 │   │   ├── filters/
-│   │   │   └── filtersSlice.js
+│   │   │   └── filtersSlice.ts
 │   │   └── ui/
-│   │       └── uiSlice.js
+│   │       └── uiSlice.ts
 │   ├── components/
-│   │   ├── Navbar.jsx
-│   │   ├── GameCard.jsx
-│   │   ├── GameGrid.jsx
-│   │   ├── FilterBar.jsx
-│   │   ├── ListEntryCard.jsx
-│   │   ├── Modal.jsx
-│   │   └── Toast.jsx
+│   │   ├── Navbar/
+│   │   ├── GameCard/
+│   │   ├── GameGrid/
+│   │   ├── FilterBar/
+│   │   ├── ListEntryCard/
+│   │   ├── Modal/
+│   │   └── Toast/
 │   ├── pages/
-│   │   ├── HomePage.jsx
-│   │   ├── GameDetailPage.jsx
-│   │   ├── ListPage.jsx
-│   │   └── AddGamePage.jsx
+│   │   ├── HomePage.tsx
 │   ├── routes/
-│   │   └── AppRoutes.jsx
-│   ├── utils/
-│   │   └── helpers.js
-│   ├── App.jsx
-│   └── index.js
+│   │   └── AppRoutes.tsx
+│   ├── App.tsx
+│   └── main.tsx
 ├── .env
 ├── .gitignore
 ├── package.json
-├── requirement.md
+├── REQUIREMENT.md
 └── README.md
 ```
 
 ## 🚀 Installation & Setup
 
 ### Prerequisites
-- Node.js (v16 or higher)
+- Node.js (v18 or higher)
 - npm or yarn
-- A free MockAPI account ([mockapi.io](https://mockapi.io))
 
 ### Steps
 
@@ -128,44 +125,47 @@ game-library-browser/
 3. **Set up MockAPI**
    - Sign up at [mockapi.io](https://mockapi.io)
    - Create a new project
-   - Create two resources: `games` and `listEntries`
+   - Create two resources: `games` and `lists`
    - Copy your project's base URL
 
 4. **Configure environment variables**
 
    Create a `.env` file in the root directory:
    ```env
-   REACT_APP_API_BASE_URL=https://YOUR_MOCKAPI_PROJECT_ID.mockapi.io/api/v1
+   VITE_GAME_API_URL=https://YOUR_MOCKAPI_PROJECT_ID.mockapi.io
+   VITE_USER_API_URL=https://YOUR_MOCKAPI_PROJECT_ID.mockapi.io
    ```
 
 5. **Run the development server**
    ```bash
-   npm start
+   npm run dev
    ```
 
-   Open [http://localhost:3000](http://localhost:3000) in your browser.
+   Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ## 🔌 MockAPI Setup
 
-### Resource: `games`
+### Resource: `games` (endpoint: `/api/v1/games`)
 
 | Field | Type | Description |
 |-------|------|-------------|
 | id | String | Auto-generated |
-| title | String | Game title |
-| genre | String | Game genre |
-| platform | String | Supported platforms |
+| appid | Number | Steam App ID |
+| name | String | Game title |
+| genre | Array | Array of genres |
+| platforms | Array | Array of platforms |
 | releaseYear | Number | Year of release |
 | rating | Number | Average rating (0–10) |
-| coverImage | String | Image URL |
+| image | String | Image URL |
 | description | String | Game description |
 
-### Resource: `listEntries`
+### Resource: `lists` (endpoint: `/api/v1/lists`)
 
 | Field | Type | Description |
 |-------|------|-------------|
 | id | String | Auto-generated |
-| gameId | String | Reference to game |
+| gameid | String | Reference to game id |
+| userid | String | User ID |
 | status | String | playing / completed / backlog / wishlist |
 | notes | String | User's personal notes |
 | personalRating | Number | User's rating (0–10) |

@@ -1,0 +1,148 @@
+.gameDetailPage {
+  padding: 20px 0;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.gameDetailContainer {
+  background-color: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.gameDetailHeader {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 32px;
+  padding: 32px;
+  border-bottom: 1px solid var(--border);
+}
+
+@media (max-width: 768px) {
+  .gameDetailHeader {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gameDetailCover img {
+  width: 100%;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.gameDetailInfo h1 {
+  font-size: 2.5rem;
+  margin-bottom: 16px;
+}
+
+.gameDetailBadges {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.gameDetailMeta {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 32px;
+  color: var(--text-secondary);
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.addToListControl {
+  display: flex;
+  gap: 12px;
+}
+
+.statusSelect {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background-color: var(--bg);
+}
+
+.alreadyInList {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--success);
+  font-weight: 600;
+}
+
+.gameDetailBody {
+  padding: 32px;
+}
+
+.gameDescription h2 {
+  margin-bottom: 16px;
+}
+
+.gameDescription p {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.badgeGenre {
+  background-color: #ede9fe;
+  color: #7c3aed;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badgeRating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #f59e0b;
+  font-weight: 700;
+}
+
+.btnPrimary {
+  background-color: var(--primary);
+  color: white;
+  padding: 8px 16px;
+  border-radius: var(--radius);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s;
+}
+
+.btnPrimary:hover {
+  background-color: var(--primary-hover);
+}
+
+.btnLink {
+  color: var(--primary);
+  font-weight: 600;
+  margin-left: 8px;
+}
+
+.btnLink:hover {
+  text-decoration: underline;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+}

@@ -130,10 +130,10 @@ The application uses a **hybrid catalog model**:
 ### Resource: `listEntries`
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/listEntries` | Fetch all list entries |
-| POST | `/listEntries` | Add a game to a list |
-| PUT | `/listEntries/:id` | Update list entry |
-| DELETE | `/listEntries/:id` | Remove from list |
+| GET | `/list` | Fetch all list entries |
+| POST | `/list` | Add a game to a list |
+| PUT | `/list/:id` | Update list entry |
+| DELETE | `/list/:id` | Remove from list |
 
 ---
 

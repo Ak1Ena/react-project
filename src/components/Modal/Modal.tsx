@@ -1,9 +1,17 @@
 import { useState, type FC, type FormEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { X } from 'lucide-react';
-import type { RootState, AppDispatch } from '../app/store';
-import { closeModal } from '../features/ui/uiSlice';
-import { updateListEntry } from '../features/lists/listsSlice';
+import type { RootState, AppDispatch } from '../../app/store';
+import { closeModal } from '../../features/ui/uiSlice';
+import { updateListEntry } from '../../features/lists/listsSlice';
+import type { Game } from '../../features/games/gamesAPI';
+import type { ListEntry } from '../../features/lists/listsAPI';
+
+interface EditEntryData {
+  entry: ListEntry;
+  game: Game;
+}
+import styles from './Modal.module.css';
 
 const Modal: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -18,16 +26,16 @@ const Modal: FC = () => {
   const renderContent = () => {
     switch (modalType) {
       case 'EDIT_ENTRY':
-        return <EditEntryForm data={modalData} onClose={handleClose} />;
+        return <EditEntryForm data={modalData as EditEntryData} onClose={handleClose} />;
       default:
         return <div>Unknown modal type</div>;
     }
   };
 
   return (
-    <div className="modal-overlay" onClick={handleClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={handleClose}>
+    <div className={styles.modalOverlay} onClick={handleClose}>
+      <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+        <button className={styles.modalClose} onClick={handleClose}>
           <X size={24} />
         </button>
         {renderContent()}
@@ -36,7 +44,7 @@ const Modal: FC = () => {
   );
 };
 
-const EditEntryForm: FC<{ data: any; onClose: () => void }> = ({ data, onClose }) => {
+const EditEntryForm: FC<{ data: EditEntryData; onClose: () => void }> = ({ data, onClose }) => {
   const dispatch = useDispatch<AppDispatch>();
   const [notes, setNotes] = useState(data.entry.notes || '');
   const [rating, setRating] = useState(data.entry.personalRating || 0);
@@ -51,9 +59,9 @@ const EditEntryForm: FC<{ data: any; onClose: () => void }> = ({ data, onClose }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="edit-entry-form">
-      <h2>Edit Entry: {data.game.title}</h2>
-      <div className="form-group">
+    <form onSubmit={handleSubmit} className={styles.editEntryForm}>
+      <h2>Edit Entry: {data.game.name}</h2>
+      <div className={styles.formGroup}>
         <label>Personal Rating (0-10)</label>
         <input 
           type="number" 
@@ -64,7 +72,7 @@ const EditEntryForm: FC<{ data: any; onClose: () => void }> = ({ data, onClose }
           onChange={(e) => setRating(Number(e.target.value))} 
         />
       </div>
-      <div className="form-group">
+      <div className={styles.formGroup}>
         <label>Notes</label>
         <textarea 
           value={notes} 
@@ -73,9 +81,9 @@ const EditEntryForm: FC<{ data: any; onClose: () => void }> = ({ data, onClose }
           rows={4}
         />
       </div>
-      <div className="form-actions">
-        <button type="button" onClick={onClose} className="btn-secondary">Cancel</button>
-        <button type="submit" className="btn-primary">Save Changes</button>
+      <div className={styles.formActions}>
+        <button type="button" onClick={onClose} className={styles.btnSecondary}>Cancel</button>
+        <button type="submit" className={styles.btnPrimary}>Save Changes</button>
       </div>
     </form>
   );

@@ -1,7 +1,8 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import * as listsAPI from './listsAPI';
 import type { ListEntry } from './listsAPI';
+import type { RootState } from '../../app/store';
 
 interface ListsState {
   entries: ListEntry[];
@@ -15,9 +16,24 @@ const initialState: ListsState = {
   error: null,
 };
 
-export const fetchListEntries = createAsyncThunk('lists/fetchListEntries', async () => {
-  return await listsAPI.fetchListEntries();
-});
+export const fetchListEntries = createAsyncThunk(
+  'lists/fetchListEntries',
+  async (_, { getState, rejectWithValue }) => {
+    const state = getState() as RootState;
+    const user = state.auth.user;
+
+    if (!user) {
+      return rejectWithValue('User not authenticated');
+    }
+
+    try {
+      return await listsAPI.fetchListEntries(user.id);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to fetch list entries';
+      return rejectWithValue(message);
+    }
+  }
+);
 
 export const addToList = createAsyncThunk(
   'lists/addToList',
@@ -55,19 +71,50 @@ const listsSlice = createSlice({
         state.status = 'failed';
         state.error = action.error.message || 'Failed to fetch list entries';
       })
+      .addCase(addToList.pending, (state) => {
+        state.status = 'loading';
+      })
       .addCase(addToList.fulfilled, (state, action: PayloadAction<ListEntry>) => {
+        state.status = 'succeeded';
         state.entries.push(action.payload);
       })
+      .addCase(addToList.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message || 'Failed to add entry to list';
+      })
+      .addCase(updateListEntry.pending, (state) => {
+        state.status = 'loading';
+      })
       .addCase(updateListEntry.fulfilled, (state, action: PayloadAction<ListEntry>) => {
+        state.status = 'succeeded';
         const index = state.entries.findIndex((entry) => entry.id === action.payload.id);
         if (index !== -1) {
           state.entries[index] = action.payload;
         }
       })
+      .addCase(updateListEntry.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message || 'Failed to update list entry';
+      })
+      .addCase(removeFromList.pending, (state) => {
+        state.status = 'loading';
+      })
       .addCase(removeFromList.fulfilled, (state, action: PayloadAction<string>) => {
+        state.status = 'succeeded';
         state.entries = state.entries.filter((entry) => entry.id !== action.payload);
+      })
+      .addCase(removeFromList.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message || 'Failed to remove entry from list';
       });
   },
 });
+
+export const selectListEntries = (state: RootState) => state.lists.entries;
+
+export const selectEntriesByStatus = createSelector(
+  [selectListEntries, (_state: RootState, status: string | undefined) => status],
+  (entries, status) => entries.filter((entry) => entry.status === status)
+);
 
 export default listsSlice.reducer;

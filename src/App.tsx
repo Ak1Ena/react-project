@@ -1,14 +1,14 @@
-import Navbar from './components/Navbar';
+import Navbar from './components/Navbar/Navbar';
 import AppRoutes from './routes/AppRoutes';
-import Modal from './components/Modal';
-import Toast from './components/Toast';
-import './App.css';
+import Modal from './components/Modal/Modal';
+import Toast from './components/Toast/Toast';
+import styles from './App.module.css';
 
 function App() {
   return (
-    <div className="app-wrapper">
+    <div className={styles.appWrapper}>
       <Navbar />
-      <main className="main-content">
+      <main className={styles.mainContent}>
         <AppRoutes />
       </main>
       <Modal />

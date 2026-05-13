@@ -4,6 +4,7 @@ import gamesReducer from '../features/games/gamesSlice';
 import listsReducer from '../features/lists/listsSlice';
 import filtersReducer from '../features/filters/filtersSlice';
 import uiReducer from '../features/ui/uiSlice';
+import authReducer from '../features/auth/authSlice';
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     lists: listsReducer,
     filters: filtersReducer,
     ui: uiReducer,
+    auth: authReducer,
   },
 });
 

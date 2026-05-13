@@ -10,7 +10,7 @@ interface Toast {
 interface UIState {
   modalOpen: boolean;
   modalType: string | null;
-  modalData: any | null;
+  modalData: unknown | null;
   toasts: Toast[];
   theme: 'light' | 'dark';
 }
@@ -27,7 +27,7 @@ const uiSlice = createSlice({
   name: 'ui',
   initialState,
   reducers: {
-    openModal: (state, action: PayloadAction<{ type: string; data?: any }>) => {
+    openModal: (state, action: PayloadAction<{ type: string; data?: unknown }>) => {
       state.modalOpen = true;
       state.modalType = action.payload.type;
       state.modalData = action.payload.data || null;
