@@ -26,6 +26,10 @@ export const fetchGameById = createAsyncThunk('games/fetchGameById', async (id: 
   return await gamesAPI.fetchGameById(id);
 });
 
+export const searchGames = createAsyncThunk('games/searchGames', async (query: string) => {
+  return await gamesAPI.searchGames(query);
+});
+
 export const createGame = createAsyncThunk('games/createGame', async (game: Omit<Game, 'id'>) => {
   return await gamesAPI.createGame(game);
 });
@@ -73,6 +77,17 @@ const gamesSlice = createSlice({
       .addCase(fetchGameById.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message || 'Failed to fetch game details';
+      })
+      .addCase(searchGames.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(searchGames.fulfilled, (state, action: PayloadAction<Game[]>) => {
+        state.status = 'succeeded';
+        state.items = action.payload;
+      })
+      .addCase(searchGames.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message || 'Search failed';
       })
       .addCase(createGame.pending, (state) => {
         state.status = 'loading';
@@ -146,5 +161,8 @@ export const selectFilteredGames = createSelector(
       });
   }
 );
+
+export const selectGamesStatus = (state: RootState) => state.games.status;
+export const selectGamesError = (state: RootState) => state.games.error;
 
 export default gamesSlice.reducer;

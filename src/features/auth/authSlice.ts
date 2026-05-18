@@ -60,6 +60,11 @@ const authSlice = createSlice({
       state.error = null;
       localStorage.removeItem('user');
     },
+    setSteamUser: (state, action: PayloadAction<User>) => {
+      state.user = action.payload;
+      state.status = 'succeeded';
+      localStorage.setItem('user', JSON.stringify(action.payload));
+    },
     clearError: (state) => {
       state.error = null;
     },
@@ -96,7 +101,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout, clearError } = authSlice.actions;
+export const { logout, clearError, setSteamUser } = authSlice.actions;
 export const selectCurrentUser = (state: RootState) => state.auth.user;
 export const selectAuthStatus = (state: RootState) => state.auth.status;
 export const selectAuthError = (state: RootState) => state.auth.error;

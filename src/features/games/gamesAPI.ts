@@ -1,4 +1,6 @@
-import { gameMockApi } from '../../api/mockApi';
+import axios from 'axios';
+
+const BACKEND_BASE = 'http://localhost:3001/api/steam';
 
 export interface Game {
   id: string;
@@ -13,47 +15,38 @@ export interface Game {
 }
 
 export const fetchGames = async () => {
-  const response = await gameMockApi.get<Game[]>('/api/v1/games');
-  return response.data.map(game => ({
-    ...game,
-    id: game.id || game.appid?.toString()
-  }));
+  const response = await axios.get<Game[]>(`${BACKEND_BASE}/featured`);
+  return response.data;
 };
 
 export const fetchGameById = async (id: string) => {
-  try {
-    // First try fetching by primary ID
-    const response = await gameMockApi.get<Game[]>(`/api/v1/games?id=${id}`);
-    if (response.data && response.data.length > 0) {
-      return {
-        ...response.data[0],
-        id: response.data[0].id || response.data[0].appid?.toString()
-      };
-    }
-  } catch (error) {
-    // If that fails, try searching by appid query parameter
-    console.warn(`Game with appid ${id} not found, trying fallback search by appid query...`);
-    throw error;
-  }
-};
-
-export const createGame = async (game: Omit<Game, 'id'>) => {
-  const response = await gameMockApi.post<Game>('/api/v1/games', game);
+  const response = await axios.get<any>(`${BACKEND_BASE}/game-details/${id}`);
+  
+  // Steam API returns a success wrapper
+  const gameData = response.data;
+  
   return {
-    ...response.data,
-    id: response.data.id || response.data.appid?.toString()
-  };
+    id: gameData.steam_appid.toString(),
+    appid: gameData.steam_appid,
+    name: gameData.name,
+    genre: gameData.genres?.map((g: any) => g.description) || [],
+    platforms: Object.keys(gameData.platforms).filter(p => gameData.platforms[p]),
+    releaseYear: parseInt(gameData.release_date?.date?.split(',').pop()?.trim()) || 0,
+    rating: gameData.metacritic?.score / 10 || 0,
+    image: gameData.header_image,
+    description: gameData.short_description || gameData.about_the_game
+  } as Game;
 };
 
-export const updateGame = async (id: string, game: Partial<Game>) => {
-  const response = await gameMockApi.put<Game>(`/api/v1/games/${id}`, game);
-  return {
-    ...response.data,
-    id: response.data.id || response.data.appid?.toString()
-  };
-};
-
-export const deleteGame = async (id: string) => {
-  const response = await gameMockApi.delete(`/api/v1/games/${id}`);
+export const searchGames = async (query: string) => {
+  const response = await axios.get<Game[]>(`${BACKEND_BASE}/search`, {
+    params: { q: query }
+  });
   return response.data;
 };
+
+// These are no longer needed as we are using live Steam data, 
+// but we keep them for interface compatibility (though they won't work on the store)
+export const createGame = async (game: Omit<Game, 'id'>) => { return { ...game, id: '0' } as Game; };
+export const updateGame = async (id: string, game: Partial<Game>) => { return { ...game, id } as Game; };
+export const deleteGame = async (id: string) => { return id; };
