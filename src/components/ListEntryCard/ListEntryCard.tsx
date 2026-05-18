@@ -1,13 +1,12 @@
-import { type FC, useState, useEffect } from 'react';
+import { type FC, useState, useEffect, useMemo, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Star, Trash2, Edit3, MoveRight, Save, Trophy, Clock, Calendar } from 'lucide-react';
 import type { Game } from '../../features/games/gamesAPI';
 import type { ListEntry, ListStatus } from '../../features/lists/listsAPI';
 import { removeFromList, updateListEntry } from '../../features/lists/listsSlice';
-import type { AppDispatch } from '../../app/store';
+import type { AppDispatch, RootState } from '../../app/store';
 import { openModal } from '../../features/ui/uiSlice';
 import styles from './ListEntryCard.module.css';
-import { RootState } from '../../app/store';
 import { fetchGameAchievements } from '../../features/steam/steamSlice';
 
 interface ListEntryCardProps {
@@ -15,42 +14,26 @@ interface ListEntryCardProps {
   game?: Game;
 }
 
-const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game: initialGame }) => {
+const ListEntryCard: FC<ListEntryCardProps> = memo(({ entry, game }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const { steamId, achievements, ownedGames } = useSelector((state: RootState) => state.steam);
   
-  const [game, setGame] = useState<Game | undefined>(initialGame);
-  const [isLocalLoading, setIsLocalLoading] = useState(!initialGame);
+  // Granular selectors to prevent unnecessary re-renders
+  const steamId = useSelector((state: RootState) => (state as any).steam?.steamId);
+  const achievements = useSelector((state: RootState) => (state as any).steam?.achievements[game?.id || entry.gameId]);
+  const ownedGames = useSelector((state: RootState) => (state as any).steam?.ownedGames);
   
-  // Try to find stats in the global state if not in entry (fallback for old entries)
-  const steamStatsFallback = ownedGames.find(og => og.appid.toString() === entry.gameId);
+  // Memoize fallback stats
+  const steamStatsFallback = useMemo(() => {
+    if (!Array.isArray(ownedGames)) return null;
+    return ownedGames.find((og: any) => og.appid.toString() === entry.gameId);
+  }, [ownedGames, entry.gameId]);
+
   const displayPlaytime = entry.playtime ?? steamStatsFallback?.playtime_forever;
   const displayLastPlayed = entry.lastPlayed ?? (steamStatsFallback as any)?.rtime_last_played;
 
   const [hoverRating, setHoverRating] = useState(0);
   const [reviewInput, setReviewInput] = useState(entry.review || '');
   const [isEditingReview, setIsEditingReview] = useState(!entry.review);
-
-  // Fetch game details if not provided
-  useEffect(() => {
-    if (!initialGame && entry.gameId) {
-      const fetchLocalGame = async () => {
-        try {
-          const { fetchGameById } = await import('../../features/games/gamesAPI');
-          const data = await fetchGameById(entry.gameId);
-          setGame(data);
-        } catch (error) {
-          console.error('Failed to fetch game for list entry', error);
-        } finally {
-          setIsLocalLoading(false);
-        }
-      };
-      fetchLocalGame();
-    } else {
-      setGame(initialGame);
-      setIsLocalLoading(false);
-    }
-  }, [initialGame, entry.gameId]);
 
   const handleRemove = () => {
     if (window.confirm('Are you sure you want to remove this game from your list?')) {
@@ -79,17 +62,12 @@ const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game: initialGame }) => 
     }
   };
 
-  const gameAchievements = game ? achievements[game.id || entry.gameId] : null;
-
   useEffect(() => {
-    if (steamId && (game?.id || entry.gameId)) {
+    // Only fetch if we have a steamId and haven't fetched these achievements yet
+    if (steamId && (game?.id || entry.gameId) && !achievements) {
       dispatch(fetchGameAchievements({ steamId, appId: game?.id || entry.gameId }));
     }
-  }, [steamId, game?.id, entry.gameId, dispatch]);
-
-  if (isLocalLoading) {
-    return <div className={`${styles.listEntryCard} ${styles.skeleton}`}>Loading game info...</div>;
-  }
+  }, [steamId, game?.id, entry.gameId, achievements, dispatch]);
 
   if (!game) {
     return (
@@ -155,21 +133,21 @@ const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game: initialGame }) => 
           </div>
         </div>
 
-        {(gameAchievements || displayPlaytime !== undefined || displayLastPlayed) && (
+        {(achievements || displayPlaytime !== undefined || displayLastPlayed) && (
           <div className={styles.steamStats}>
-            {gameAchievements && gameAchievements.total > 0 && (
+            {achievements && achievements.total > 0 && (
               <div className={styles.achievementSection}>
                 <div className={styles.achievementHeader}>
                   <div className={styles.statItem}>
                     <Trophy size={14} className={styles.trophyIcon} />
                     <span>Achievements</span>
                   </div>
-                  <span>{gameAchievements.achieved} / {gameAchievements.total}</span>
+                  <span>{achievements.achieved} / {achievements.total}</span>
                 </div>
                 <div className={styles.progressBar}>
                   <div 
                     className={styles.progressFill} 
-                    style={{ width: `${(gameAchievements.achieved / gameAchievements.total) * 100}%` }}
+                    style={{ width: `${(achievements.achieved / achievements.total) * 100}%` }}
                   ></div>
                 </div>
               </div>
@@ -222,7 +200,6 @@ const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game: initialGame }) => 
             ) : (
               <div className={styles.listEntryReview}>
                 <div className={styles.reviewBlockHeader}>
- GetComponent:
                 <h4>Review:</h4>
                 <button onClick={() => setIsEditingReview(true)} className={styles.editReviewInlineBtn}>
                   <Edit3 size={12} />
@@ -240,6 +217,6 @@ const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game: initialGame }) => 
       </div>
     </div>
   );
-};
+});
 
 export default ListEntryCard;

@@ -25,9 +25,7 @@ export interface SteamAchievement {
 }
 
 export const resolveVanityURL = async (vanityUrl: string) => {
-  const response = await axios.get<{ response: { success: number; steamid: string } }>(`${BACKEND_BASE}/resolve-vanity/${vanityUrl}`);
-  if (response.data.steamid) return response.data.steamid;
-  // The backend in steamRoutes.ts returns { steamid: ... } directly on success
+  const response = await axios.get<{ steamid: string }>(`${BACKEND_BASE}/resolve-vanity/${vanityUrl}`);
   return response.data.steamid; 
 };
 
@@ -37,8 +35,8 @@ export const getPlayerSummary = async (steamId: string) => {
 };
 
 export const getOwnedGames = async (steamId: string) => {
-  const response = await axios.get<{ response: SteamGame[] }>(`${BACKEND_BASE}/owned-games/${steamId}`);
-  return response.data.response;
+  const response = await axios.get<SteamGame[]>(`${BACKEND_BASE}/owned-games/${steamId}`);
+  return response.data;
 };
 
 export const getAchievements = async (steamId: string, appId: string) => {

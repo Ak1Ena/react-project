@@ -6,6 +6,7 @@ import type { RootState } from '../../app/store';
 
 interface GamesState {
   items: Game[];
+  byId: Record<string, Game>;
   selectedGame: Game | null;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
@@ -13,6 +14,7 @@ interface GamesState {
 
 const initialState: GamesState = {
   items: [],
+  byId: {},
   selectedGame: null,
   status: 'idle',
   error: null,
@@ -24,6 +26,10 @@ export const fetchGames = createAsyncThunk('games/fetchGames', async () => {
 
 export const fetchGameById = createAsyncThunk('games/fetchGameById', async (id: string) => {
   return await gamesAPI.fetchGameById(id);
+});
+
+export const fetchGamesByIds = createAsyncThunk('games/fetchGamesByIds', async (ids: string[]) => {
+  return await gamesAPI.fetchGamesByIds(ids);
 });
 
 export const searchGames = createAsyncThunk('games/searchGames', async (query: string) => {
@@ -62,6 +68,9 @@ const gamesSlice = createSlice({
       .addCase(fetchGames.fulfilled, (state, action: PayloadAction<Game[]>) => {
         state.status = 'succeeded';
         state.items = action.payload;
+        action.payload.forEach(game => {
+          state.byId[game.id] = game;
+        });
       })
       .addCase(fetchGames.rejected, (state, action) => {
         state.status = 'failed';
@@ -70,13 +79,19 @@ const gamesSlice = createSlice({
       .addCase(fetchGameById.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(fetchGameById.fulfilled, (state, action: PayloadAction<Game | undefined>) => {
+      .addCase(fetchGameById.fulfilled, (state, action: PayloadAction<Game>) => {
         state.status = 'succeeded';
-        state.selectedGame = action.payload ?? null;
+        state.selectedGame = action.payload;
+        state.byId[action.payload.id] = action.payload;
       })
       .addCase(fetchGameById.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message || 'Failed to fetch game details';
+      })
+      .addCase(fetchGamesByIds.fulfilled, (state, action: PayloadAction<Game[]>) => {
+        action.payload.forEach(game => {
+          state.byId[game.id] = game;
+        });
       })
       .addCase(searchGames.pending, (state) => {
         state.status = 'loading';
@@ -84,49 +99,31 @@ const gamesSlice = createSlice({
       .addCase(searchGames.fulfilled, (state, action: PayloadAction<Game[]>) => {
         state.status = 'succeeded';
         state.items = action.payload;
+        action.payload.forEach(game => {
+          state.byId[game.id] = game;
+        });
       })
       .addCase(searchGames.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message || 'Search failed';
       })
-      .addCase(createGame.pending, (state) => {
-        state.status = 'loading';
-      })
       .addCase(createGame.fulfilled, (state, action: PayloadAction<Game>) => {
-        state.status = 'succeeded';
         state.items.push(action.payload);
-      })
-      .addCase(createGame.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message || 'Failed to create game';
-      })
-      .addCase(updateGame.pending, (state) => {
-        state.status = 'loading';
+        state.byId[action.payload.id] = action.payload;
       })
       .addCase(updateGame.fulfilled, (state, action: PayloadAction<Game>) => {
-        state.status = 'succeeded';
         const index = state.items.findIndex((item) => item.id === action.payload.id);
         if (index !== -1) {
           state.items[index] = action.payload;
         }
+        state.byId[action.payload.id] = action.payload;
         if (state.selectedGame?.id === action.payload.id) {
           state.selectedGame = action.payload;
         }
       })
-      .addCase(updateGame.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message || 'Failed to update game';
-      })
-      .addCase(deleteGame.pending, (state) => {
-        state.status = 'loading';
-      })
       .addCase(deleteGame.fulfilled, (state, action: PayloadAction<string>) => {
-        state.status = 'succeeded';
         state.items = state.items.filter((item) => item.id !== action.payload);
-      })
-      .addCase(deleteGame.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message || 'Failed to delete game';
+        delete state.byId[action.payload];
       });
   },
 });
@@ -134,6 +131,7 @@ const gamesSlice = createSlice({
 export const { clearSelectedGame } = gamesSlice.actions;
 
 export const selectGames = (state: RootState) => state.games.items;
+export const selectGamesById = (state: RootState) => state.games.byId;
 export const selectFilters = (state: RootState) => state.filters;
 
 export const selectFilteredGames = createSelector(
