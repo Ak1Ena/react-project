@@ -1,10 +1,7 @@
-import { type FC, type MouseEvent } from 'react';
+import { type FC } from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { Star, Heart } from 'lucide-react';
+import { Star } from 'lucide-react';
 import type { Game } from '../../features/games/gamesAPI';
-import type { RootState, AppDispatch } from '../../app/store';
-import { addToList, updateListEntry } from '../../features/lists/listsSlice';
 import styles from './GameCard.module.css';
 
 interface GameCardProps {
@@ -30,35 +27,6 @@ const getGradientClass = (name: string) => {
 
 const GameCard: FC<GameCardProps> = ({ game, status = 'Playing' }) => {
   const gradientClass = getGradientClass(game.name);
-  const dispatch = useDispatch<AppDispatch>();
-  const currentUser = useSelector((state: RootState) => state.auth.user);
-  const entries = useSelector((state: RootState) => state.lists.entries);
-
-  const existingEntry = entries.find((e) => e.gameId === game.id);
-  const isFavorited = !!existingEntry?.isFavorite;
-
-  const handleFavoriteClick = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!currentUser) return;
-
-    if (existingEntry) {
-      dispatch(updateListEntry({
-        id: existingEntry.id,
-        entry: { isFavorite: !isFavorited },
-      }));
-    } else {
-      dispatch(addToList({
-        gameId: game.id,
-        userId: currentUser.id,
-        status: 'wishlist',
-        notes: '',
-        review: '',
-        personalRating: 0,
-        isFavorite: true,
-      }));
-    }
-  };
 
   return (
     <div className={styles.gameCard}>
@@ -66,20 +34,6 @@ const GameCard: FC<GameCardProps> = ({ game, status = 'Playing' }) => {
         <div className={styles.statusBadge}>
           {status}
         </div>
-        <button
-          type="button"
-          className={isFavorited ? `${styles.favoriteBtn} ${styles.favoriteBtnActive}` : styles.favoriteBtn}
-          onClick={handleFavoriteClick}
-          aria-label={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
-          aria-pressed={isFavorited}
-          title={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
-        >
-          <Heart
-            size={16}
-            fill={isFavorited ? 'var(--accent-red)' : 'none'}
-            color="var(--accent-red)"
-          />
-        </button>
 
         {game.image && <img src={game.image} alt={game.name} className={styles.cardImage} />}
         <div className={styles.patternOverlay}></div>

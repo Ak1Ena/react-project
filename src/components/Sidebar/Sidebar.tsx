@@ -17,9 +17,6 @@ const Sidebar: FC = () => {
   const entries = useSelector(selectListEntries);
 
   const getCount = (status: string) => {
-    if (status === 'favorites') {
-      return entries.filter(e => e.isFavorite).length;
-    }
     return entries.filter(e => e.status === status).length;
   };
 
@@ -77,11 +74,6 @@ const Sidebar: FC = () => {
               <Circle size={8} fill="var(--accent-red)" stroke="var(--accent-red)" />
               <span>Dropped</span>
               <span className={styles.count}>{getCount('dropped')}</span>
-            </NavLink>
-            <NavLink to="/my-list/favorites" className={styles.navLink}>
-              <Circle size={8} fill="var(--accent-purple)" stroke="var(--accent-purple)" />
-              <span>Favorites</span>
-              <span className={styles.count}>{getCount('favorites')}</span>
             </NavLink>
           </div>
         </div>

@@ -58,32 +58,6 @@
   z-index: 2;
 }
 
-.favoriteBtn {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background-color: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(4px);
-  z-index: 3;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: var(--transition);
-  cursor: pointer;
-}
-
-.favoriteBtn:hover {
-  background-color: rgba(0, 0, 0, 0.65);
-  transform: scale(1.08);
-}
-
-.favoriteBtnActive {
-  background-color: rgba(239, 68, 68, 0.2);
-}
-
 .cardTitleOver {
   margin-top: auto;
   font-size: 24px;

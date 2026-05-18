@@ -1,7 +1,7 @@
 import { type FC, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchListEntries, selectEntriesByStatus, selectListEntries } from '../features/lists/listsSlice';
+import { fetchListEntries, selectEntriesByStatus } from '../features/lists/listsSlice';
 import { fetchGames, selectGames } from '../features/games/gamesSlice';
 import type { RootState, AppDispatch } from '../app/store';
 import FilterBar from '../components/FilterBar/FilterBar';
@@ -11,10 +11,7 @@ import styles from './ListPage.module.css';
 const ListPage: FC = () => {
   const { status } = useParams<{ status: string }>();
   const dispatch = useDispatch<AppDispatch>();
-  const isFavoritesList = status === 'favorites';
-  const statusEntries = useSelector((state: RootState) => selectEntriesByStatus(state, status));
-  const allEntries = useSelector(selectListEntries);
-  const entries = isFavoritesList ? allEntries.filter((e) => e.isFavorite) : statusEntries;
+  const entries = useSelector((state: RootState) => selectEntriesByStatus(state, status));
   const games = useSelector(selectGames);
   const filters = useSelector((state: RootState) => state.filters);
 
@@ -26,9 +23,7 @@ const ListPage: FC = () => {
   const filteredGames = games.filter((game) => {
     // If status is provided, only show games in that list. Otherwise, show all games (Library view).
     if (status) {
-      const entry = isFavoritesList
-        ? entries.find((e) => e.gameId === game.id && e.isFavorite)
-        : entries.find((e) => e.gameId === game.id && e.status === status);
+      const entry = entries.find((e) => e.gameId === game.id && e.status === status);
       if (!entry) return false;
     }
 

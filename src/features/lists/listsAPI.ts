@@ -1,6 +1,6 @@
 import { gameMockApi } from '../../api/mockApi';
 
-export type ListStatus = 'playing' | 'completed' | 'backlog' | 'wishlist';
+export type ListStatus = 'playing' | 'completed' | 'backlog' | 'wishlist' | 'dropped';
 
 export interface ListEntry {
   id: string;
@@ -11,7 +11,6 @@ export interface ListEntry {
   review: string;
   personalRating: number;
   dateAdded: string;
-  isFavorite?: boolean;
 }
 
 export const fetchListEntries = async (userId: string) => {
