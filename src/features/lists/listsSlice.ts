@@ -136,10 +136,38 @@ const listsSlice = createSlice({
 });
 
 export const selectListEntries = (state: RootState) => state.lists.entries;
+export const selectPublicReviews = (state: RootState) => state.lists.publicReviews;
 
 export const selectEntriesByStatus = createSelector(
   [selectListEntries, (_state: RootState, status: string | undefined) => status],
   (entries, status) => entries.filter((entry) => entry.status === status)
+);
+
+// Merge the snapshot from fetchGameReviews (publicReviews) with the live
+// user's entries. Entries take precedence on duplicate ids so the current
+// user's just-saved review appears immediately without re-fetching.
+export const selectCommunityReviewsForGame = createSelector(
+  [
+    selectPublicReviews,
+    selectListEntries,
+    (_state: RootState, gameId: string | undefined) => gameId,
+  ],
+  (publicReviews, entries, gameId) => {
+    if (!gameId) return [];
+
+    const byId = new Map<string, ListEntry>();
+    for (const r of publicReviews) {
+      if (r.gameId === gameId) byId.set(r.id, r);
+    }
+    // Overwrite with live entries (fresh review text/rating).
+    for (const e of entries) {
+      if (e.gameId === gameId) byId.set(e.id, e);
+    }
+
+    return Array.from(byId.values())
+      .filter((r) => (r.review || '').trim().length > 0)
+      .sort((a, b) => new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime());
+  }
 );
 
 export default listsSlice.reducer;

@@ -6,7 +6,13 @@ import { Star, ArrowLeft, Check, Gamepad2, Clock, Send } from 'lucide-react';
 import { useUI } from '../context/UIContext';
 import type { RootState, AppDispatch } from '../app/store';
 import { fetchGameById, clearSelectedGame } from '../features/games/gamesSlice';
-import { addToList, fetchListEntries, updateListEntry, fetchGameReviews } from '../features/lists/listsSlice';
+import {
+  addToList,
+  fetchListEntries,
+  updateListEntry,
+  fetchGameReviews,
+  selectCommunityReviewsForGame,
+} from '../features/lists/listsSlice';
 import { fetchAllUsers } from '../features/auth/authSlice';
 import type { ListStatus } from '../features/lists/listsAPI';
 import styles from './GameDetailPage.module.css';
@@ -17,9 +23,12 @@ const GameDetailPage: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { showToast } = useUI();
   const { selectedGame: game, status } = useSelector((state: RootState) => state.games);
-  const { entries, publicReviews } = useSelector((state: RootState) => state.lists);
+  const { entries } = useSelector((state: RootState) => state.lists);
   const currentUser = useSelector((state: RootState) => state.auth.user);
   const allUsers = useSelector((state: RootState) => state.auth.users);
+  const communityReviews = useSelector((state: RootState) =>
+    selectCommunityReviewsForGame(state, id)
+  );
   
   const existingEntry = entries.find((e) => e.gameId === game?.id);
 
@@ -89,23 +98,6 @@ const GameDetailPage: FC = () => {
     return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
   };
 
-  const communityReviewsBase = publicReviews
-    .filter((r) => r.gameId === game.id && (r.review || '').trim().length > 0);
-
-  // Merge in the current user's latest review so it shows up immediately
-  // after sending (publicReviews is only refreshed on page load).
-  const merged = [...communityReviewsBase];
-  if (
-    existingEntry &&
-    (existingEntry.review || '').trim().length > 0 &&
-    !merged.some((r) => r.id === existingEntry.id)
-  ) {
-    merged.push(existingEntry);
-  }
-
-  const communityReviews = merged.sort(
-    (a, b) => new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime()
-  );
 
   const statuses: { id: ListStatus; label: string; icon: ReactNode }[] = [
     { id: 'playing', label: 'Playing', icon: <Gamepad2 size={16} /> },
