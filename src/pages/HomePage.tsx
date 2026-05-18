@@ -18,9 +18,9 @@ const HomePage: FC = () => {
     return <Spinner fullPage label="Loading games..." />;
   }
 
-  const playingGames = entries.length > 0
-    ? games.filter(g => entries.some(e => e.gameId === g.id && e.status === 'playing')).slice(0, 6)
-    : games.slice(0, 6);
+  const playingGames = games.filter((g) =>
+    entries.some((e) => String(e.gameId) === String(g.id) && e.status === 'playing'),
+  ).slice(0, 6);
 
   const heroGame = playingGames[0] || games[0];
 
@@ -28,10 +28,17 @@ const HomePage: FC = () => {
     <div className={styles.dashboard}>
       {heroGame && (
         <div className={styles.hero}>
+          {heroGame.image && (
+            <img src={heroGame.image} alt={heroGame.name} className={styles.heroImage} />
+          )}
           <div className={styles.heroContent}>
-            <span className={styles.heroLabel}>RESUME PLAYING</span>
+            <span className={styles.heroLabel}>
+              {playingGames.length > 0 ? 'RESUME PLAYING' : 'FEATURED GAME'}
+            </span>
             <h1 className={styles.heroTitle}>{heroGame.name}</h1>
-            <p className={styles.heroMeta}>{heroGame.genre.join(' · ')} · {heroGame.releaseYear}</p>
+            <p className={styles.heroMeta}>
+              {heroGame.genre.join(' · ')} · {heroGame.releaseYear}
+            </p>
           </div>
           <div className={styles.heroGradient}></div>
         </div>
@@ -40,13 +47,23 @@ const HomePage: FC = () => {
       <div className={styles.fullWidthGrid}>
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
-            <h2 className={styles.sectionTitle}>Continue playing <span className={styles.count}>/{playingGames.length}</span></h2>
-            <button className={styles.seeAll}>See all <ChevronRight size={16} /></button>
+            <h2 className={styles.sectionTitle}>
+              Continue playing <span className={styles.count}>/{playingGames.length}</span>
+            </h2>
+            <button className={styles.seeAll}>
+              See all <ChevronRight size={16} />
+            </button>
           </div>
           <div className={styles.gameRow}>
-            {playingGames.map(game => (
-              <GameCard key={game.id} game={game} status="Playing" />
-            ))}
+            {playingGames.length > 0 ? (
+              playingGames.map((game) => (
+                <GameCard key={game.id} game={game} status="Playing" />
+              ))
+            ) : (
+              <p className={styles.emptyMessage}>
+                You haven't marked any games as "Playing" yet. Explore the catalog to get started!
+              </p>
+            )}
           </div>
         </section>
       </div>
