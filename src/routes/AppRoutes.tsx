@@ -8,6 +8,7 @@ import ListPage from '../pages/ListPage';
 import AddGamePage from '../pages/AddGamePage';
 import LoginPage from '../pages/LoginPage';
 import RegisterPage from '../pages/RegisterPage';
+import SteamSuccessPage from '../pages/SteamSuccessPage';
 
 interface RouteProps {
   children: ReactNode;
@@ -48,7 +49,10 @@ const AppRoutes: FC = () => {
           </PublicRoute>
         }
       />
-
+      <Route
+        path="/steam-success"
+        element={<SteamSuccessPage />}
+      />
       <Route
         path="/"
         element={

@@ -139,7 +139,11 @@ export const selectListEntries = (state: RootState) => state.lists.entries;
 
 export const selectEntriesByStatus = createSelector(
   [selectListEntries, (_state: RootState, status: string | undefined) => status],
-  (entries, status) => entries.filter((entry) => entry.status === status)
+  (entries, status) => {
+    if (!status) return [];
+    const normalizedStatus = status.toLowerCase();
+    return entries.filter((entry) => entry.status.toLowerCase() === normalizedStatus);
+  }
 );
 
 export default listsSlice.reducer;
