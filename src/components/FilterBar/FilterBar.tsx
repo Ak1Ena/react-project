@@ -2,7 +2,7 @@ import { type FC, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { LayoutGrid, List } from 'lucide-react';
 import type { RootState } from '../../app/store';
-import { selectGames } from '../../features/games/gamesSlice';
+import { useGetGamesQuery } from '../../features/api/gameApi';
 import {
   setGenre,
   setPlatform,
@@ -15,7 +15,7 @@ import styles from './FilterBar.module.css';
 const FilterBar: FC<{ totalResults: number }> = ({ totalResults }) => {
   const dispatch = useDispatch();
   const filters = useSelector((state: RootState) => state.filters);
-  const games = useSelector(selectGames);
+  const { data: games = [] } = useGetGamesQuery();
 
   const genres = useMemo(() => {
     const allGenres = games.flatMap(game => game.genre);

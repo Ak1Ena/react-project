@@ -2,15 +2,15 @@ import { useState, type FC, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { LogIn } from 'lucide-react';
-import type { AppDispatch } from '../app/store';
-import { login, selectAuthStatus, selectAuthError, clearError } from '../features/auth/authSlice';
+import { useLazyGetUsersQuery } from '../features/api/userApi';
+import { setUser, setAuthError, clearError, selectAuthError } from '../features/auth/authSlice';
 import styles from './Auth.module.css';
 
 const LoginPage: FC = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
-  const status = useSelector(selectAuthStatus);
+  const dispatch = useDispatch();
   const error = useSelector(selectAuthError);
+  const [fetchUsers, { isLoading }] = useLazyGetUsersQuery();
 
   const [formData, setFormData] = useState({
     username: '',
@@ -26,10 +26,18 @@ const LoginPage: FC = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      await dispatch(login(formData)).unwrap();
+      const users = await fetchUsers().unwrap();
+      const user = users.find(
+        (u) => u.username === formData.username && u.password === formData.password
+      );
+      if (!user) {
+        dispatch(setAuthError('Invalid username or password'));
+        return;
+      }
+      dispatch(setUser(user));
       navigate('/');
     } catch {
-      // Error is handled in the slice and displayed via selector
+      dispatch(setAuthError('Login failed. Please try again.'));
     }
   };
 
@@ -64,9 +72,9 @@ const LoginPage: FC = () => {
 
         {error && <div className="error-message">{error}</div>}
 
-        <button type="submit" disabled={status === 'loading'} className="btn-primary">
+        <button type="submit" disabled={isLoading} className="btn-primary">
           <LogIn size={20} />
-          {status === 'loading' ? 'Logging in...' : 'Login'}
+          {isLoading ? 'Logging in...' : 'Login'}
         </button>
       </form>
 

@@ -1,23 +1,23 @@
-import { useEffect, type FC } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { type FC } from 'react';
+import { useSelector } from 'react-redux';
 import { ChevronRight } from 'lucide-react';
-import type { RootState, AppDispatch } from '../app/store';
-import { fetchGames, selectGames } from '../features/games/gamesSlice';
-import { fetchListEntries } from '../features/lists/listsSlice';
+import type { RootState } from '../app/store';
+import { useGetGamesQuery, useGetListEntriesQuery } from '../features/api/gameApi';
 import GameCard from '../components/GameCard/GameCard';
 import styles from './HomePage.module.css';
 
 const HomePage: FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const games = useSelector(selectGames);
-  const { entries } = useSelector((state: RootState) => state.lists);
+  const currentUser = useSelector((state: RootState) => state.auth.user);
+  const { data: games = [], isLoading: gamesLoading } = useGetGamesQuery();
+  const { data: entries = [] } = useGetListEntriesQuery(currentUser?.id ?? '', {
+    skip: !currentUser,
+  });
 
-  useEffect(() => {
-    dispatch(fetchGames());
-    dispatch(fetchListEntries());
-  }, [dispatch]);
+  if (gamesLoading) {
+    return <div className={styles.loading}>Loading games...</div>;
+  }
 
-  const playingGames = entries.length > 0 
+  const playingGames = entries.length > 0
     ? games.filter(g => entries.some(e => e.gameId === g.id && e.status === 'playing')).slice(0, 6)
     : games.slice(0, 6);
 

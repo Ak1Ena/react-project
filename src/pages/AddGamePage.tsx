@@ -1,16 +1,14 @@
 import { useState, type FC, type ChangeEvent, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import { ArrowLeft, Save, Sparkles, Image as ImageIcon, Upload, Loader2 } from 'lucide-react';
-import type { AppDispatch } from '../app/store';
-import { createGame } from '../features/games/gamesSlice';
+import { useCreateGameMutation } from '../features/api/gameApi';
 import { useUI } from '../context/useUI';
 import styles from './AddGamePage.module.css';
 
 const AddGamePage: FC = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
   const { showToast } = useUI();
+  const [createGame, { isLoading: loading }] = useCreateGameMutation();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -21,8 +19,6 @@ const AddGamePage: FC = () => {
     image: '',
     description: '',
   });
-
-  const [loading, setLoading] = useState(false);
 
   const genres = ['Action', 'RPG', 'FPS', 'Strategy', 'Adventure', 'Sports', 'Simulation'];
 
@@ -58,19 +54,16 @@ const AddGamePage: FC = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     try {
       const gameData = {
         ...formData,
         appid: Math.floor(Date.now() / 1000) + Math.floor(Math.random() * 1000),
       };
-      await dispatch(createGame(gameData)).unwrap();
+      await createGame(gameData).unwrap();
       showToast('Game added successfully to catalog!', 'success');
       navigate('/');
     } catch {
       showToast('Failed to add game. Please try again.', 'error');
-    } finally {
-      setLoading(false);
     }
   };
 

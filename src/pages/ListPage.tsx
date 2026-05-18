@@ -1,27 +1,25 @@
-import { type FC, useEffect } from 'react';
+import { type FC } from 'react';
 import { useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchListEntries, selectEntriesByStatus } from '../features/lists/listsSlice';
-import { fetchGames, selectGames } from '../features/games/gamesSlice';
-import type { RootState, AppDispatch } from '../app/store';
+import { useSelector } from 'react-redux';
+import { useGetGamesQuery, useGetListEntriesQuery } from '../features/api/gameApi';
+import type { RootState } from '../app/store';
 import FilterBar from '../components/FilterBar/FilterBar';
 import GameCard from '../components/GameCard/GameCard';
 import styles from './ListPage.module.css';
 
 const ListPage: FC = () => {
   const { status } = useParams<{ status: string }>();
-  const dispatch = useDispatch<AppDispatch>();
-  const entries = useSelector((state: RootState) => selectEntriesByStatus(state, status));
-  const games = useSelector(selectGames);
+  const currentUser = useSelector((state: RootState) => state.auth.user);
   const filters = useSelector((state: RootState) => state.filters);
 
-  useEffect(() => {
-    dispatch(fetchGames());
-    dispatch(fetchListEntries());
-  }, [dispatch]);
+  const { data: games = [], isLoading: gamesLoading } = useGetGamesQuery();
+  const { data: allEntries = [] } = useGetListEntriesQuery(currentUser?.id ?? '', {
+    skip: !currentUser,
+  });
+
+  const entries = status ? allEntries.filter((e) => e.status === status) : allEntries;
 
   const filteredGames = games.filter((game) => {
-    // If status is provided, only show games in that list. Otherwise, show all games (Library view).
     if (status) {
       const entry = entries.find((e) => e.gameId === game.id && e.status === status);
       if (!entry) return false;
@@ -37,11 +35,11 @@ const ListPage: FC = () => {
       return false;
     }
     if (filters.year !== 'All') {
-        if (filters.year === '≤2022') {
-            if (game.releaseYear > 2022) return false;
-        } else if (game.releaseYear.toString() !== filters.year) {
-            return false;
-        }
+      if (filters.year === '≤2022') {
+        if (game.releaseYear > 2022) return false;
+      } else if (game.releaseYear.toString() !== filters.year) {
+        return false;
+      }
     }
     if (game.rating < filters.minRating) {
       return false;
@@ -51,6 +49,10 @@ const ListPage: FC = () => {
   });
 
   const displayStatus = status ? status.charAt(0).toUpperCase() + status.slice(1) : 'Library';
+
+  if (gamesLoading) {
+    return <div className={styles.listPage}>Loading...</div>;
+  }
 
   return (
     <div className={styles.listPage}>

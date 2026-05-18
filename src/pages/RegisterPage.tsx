@@ -2,15 +2,15 @@ import { useState, type FC, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { UserPlus } from 'lucide-react';
-import type { AppDispatch } from '../app/store';
-import { register, selectAuthStatus, selectAuthError, clearError } from '../features/auth/authSlice';
+import { useRegisterUserMutation } from '../features/api/userApi';
+import { setUser, setAuthError, clearError, selectAuthError } from '../features/auth/authSlice';
 import styles from './Auth.module.css';
 
 const RegisterPage: FC = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
-  const status = useSelector(selectAuthStatus);
+  const dispatch = useDispatch();
   const error = useSelector(selectAuthError);
+  const [registerUser, { isLoading }] = useRegisterUserMutation();
 
   const [formData, setFormData] = useState({
     username: '',
@@ -35,15 +35,15 @@ const RegisterPage: FC = () => {
       return;
     }
     try {
-      const registerData = {
+      const user = await registerUser({
         username: formData.username,
         email: formData.email,
         password: formData.password,
-      };
-      await dispatch(register(registerData)).unwrap();
+      }).unwrap();
+      dispatch(setUser(user));
       navigate('/');
     } catch {
-      // Error is handled in the slice
+      dispatch(setAuthError('Registration failed. Please try again.'));
     }
   };
 
@@ -104,9 +104,9 @@ const RegisterPage: FC = () => {
           <div className="error-message">{error || validationError}</div>
         )}
 
-        <button type="submit" disabled={status === 'loading'} className="btn-primary">
+        <button type="submit" disabled={isLoading} className="btn-primary">
           <UserPlus size={20} />
-          {status === 'loading' ? 'Creating account...' : 'Register'}
+          {isLoading ? 'Creating account...' : 'Register'}
         </button>
       </form>
 

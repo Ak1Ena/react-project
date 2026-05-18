@@ -1,10 +1,8 @@
 import { type FC, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { Star, Trash2, Edit3, MoveRight, Save } from 'lucide-react';
 import type { Game } from '../../features/games/gamesAPI';
 import type { ListEntry, ListStatus } from '../../features/lists/listsAPI';
-import { removeFromList, updateListEntry } from '../../features/lists/listsSlice';
-import type { AppDispatch } from '../../app/store';
+import { useRemoveFromListMutation, useUpdateListEntryMutation } from '../../features/api/gameApi';
 import { useUI } from '../../context/useUI';
 import styles from './ListEntryCard.module.css';
 
@@ -14,24 +12,25 @@ interface ListEntryCardProps {
 }
 
 const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
-  const dispatch = useDispatch<AppDispatch>();
   const { openModal } = useUI();
+  const [updateListEntry] = useUpdateListEntryMutation();
+  const [removeFromList] = useRemoveFromListMutation();
   const [hoverRating, setHoverRating] = useState(0);
   const [reviewInput, setReviewInput] = useState(entry.review || '');
   const [isEditingReview, setIsEditingReview] = useState(!entry.review);
 
   const handleRemove = () => {
     if (window.confirm('Are you sure you want to remove this game from your list?')) {
-      dispatch(removeFromList(entry.id));
+      removeFromList(entry.id);
     }
   };
 
   const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    dispatch(updateListEntry({ id: entry.id, entry: { status: e.target.value as ListStatus } }));
+    updateListEntry({ id: entry.id, entry: { status: e.target.value as ListStatus } });
   };
 
   const handleRatingChange = (newRating: number) => {
-    dispatch(updateListEntry({ id: entry.id, entry: { personalRating: newRating } }));
+    updateListEntry({ id: entry.id, entry: { personalRating: newRating } });
   };
 
   const handleEditNotes = () => {
@@ -40,7 +39,7 @@ const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
 
   const handlePostReview = () => {
     if (reviewInput?.trim()) {
-      dispatch(updateListEntry({ id: entry.id, entry: { review: reviewInput } }));
+      updateListEntry({ id: entry.id, entry: { review: reviewInput } });
       setIsEditingReview(false);
     }
   };

@@ -8,13 +8,13 @@ import {
   LogOut
 } from 'lucide-react';
 import { selectCurrentUser, logout } from '../../features/auth/authSlice';
-import { selectListEntries } from '../../features/lists/listsSlice';
+import { useGetListEntriesQuery } from '../../features/api/gameApi';
 import styles from './Sidebar.module.css';
 
 const Sidebar: FC = () => {
   const dispatch = useDispatch();
   const user = useSelector(selectCurrentUser);
-  const entries = useSelector(selectListEntries);
+  const { data: entries = [] } = useGetListEntriesQuery(user?.id ?? '', { skip: !user });
 
   const getCount = (status: string) => {
     return entries.filter(e => e.status === status).length;

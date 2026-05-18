@@ -1,8 +1,6 @@
 import { useState, type FC, type FormEvent } from 'react';
-import { useDispatch } from 'react-redux';
 import { X, Star } from 'lucide-react';
-import type { AppDispatch } from '../../app/store';
-import { updateListEntry } from '../../features/lists/listsSlice';
+import { useUpdateListEntryMutation } from '../../features/api/gameApi';
 import type { Game } from '../../features/games/gamesAPI';
 import type { ListEntry } from '../../features/lists/listsAPI';
 import { useUI } from '../../context/useUI';
@@ -44,17 +42,17 @@ const Modal: FC = () => {
 };
 
 const EditEntryForm: FC<{ data: EditEntryData; onClose: () => void }> = ({ data, onClose }) => {
-  const dispatch = useDispatch<AppDispatch>();
+  const [updateListEntry] = useUpdateListEntryMutation();
   const [notes, setNotes] = useState(data.entry.notes || '');
   const [rating, setRating] = useState(data.entry.personalRating || 0);
   const [hoverRating, setHoverRating] = useState(0);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    dispatch(updateListEntry({ 
-      id: data.entry.id, 
-      entry: { notes, personalRating: Number(rating) } 
-    }));
+    updateListEntry({
+      id: data.entry.id,
+      entry: { notes, personalRating: Number(rating) },
+    });
     onClose();
   };
 

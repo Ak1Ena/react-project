@@ -1,46 +1,45 @@
-import { useEffect, useState, type FC } from 'react';
+import { useState, type FC } from 'react';
 import type { ReactNode } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Star, ArrowLeft, Check, Gamepad2, Clock, Send, Loader2 } from 'lucide-react';
 import { useUI } from '../context/useUI';
-import type { RootState, AppDispatch } from '../app/store';
-import { fetchGameById, clearSelectedGame } from '../features/games/gamesSlice';
+import type { RootState } from '../app/store';
 import {
-  addToList,
-  fetchListEntries,
-  updateListEntry,
-  fetchGameReviews,
-  selectCommunityReviewsForGame,
-} from '../features/lists/listsSlice';
-import { fetchAllUsers } from '../features/auth/authSlice';
-import type { ListStatus } from '../features/lists/listsAPI';
+  useGetGameByIdQuery,
+  useGetListEntriesQuery,
+  useGetGameReviewsQuery,
+  useAddToListMutation,
+  useUpdateListEntryMutation,
+} from '../features/api/gameApi';
+import { useGetUsersQuery } from '../features/api/userApi';
+import type { ListStatus, ListEntry } from '../features/lists/listsAPI';
 import styles from './GameDetailPage.module.css';
 
 const GameDetailPage: FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
   const { showToast } = useUI();
-  const { selectedGame: game, status } = useSelector((state: RootState) => state.games);
-  const { entries } = useSelector((state: RootState) => state.lists);
   const currentUser = useSelector((state: RootState) => state.auth.user);
-  const allUsers = useSelector((state: RootState) => state.auth.users);
-  const communityReviews = useSelector((state: RootState) =>
-    selectCommunityReviewsForGame(state, id)
-  );
-  
-  const existingEntry = entries.find((e) => e.gameId === game?.id);
 
+  const { data: game, isLoading: gameLoading } = useGetGameByIdQuery(id ?? '', { skip: !id });
+  const { data: entries = [] } = useGetListEntriesQuery(currentUser?.id ?? '', { skip: !currentUser });
+  const { data: publicReviews = [] } = useGetGameReviewsQuery(id ?? '', { skip: !id });
+  const { data: allUsers = [] } = useGetUsersQuery();
+
+  const [addToList] = useAddToListMutation();
+  const [updateListEntry] = useUpdateListEntryMutation();
+
+  const existingEntry = entries.find((e) => e.gameId === game?.id);
   const displayRating = existingEntry?.personalRating || 0;
+
   const [localReview, setLocalReview] = useState('');
   const [reviewSending, setReviewSending] = useState(false);
   const [pendingStatus, setPendingStatus] = useState<ListStatus | null>(null);
   const [pendingRating, setPendingRating] = useState<number | null>(null);
 
-  // Track which entry's review the textarea currently mirrors so we can
-  // reset it during render when the user navigates to a different game
-  // (the React-recommended alternative to setState-in-useEffect).
+  // Reset textarea when the underlying entry changes (different game or
+  // initial fetch). Using the React "adjust state during render" pattern.
   const [reviewSourceId, setReviewSourceId] = useState<string | null>(null);
   const currentEntryId = existingEntry?.id ?? null;
   if (currentEntryId !== reviewSourceId) {
@@ -48,19 +47,7 @@ const GameDetailPage: FC = () => {
     setLocalReview(existingEntry?.review || '');
   }
 
-  useEffect(() => {
-    if (id) {
-      dispatch(fetchGameById(id));
-      dispatch(fetchListEntries());
-      dispatch(fetchGameReviews(id));
-      dispatch(fetchAllUsers());
-    }
-    return () => {
-      dispatch(clearSelectedGame());
-    };
-  }, [id, dispatch]);
-
-  if (status === 'loading' || !game) {
+  if (gameLoading || !game) {
     return <div className={styles.loading}>Loading...</div>;
   }
 
@@ -69,16 +56,16 @@ const GameDetailPage: FC = () => {
     setPendingStatus(newStatus);
     try {
       if (existingEntry) {
-        await dispatch(updateListEntry({ id: existingEntry.id, entry: { status: newStatus } })).unwrap();
+        await updateListEntry({ id: existingEntry.id, entry: { status: newStatus } }).unwrap();
       } else {
-        await dispatch(addToList({
+        await addToList({
           gameId: game.id,
           userId: currentUser.id,
           status: newStatus,
           notes: '',
           review: '',
           personalRating: 0,
-        })).unwrap();
+        }).unwrap();
       }
     } catch {
       showToast('Failed to update status. Try again.', 'error');
@@ -91,7 +78,7 @@ const GameDetailPage: FC = () => {
     if (!existingEntry || pendingRating !== null) return;
     setPendingRating(rating);
     try {
-      await dispatch(updateListEntry({ id: existingEntry.id, entry: { personalRating: rating } })).unwrap();
+      await updateListEntry({ id: existingEntry.id, entry: { personalRating: rating } }).unwrap();
     } catch {
       showToast('Failed to save rating. Try again.', 'error');
     } finally {
@@ -108,7 +95,7 @@ const GameDetailPage: FC = () => {
     }
     setReviewSending(true);
     try {
-      await dispatch(updateListEntry({ id: existingEntry.id, entry: { review: trimmed } })).unwrap();
+      await updateListEntry({ id: existingEntry.id, entry: { review: trimmed } }).unwrap();
       showToast('Review sent!', 'success');
     } catch {
       showToast('Failed to send review. Try again.', 'error');
@@ -131,6 +118,15 @@ const GameDetailPage: FC = () => {
     return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
   };
 
+  // Merge publicReviews snapshot with live current-user entries so the
+  // user's just-saved review appears immediately. Entries take precedence
+  // over publicReviews when both reference the same id.
+  const byId = new Map<string, ListEntry>();
+  for (const r of publicReviews) byId.set(r.id, r);
+  for (const e of entries) if (e.gameId === game.id) byId.set(e.id, e);
+  const communityReviews = Array.from(byId.values())
+    .filter((r) => (r.review || '').trim().length > 0)
+    .sort((a, b) => new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime());
 
   const statuses: { id: ListStatus; label: string; icon: ReactNode }[] = [
     { id: 'playing', label: 'Playing', icon: <Gamepad2 size={16} /> },
