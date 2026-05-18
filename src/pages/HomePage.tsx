@@ -43,9 +43,9 @@ const HomePage: FC = () => {
       {heroGame && (
         <div className={styles.hero}>
           <div className={styles.heroContent}>
-            <span className={styles.heroLabel}>RESUME PLAYING · 64% COMPLETE</span>
+            <span className={styles.heroLabel}>RESUME PLAYING</span>
             <h1 className={styles.heroTitle}>{heroGame.name}</h1>
-            <p className={styles.heroMeta}>{heroGame.genre[0]} · Action · 42h played</p>
+            <p className={styles.heroMeta}>{heroGame.genre.join(' · ')} · {heroGame.releaseYear}</p>
           </div>
           <div className={styles.heroGradient}></div>
         </div>

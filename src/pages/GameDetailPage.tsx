@@ -32,8 +32,6 @@ const GameDetailPage: FC = () => {
     };
   }, [id, dispatch]);
 
-  const progress = 23;
-
   if (status === 'loading' || !game) {
     return <div className={styles.loading}>Loading...</div>;
   }
@@ -96,11 +94,9 @@ const GameDetailPage: FC = () => {
           <header className={styles.header}>
             <h1 className={styles.title}>{game.name}</h1>
             <div className={styles.infoRow}>
-              <span>Two Brick Games</span>
+              <span>{game.genre.join(' · ')}</span>
               <span className={styles.dot}>·</span>
               <span>{game.releaseYear}</span>
-              <span className={styles.dot}>·</span>
-              <span>Strategy · RPG</span>
               <span className={styles.dot}>·</span>
               <div className={styles.commRating}>
                 <Star size={14} fill="var(--primary)" color="var(--primary)" />
@@ -112,30 +108,21 @@ const GameDetailPage: FC = () => {
           <div className={styles.statsGrid}>
             <div className={styles.statCard}>
               <span className={styles.statLabel}>STATUS</span>
-              <span className={styles.statValue} style={{ color: 'var(--primary)' }}>Playing</span>
+              <span className={styles.statValue} style={{ color: existingEntry ? 'var(--primary)' : 'var(--text-muted)' }}>
+                {existingEntry ? existingEntry.status.charAt(0).toUpperCase() + existingEntry.status.slice(1) : 'Not tracked'}
+              </span>
             </div>
             <div className={styles.statCard}>
-              <span className={styles.statLabel}>HOURS</span>
-              <span className={styles.statValue}>12h</span>
+              <span className={styles.statLabel}>GENRE</span>
+              <span className={styles.statValue}>{game.genre[0]}</span>
             </div>
             <div className={styles.statCard}>
-              <span className={styles.statLabel}>PROGRESS</span>
-              <span className={styles.statValue}>23%</span>
+              <span className={styles.statLabel}>RELEASE YEAR</span>
+              <span className={styles.statValue}>{game.releaseYear}</span>
             </div>
             <div className={styles.statCard}>
-              <span className={styles.statLabel}>LAST PLAYED</span>
-              <span className={styles.statValue}>Yesterday</span>
-            </div>
-          </div>
-
-          <div className={styles.progressSection}>
-            <div className={styles.progressHeader}>
-              <span className={styles.progressLabel}>PROGRESS</span>
-              <span className={styles.progressHint}>click bar to set</span>
-            </div>
-            <div className={styles.progressTrack}>
-              <div className={styles.progressBar} style={{ width: `${progress}%` }}></div>
-              <span className={styles.progressPercent}>{progress}%</span>
+              <span className={styles.statLabel}>PLATFORMS</span>
+              <span className={styles.statValue}>{game.platforms.length} platforms</span>
             </div>
           </div>
 
