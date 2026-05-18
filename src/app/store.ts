@@ -3,7 +3,6 @@ import type { ThunkAction, Action } from '@reduxjs/toolkit';
 import gamesReducer from '../features/games/gamesSlice';
 import listsReducer from '../features/lists/listsSlice';
 import filtersReducer from '../features/filters/filtersSlice';
-import uiReducer from '../features/ui/uiSlice';
 import authReducer from '../features/auth/authSlice';
 
 export const store = configureStore({
@@ -11,7 +10,6 @@ export const store = configureStore({
     games: gamesReducer,
     lists: listsReducer,
     filters: filtersReducer,
-    ui: uiReducer,
     auth: authReducer,
   },
 });

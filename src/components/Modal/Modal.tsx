@@ -1,11 +1,11 @@
 import { useState, type FC, type FormEvent } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { X, Star } from 'lucide-react';
-import type { RootState, AppDispatch } from '../../app/store';
-import { closeModal } from '../../features/ui/uiSlice';
+import type { AppDispatch } from '../../app/store';
 import { updateListEntry } from '../../features/lists/listsSlice';
 import type { Game } from '../../features/games/gamesAPI';
 import type { ListEntry } from '../../features/lists/listsAPI';
+import { useUI } from '../../context/UIContext';
 
 interface EditEntryData {
   entry: ListEntry;
@@ -14,13 +14,12 @@ interface EditEntryData {
 import styles from './Modal.module.css';
 
 const Modal: FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const { modalOpen, modalType, modalData } = useSelector((state: RootState) => state.ui);
+  const { modalOpen, modalType, modalData, closeModal } = useUI();
 
   if (!modalOpen) return null;
 
   const handleClose = () => {
-    dispatch(closeModal());
+    closeModal();
   };
 
   const renderContent = () => {

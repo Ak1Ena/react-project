@@ -4,18 +4,24 @@ import { useDispatch, useSelector } from 'react-redux';
 import { 
   LayoutDashboard, 
   Library, 
-  Compass, 
-  BarChart3, 
-  Settings,
   Circle,
   LogOut
 } from 'lucide-react';
 import { selectCurrentUser, logout } from '../../features/auth/authSlice';
+import { selectListEntries } from '../../features/lists/listsSlice';
 import styles from './Sidebar.module.css';
 
 const Sidebar: FC = () => {
   const dispatch = useDispatch();
   const user = useSelector(selectCurrentUser);
+  const entries = useSelector(selectListEntries);
+
+  const getCount = (status: string) => {
+    if (status === 'favorites') {
+      return entries.filter(e => e.isFavorite).length;
+    }
+    return entries.filter(e => e.status === status).length;
+  };
 
   return (
     <aside className={styles.sidebar}>
@@ -42,20 +48,6 @@ const Sidebar: FC = () => {
             <Library size={20} />
             <span>Library</span>
           </NavLink>
-          <NavLink 
-            to="/discover" 
-            className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}
-          >
-            <Compass size={20} />
-            <span>Discover</span>
-          </NavLink>
-          <NavLink 
-            to="/stats" 
-            className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}
-          >
-            <BarChart3 size={20} />
-            <span>Stats</span>
-          </NavLink>
         </div>
 
         <div className={styles.navGroup}>
@@ -64,42 +56,32 @@ const Sidebar: FC = () => {
             <NavLink to="/my-list/playing" className={styles.navLink}>
               <Circle size={8} fill="var(--primary)" stroke="var(--primary)" />
               <span>Playing</span>
-              <span className={styles.count}>6</span>
+              <span className={styles.count}>{getCount('playing')}</span>
             </NavLink>
             <NavLink to="/my-list/completed" className={styles.navLink}>
               <Circle size={8} fill="var(--accent-green)" stroke="var(--accent-green)" />
               <span>Completed</span>
-              <span className={styles.count}>8</span>
+              <span className={styles.count}>{getCount('completed')}</span>
             </NavLink>
             <NavLink to="/my-list/backlog" className={styles.navLink}>
               <Circle size={8} fill="var(--accent-purple)" stroke="var(--accent-purple)" />
               <span>Backlog</span>
-              <span className={styles.count}>3</span>
+              <span className={styles.count}>{getCount('backlog')}</span>
             </NavLink>
             <NavLink to="/my-list/wishlist" className={styles.navLink}>
               <Circle size={8} fill="var(--accent-orange)" stroke="var(--accent-orange)" />
               <span>Wishlist</span>
-              <span className={styles.count}>5</span>
+              <span className={styles.count}>{getCount('wishlist')}</span>
             </NavLink>
             <NavLink to="/my-list/dropped" className={styles.navLink}>
               <Circle size={8} fill="var(--accent-red)" stroke="var(--accent-red)" />
               <span>Dropped</span>
-              <span className={styles.count}>2</span>
+              <span className={styles.count}>{getCount('dropped')}</span>
             </NavLink>
             <NavLink to="/my-list/favorites" className={styles.navLink}>
               <Circle size={8} fill="var(--accent-purple)" stroke="var(--accent-purple)" />
               <span>Favorites</span>
-              <span className={styles.count}>9</span>
-            </NavLink>
-          </div>
-        </div>
-
-        <div className={styles.navGroup}>
-          <h3 className={styles.groupTitle}>ACCOUNT</h3>
-          <div className={styles.navSection}>
-            <NavLink to="/settings" className={styles.navLink}>
-              <Settings size={20} />
-              <span>Settings</span>
+              <span className={styles.count}>{getCount('favorites')}</span>
             </NavLink>
           </div>
         </div>

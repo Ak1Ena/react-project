@@ -2,6 +2,12 @@
   display: flex;
   flex-direction: column;
   gap: 32px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .hero {
@@ -51,137 +57,9 @@
   z-index: 1;
 }
 
-.mainGrid {
-  display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 32px;
-}
-
-.leftCol {
+.fullWidthGrid {
   display: flex;
   flex-direction: column;
   gap: 32px;
 }
 
-.sectionHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.sectionTitle {
-  font-size: 18px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.count {
-  color: var(--text-muted);
-  font-weight: 500;
-}
-
-.seeAll {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text-muted);
-  gap: 4px;
-}
-
-.seeAll:hover {
-  color: var(--text-primary);
-}
-
-.gameRow {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
-}
-
-.rightCol {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-}
-
-.activityList, .achievementList {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-top: 16px;
-}
-
-.activityItem {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background-color: var(--bg-card);
-  padding: 12px;
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border);
-}
-
-.activityAvatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 800;
-  font-size: 14px;
-}
-
-.activityContent {
-  display: flex;
-  flex-direction: column;
-}
-
-.activityText {
-  font-size: 13px;
-  color: var(--text-secondary);
-}
-
-.activityText strong {
-  color: white;
-}
-
-.activityTime {
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
-.achievementItem {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  background-color: var(--bg-card);
-  padding: 16px;
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border);
-}
-
-.achievementIcon {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.achievementInfo {
-  display: flex;
-  flex-direction: column;
-}
-
-.achievementTitle {
-  font-size: 14px;
-  font-weight: 700;
-}
-
-.achievementDesc {
-  font-size: 12px;
-  color: var(--text-muted);
-}

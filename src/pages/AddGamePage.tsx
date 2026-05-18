@@ -1,14 +1,16 @@
 import { useState, type FC, type ChangeEvent, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { ChevronLeft, Save } from 'lucide-react';
+import { ArrowLeft, Save, Sparkles, Image as ImageIcon, Upload } from 'lucide-react';
 import type { AppDispatch } from '../app/store';
 import { createGame } from '../features/games/gamesSlice';
-import { showToast } from '../features/ui/uiSlice';
+import { useUI } from '../context/UIContext';
+import styles from './AddGamePage.module.css';
 
 const AddGamePage: FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
+  const { showToast } = useUI();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -38,6 +40,22 @@ const AddGamePage: FC = () => {
     }
   };
 
+  const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        showToast('Image is too large. Please select a file under 2MB.', 'error');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData((prev) => ({ ...prev, image: reader.result as string }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -47,125 +65,167 @@ const AddGamePage: FC = () => {
         appid: Math.floor(Date.now() / 1000) + Math.floor(Math.random() * 1000),
       };
       await dispatch(createGame(gameData)).unwrap();
-      dispatch(showToast({ message: 'Game added successfully to catalog!', type: 'success' }));
+      showToast('Game added successfully to catalog!', 'success');
       navigate('/');
     } catch {
-      dispatch(showToast({ message: 'Failed to add game. Please try again.', type: 'error' }));
+      showToast('Failed to add game. Please try again.', 'error');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="add-game-page">
-      <button onClick={() => navigate(-1)} className="back-button">
-        <ChevronLeft size={20} />
-        Back
-      </button>
+    <div className={styles.pageContainer}>
+      <header className={styles.pageHeader}>
+        <button className={styles.backBtn} onClick={() => navigate(-1)}>
+          <ArrowLeft size={20} />
+          <span>Back to Library</span>
+        </button>
+      </header>
 
-      <div className="form-container">
-        <h1>Add New Game to Catalog</h1>
-        <form onSubmit={handleSubmit} className="add-game-form">
-          <div className="form-grid">
-            <div className="form-group">
-              <label htmlFor="name">Game Title*</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                required
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="e.g. Elden Ring"
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="genre">Genre*</label>
-              <select id="genre" name="genre" value={formData.genre[0]} onChange={handleChange}>
-                {genres.map((g) => (
-                  <option key={g} value={g}>{g}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="platforms">Platforms* (comma separated)</label>
-              <input
-                type="text"
-                id="platforms"
-                name="platforms"
-                required
-                value={formData.platforms.join(', ')}
-                onChange={handleChange}
-                placeholder="e.g. PC, PS5, Xbox"
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="releaseYear">Release Year*</label>
-              <input
-                type="number"
-                id="releaseYear"
-                name="releaseYear"
-                required
-                min="1950"
-                max={new Date().getFullYear() + 5}
-                value={formData.releaseYear}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="rating">Base Rating (0-10)</label>
-              <input
-                type="number"
-                id="rating"
-                name="rating"
-                min="0"
-                max="10"
-                step="0.1"
-                value={formData.rating}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="image">Cover Image URL*</label>
-              <input
-                type="url"
-                id="image"
-                name="image"
-                required
-                value={formData.image}
-                onChange={handleChange}
-                placeholder="https://example.com/image.jpg"
-              />
-            </div>
+      <div className={styles.mainLayout}>
+        <div className={styles.leftCol}>
+          <div className={styles.imagePreviewCard}>
+            {formData.image ? (
+              <img src={formData.image} alt="Preview" className={styles.previewImage} />
+            ) : (
+              <div className={styles.placeholderIcon}>
+                <ImageIcon size={48} />
+                <span>Image Preview</span>
+              </div>
+            )}
+            <div className={styles.patternOverlay}></div>
+            <h2 className={styles.previewTitle}>{formData.name || 'New Game'}</h2>
           </div>
 
-          <div className="form-group full-width">
-            <label htmlFor="description">Description</label>
-            <textarea
-              id="description"
-              name="description"
-              rows={5}
-              value={formData.description}
-              onChange={handleChange}
-              placeholder="Provide a brief description of the game..."
-            />
+          <div className={styles.infoBox}>
+            <div className={styles.infoIcon}>
+              <Sparkles size={18} />
+            </div>
+            <p className={styles.infoText}>
+              Adding a game will make it available for all users in the community catalog.
+            </p>
           </div>
+        </div>
 
-          <div className="form-actions">
-            <button type="button" onClick={() => navigate(-1)} className="btn-secondary">
-              Cancel
-            </button>
-            <button type="submit" disabled={loading} className="btn-primary">
-              <Save size={20} />
-              {loading ? 'Saving...' : 'Save Game'}
-            </button>
-          </div>
-        </form>
+        <div className={styles.rightCol}>
+          <header className={styles.formHeader}>
+            <h1 className={styles.title}>Add New Game</h1>
+            <p className={styles.subtitle}>Fill in the details to contribute to the catalog</p>
+          </header>
+
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <div className={styles.formGrid}>
+              <div className={styles.formGroup}>
+                <label className={styles.label}>Game Title*</label>
+                <input
+                  type="text"
+                  name="name"
+                  required
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="e.g. Elden Ring"
+                  className={styles.input}
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className={styles.label}>Genre*</label>
+                <select 
+                  name="genre" 
+                  value={formData.genre[0]} 
+                  onChange={handleChange}
+                  className={styles.select}
+                >
+                  {genres.map((g) => (
+                    <option key={g} value={g}>{g}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className={styles.label}>Platforms* (comma separated)</label>
+                <input
+                  type="text"
+                  name="platforms"
+                  required
+                  value={formData.platforms.join(', ')}
+                  onChange={handleChange}
+                  placeholder="e.g. PC, PS5, Xbox"
+                  className={styles.input}
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className={styles.label}>Release Year*</label>
+                <input
+                  type="number"
+                  name="releaseYear"
+                  required
+                  min="1950"
+                  max={new Date().getFullYear() + 5}
+                  value={formData.releaseYear}
+                  onChange={handleChange}
+                  className={styles.input}
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className={styles.label}>Base Rating (0-10)</label>
+                <input
+                  type="number"
+                  name="rating"
+                  min="0"
+                  max="10"
+                  step="0.1"
+                  value={formData.rating}
+                  onChange={handleChange}
+                  className={styles.input}
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className={styles.label}>Cover Image*</label>
+                <div className={styles.uploadWrapper}>
+                  <label htmlFor="image-upload" className={styles.uploadLabel}>
+                    <Upload size={16} />
+                    <span>{formData.image ? 'Change Image' : 'Upload Image'}</span>
+                  </label>
+                  <input
+                    id="image-upload"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className={styles.fileInput}
+                  />
+                  {formData.image && <span className={styles.fileName}>Image selected ✅</span>}
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.formGroup}>
+              <label className={styles.label}>Description</label>
+              <textarea
+                name="description"
+                rows={5}
+                value={formData.description}
+                onChange={handleChange}
+                placeholder="Provide a brief description..."
+                className={styles.textarea}
+              />
+            </div>
+
+            <div className={styles.formActions}>
+              <button type="button" onClick={() => navigate(-1)} className={styles.cancelBtn}>
+                Cancel
+              </button>
+              <button type="submit" disabled={loading || !formData.image} className={styles.saveBtn}>
+                <Save size={18} />
+                <span>{loading ? 'Saving...' : 'Save Game'}</span>
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

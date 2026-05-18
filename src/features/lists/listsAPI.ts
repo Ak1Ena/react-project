@@ -11,6 +11,7 @@ export interface ListEntry {
   review: string;
   personalRating: number;
   dateAdded: string;
+  isFavorite?: boolean;
 }
 
 export const fetchListEntries = async (userId: string) => {

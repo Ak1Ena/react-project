@@ -1,41 +1,53 @@
 import { type FC } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Search, Bell, ListFilter, Plus } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Search, Plus } from 'lucide-react';
+import { setSearchQuery } from '../../features/filters/filtersSlice';
+import type { RootState } from '../../app/store';
 import styles from './Navbar.module.css';
 
 const Navbar: FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
+  const searchQuery = useSelector((state: RootState) => state.filters.searchQuery);
+
+  const isDashboard = location.pathname === '/';
+  const isAddGame = location.pathname === '/add-game';
+  const showSearch = !isDashboard && !isAddGame;
+  const showAddBtn = !isAddGame;
 
   return (
     <header className={styles.navbar}>
-      <div className={styles.searchWrapper}>
-        <Search className={styles.searchIcon} size={18} />
-        <input 
-          type="text" 
-          placeholder="Search 50,000+ games, studios, genres..." 
-          className={styles.searchInput}
-        />
-        <div className={styles.searchShortcut}>
-          <kbd>⌘</kbd>
-          <kbd>K</kbd>
+      {showSearch ? (
+        <div className={styles.searchWrapper}>
+          <Search className={styles.searchIcon} size={18} />
+          <input
+            type="text"
+            placeholder="Search 50,000+ games, studios, genres..."
+            className={styles.searchInput}
+            value={searchQuery}
+            onChange={(e) => dispatch(setSearchQuery(e.target.value))}
+          />
+          <div className={styles.searchShortcut}>
+            <kbd>⌘</kbd>
+            <kbd>K</kbd>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div />
+      )}
 
       <div className={styles.actions}>
-        <button className={styles.iconBtn}>
-          <Bell size={20} />
-          <span className={styles.badge}></span>
-        </button>
-        <button className={styles.iconBtn}>
-          <ListFilter size={20} />
-        </button>
-        <button 
-          className={styles.addBtn}
-          onClick={() => navigate('/add-game')}
-        >
-          <Plus size={18} />
-          <span>Add game</span>
-        </button>
+        {showAddBtn && (
+          <button
+            className={styles.addBtn}
+            onClick={() => navigate('/add-game')}
+          >
+            <Plus size={18} />
+            <span>Add game</span>
+          </button>
+        )}
       </div>
     </header>
   );

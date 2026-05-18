@@ -1,45 +1,45 @@
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(8px);
-  z-index: 1000;
+.pageContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.pageHeader {
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 40px;
 }
 
-.container {
+.backBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-weight: 600;
+  transition: var(--transition);
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  margin-left: -12px;
+}
+
+.backBtn:hover {
+  color: white;
   background-color: var(--bg-card);
-  width: 100%;
-  max-width: 1000px;
-  height: 80vh;
+}
+
+.mainLayout {
+  display: flex;
+  gap: 40px;
+  background-color: var(--bg-card);
   border-radius: var(--radius-xl);
   border: 1px solid var(--border);
-  display: flex;
-  position: relative;
   overflow: hidden;
-}
-
-.closeBtn {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 32px;
-  height: 32px;
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
-  color: var(--text-muted);
-  z-index: 10;
-}
-
-.closeBtn:hover {
-  color: white;
-  background-color: rgba(0, 0, 0, 0.4);
+  min-height: 600px;
 }
 
 .leftCol {
@@ -51,12 +51,23 @@
 
 .heroCard {
   height: 400px;
-  background: linear-gradient(135deg, #7f1d1d, #ef4444);
+  background: var(--bg-sidebar);
   position: relative;
   padding: 32px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  overflow: hidden;
+}
+
+.heroImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
 }
 
 .patternOverlay {
@@ -65,23 +76,23 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: linear-gradient(45deg, rgba(0,0,0,0.1) 25%, transparent 25%, transparent 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1) 75%, transparent 75%, transparent);
-  background-size: 8px 8px;
-  opacity: 0.5;
+  background: linear-gradient(transparent, rgba(0,0,0,0.8));
+  z-index: 2;
 }
 
 .heroTitle {
   font-size: 32px;
   font-weight: 800;
   color: white;
-  z-index: 2;
+  z-index: 3;
   line-height: 1.1;
+  margin: 0;
 }
 
 .trackSection {
   padding: 32px;
   flex: 1;
-  background-color: #1a1c23;
+  background-color: var(--bg-sidebar);
 }
 
 .sectionTitle {
@@ -132,7 +143,7 @@
   overflow-y: auto;
 }
 
-.header {
+.detailHeader {
   margin-bottom: 32px;
 }
 
@@ -140,6 +151,7 @@
   font-size: 32px;
   font-weight: 800;
   margin-bottom: 8px;
+  color: white;
 }
 
 .infoRow {
@@ -191,51 +203,6 @@
   font-weight: 800;
 }
 
-.progressSection {
-  margin-bottom: 32px;
-}
-
-.progressHeader {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-
-.progressLabel {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--text-muted);
-}
-
-.progressHint {
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
-.progressTrack {
-  height: 8px;
-  background-color: var(--bg-sidebar);
-  border-radius: 4px;
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.progressBar {
-  height: 100%;
-  background-color: var(--primary);
-  border-radius: 4px;
-}
-
-.progressPercent {
-  position: absolute;
-  right: 0;
-  top: -24px;
-  font-size: 14px;
-  font-weight: 800;
-  color: var(--primary);
-}
-
 .inputLabel {
   font-size: 11px;
   font-weight: 700;
@@ -256,16 +223,69 @@
   margin-bottom: 24px;
 }
 
+.reviewWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 .reviewArea {
   width: 100%;
-  min-height: 100px;
+  min-height: 120px;
   background-color: var(--bg-input);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: 16px;
   color: white;
   font-family: inherit;
-  resize: none;
+  resize: vertical;
+}
+
+.saveReviewBtn {
+  align-self: flex-end;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: var(--primary);
+  color: var(--bg-card);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 700;
+  transition: var(--transition);
+}
+
+.saveReviewBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+.saveReviewBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.trackPrompt {
+  background-color: var(--bg-sidebar);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 24px 0;
+}
+
+.platformsSection {
+  margin-top: 24px;
+}
+
+.platforms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .platformBadge {
@@ -283,6 +303,108 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: 100%;
+  min-height: 400px;
   color: var(--text-muted);
+}
+
+.commentsSection {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.commentCount {
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+.emptyComments {
+  background-color: var(--bg-sidebar);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.commentsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.commentItem {
+  display: flex;
+  gap: 12px;
+  background-color: var(--bg-sidebar);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+}
+
+.commentAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--primary);
+  color: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.commentBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.commentHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.commentAuthor {
+  font-weight: 700;
+  font-size: 13px;
+  color: white;
+}
+
+.commentRating {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary);
+  background-color: rgba(198, 255, 0, 0.1);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.commentDate {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+.commentText {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin: 0;
 }

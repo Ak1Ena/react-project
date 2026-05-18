@@ -1,8 +1,7 @@
 import { type FC, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Sparkles, Plus } from 'lucide-react';
-import { fetchListEntries, selectEntriesByStatus } from '../features/lists/listsSlice';
+import { fetchListEntries, selectEntriesByStatus, selectListEntries } from '../features/lists/listsSlice';
 import { fetchGames, selectGames } from '../features/games/gamesSlice';
 import type { RootState, AppDispatch } from '../app/store';
 import FilterBar from '../components/FilterBar/FilterBar';
@@ -12,7 +11,10 @@ import styles from './ListPage.module.css';
 const ListPage: FC = () => {
   const { status } = useParams<{ status: string }>();
   const dispatch = useDispatch<AppDispatch>();
-  const entries = useSelector((state: RootState) => selectEntriesByStatus(state, status));
+  const isFavoritesList = status === 'favorites';
+  const statusEntries = useSelector((state: RootState) => selectEntriesByStatus(state, status));
+  const allEntries = useSelector(selectListEntries);
+  const entries = isFavoritesList ? allEntries.filter((e) => e.isFavorite) : statusEntries;
   const games = useSelector(selectGames);
   const filters = useSelector((state: RootState) => state.filters);
 
@@ -24,7 +26,9 @@ const ListPage: FC = () => {
   const filteredGames = games.filter((game) => {
     // If status is provided, only show games in that list. Otherwise, show all games (Library view).
     if (status) {
-      const entry = entries.find((e) => e.gameId === game.id && e.status === status);
+      const entry = isFavoritesList
+        ? entries.find((e) => e.gameId === game.id && e.isFavorite)
+        : entries.find((e) => e.gameId === game.id && e.status === status);
       if (!entry) return false;
     }
 
@@ -61,16 +65,6 @@ const ListPage: FC = () => {
           <p className={styles.subtitle}>
             {filteredGames.length} titles · auto-synced from your connected platforms
           </p>
-        </div>
-        <div className={styles.headerActions}>
-          <button className={styles.secondaryBtn}>
-            <Sparkles size={16} />
-            <span>Recommendations</span>
-          </button>
-          <button className={styles.secondaryBtn}>
-            <Plus size={16} />
-            <span>Add list</span>
-          </button>
         </div>
       </header>
 

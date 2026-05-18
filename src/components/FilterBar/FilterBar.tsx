@@ -1,7 +1,8 @@
-import { type FC } from 'react';
+import { type FC, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { LayoutGrid, List } from 'lucide-react';
 import type { RootState } from '../../app/store';
+import { selectGames } from '../../features/games/gamesSlice';
 import {
   setGenre,
   setPlatform,
@@ -14,9 +15,18 @@ import styles from './FilterBar.module.css';
 const FilterBar: FC<{ totalResults: number }> = ({ totalResults }) => {
   const dispatch = useDispatch();
   const filters = useSelector((state: RootState) => state.filters);
+  const games = useSelector(selectGames);
 
-  const genres = ['Action', 'RPG', 'Roguelike', 'Strategy', 'Indie', 'Adventure'];
-  const platforms = ['PC', 'PS5', 'Xbox', 'Switch'];
+  const genres = useMemo(() => {
+    const allGenres = games.flatMap(game => game.genre);
+    return Array.from(new Set(allGenres)).sort().slice(0, 8);
+  }, [games]);
+
+  const platforms = useMemo(() => {
+    const allPlatforms = games.flatMap(game => game.platforms);
+    return Array.from(new Set(allPlatforms)).sort();
+  }, [games]);
+
   const years = ['2025', '2024', '2023', '≤2022'];
   const ratings = [
     { label: '9+', value: 9 },

@@ -5,7 +5,7 @@ import type { Game } from '../../features/games/gamesAPI';
 import type { ListEntry, ListStatus } from '../../features/lists/listsAPI';
 import { removeFromList, updateListEntry } from '../../features/lists/listsSlice';
 import type { AppDispatch } from '../../app/store';
-import { openModal } from '../../features/ui/uiSlice';
+import { useUI } from '../../context/UIContext';
 import styles from './ListEntryCard.module.css';
 
 interface ListEntryCardProps {
@@ -15,6 +15,7 @@ interface ListEntryCardProps {
 
 const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
   const dispatch = useDispatch<AppDispatch>();
+  const { openModal } = useUI();
   const [hoverRating, setHoverRating] = useState(0);
   const [reviewInput, setReviewInput] = useState(entry.review || '');
   const [isEditingReview, setIsEditingReview] = useState(!entry.review);
@@ -34,7 +35,7 @@ const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
   };
 
   const handleEditNotes = () => {
-    dispatch(openModal({ type: 'EDIT_ENTRY', data: { entry, game } }));
+    openModal('EDIT_ENTRY', { entry, game });
   };
 
   const handlePostReview = () => {
