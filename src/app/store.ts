@@ -1,13 +1,27 @@
 import { configureStore } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
+import filtersReducer from '../features/filters/filtersSlice';
+import authReducer from '../features/auth/authSlice';
+import { gameApi } from '../features/api/gameApi';
+import { userApi } from '../features/api/userApi';
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
+    // Local UI / auth state
+    filters: filtersReducer,
+    auth: authReducer,
+    // RTK Query API caches (games + lists, users)
+    [gameApi.reducerPath]: gameApi.reducer,
+    [userApi.reducerPath]: userApi.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(gameApi.middleware, userApi.middleware),
 });
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
+// The shape of the entire Redux state — use this in useSelector.
+//   useSelector((state: RootState) => state.auth.user)
 export type RootState = ReturnType<typeof store.getState>;
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
+
+// The dispatch function — use this with useDispatch so async thunks and
+// RTK Query mutations are typed.
+//   const dispatch = useDispatch<AppDispatch>();
 export type AppDispatch = typeof store.dispatch;

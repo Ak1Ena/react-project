@@ -1,0 +1,32 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px;
+  color: var(--text-secondary);
+}
+
+.fullPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 50vh;
+  color: var(--text-secondary);
+}
+
+.spinner {
+  color: var(--primary);
+  animation: spinner-rotate 0.9s linear infinite;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+@keyframes spinner-rotate {
+  to { transform: rotate(360deg); }
+}

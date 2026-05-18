@@ -1,0 +1,292 @@
+import { useState, type FC, type ChangeEvent, type FormEvent } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { ArrowLeft, Save, Sparkles, Image as ImageIcon, Loader2 } from 'lucide-react';
+import {
+  useCreateGameMutation,
+  useGetGameByIdQuery,
+  useUpdateGameMutation,
+} from '../features/api/gameApi';
+import { useUI } from '../context/useUI';
+import styles from './AddGamePage.module.css';
+
+const AddGamePage: FC = () => {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const editId = searchParams.get('id');
+  const isEditMode = !!editId;
+  const { showToast } = useUI();
+  const [createGame, { isLoading: creating }] = useCreateGameMutation();
+  const [updateGame, { isLoading: updating }] = useUpdateGameMutation();
+  const loading = creating || updating;
+
+  const { data: existingGame, isLoading: loadingExisting } = useGetGameByIdQuery(editId ?? '', {
+    skip: !editId,
+  });
+
+  const [formData, setFormData] = useState({
+    name: '',
+    genre: ['Action'] as string[],
+    platforms: [] as string[],
+    releaseYear: new Date().getFullYear(),
+    rating: 0,
+    image: '',
+    description: '',
+  });
+
+  const [hydratedFromId, setHydratedFromId] = useState<string | null>(null);
+  if (existingGame && hydratedFromId !== existingGame.id) {
+    setHydratedFromId(existingGame.id);
+    setFormData({
+      name: existingGame.name,
+      genre: existingGame.genre.length ? existingGame.genre : ['Action'],
+      platforms: existingGame.platforms,
+      releaseYear: existingGame.releaseYear,
+      rating: existingGame.rating,
+      image: existingGame.image,
+      description: existingGame.description,
+    });
+  }
+
+  const genres = ['Action', 'RPG', 'FPS', 'Strategy', 'Adventure', 'Sports', 'Simulation'];
+  const availablePlatforms = ['Windows', 'Mac', 'Linux'];
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    if (name === 'genre') {
+      setFormData((prev) => ({ ...prev, genre: [value] }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: name === 'releaseYear' || name === 'rating' ? Number(value) : value,
+      }));
+    }
+  };
+
+  const togglePlatform = (platform: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      platforms: prev.platforms.includes(platform)
+        ? prev.platforms.filter((p) => p !== platform)
+        : [...prev.platforms, platform],
+    }));
+  };
+
+  const isValidUrl = (value: string) => {
+    try {
+      const u = new URL(value);
+      return u.protocol === 'http:' || u.protocol === 'https:';
+    } catch {
+      return false;
+    }
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (formData.platforms.length === 0) {
+      showToast('Pick at least one platform.', 'error');
+      return;
+    }
+    if (!isValidUrl(formData.image)) {
+      showToast('Please paste a valid http(s) image URL.', 'error');
+      return;
+    }
+    try {
+      if (isEditMode && editId) {
+        await updateGame({ id: editId, game: formData }).unwrap();
+        showToast('Game updated.', 'success');
+        navigate('/admin');
+      } else {
+        await createGame(formData).unwrap();
+        showToast('Game added successfully to catalog!', 'success');
+        navigate('/');
+      }
+    } catch {
+      showToast(
+        isEditMode ? 'Failed to update game. Please try again.' : 'Failed to add game. Please try again.',
+        'error',
+      );
+    }
+  };
+
+  if (isEditMode && loadingExisting) {
+    return (
+      <div className={styles.pageContainer}>
+        <header className={styles.pageHeader}>
+          <button className={styles.backBtn} onClick={() => navigate(-1)}>
+            <ArrowLeft size={20} />
+            <span>Back</span>
+          </button>
+        </header>
+        <p style={{ color: 'var(--text-muted)', padding: '24px' }}>Loading game...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.pageContainer}>
+      <header className={styles.pageHeader}>
+        <button className={styles.backBtn} onClick={() => navigate(-1)}>
+          <ArrowLeft size={20} />
+          <span>Back to Library</span>
+        </button>
+      </header>
+
+      <div className={styles.mainLayout}>
+        <div className={styles.leftCol}>
+          <div className={styles.imagePreviewCard}>
+            {formData.image ? (
+              <img src={formData.image} alt="Preview" className={styles.previewImage} />
+            ) : (
+              <div className={styles.placeholderIcon}>
+                <ImageIcon size={48} />
+                <span>Image Preview</span>
+              </div>
+            )}
+            <div className={styles.patternOverlay}></div>
+            <h2 className={styles.previewTitle}>{formData.name || 'New Game'}</h2>
+          </div>
+
+          <div className={styles.infoBox}>
+            <div className={styles.infoIcon}>
+              <Sparkles size={18} />
+            </div>
+            <p className={styles.infoText}>
+              Adding a game will make it available for all users in the community catalog.
+            </p>
+          </div>
+        </div>
+
+        <div className={styles.rightCol}>
+          <header className={styles.formHeader}>
+            <h1 className={styles.title}>{isEditMode ? 'Edit Game' : 'Add New Game'}</h1>
+            <p className={styles.subtitle}>
+              {isEditMode
+                ? 'Update the details of this catalog entry.'
+                : 'Fill in the details to contribute to the catalog'}
+            </p>
+          </header>
+
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <div className={styles.formGrid}>
+              <div className={styles.formGroup}>
+                <label className={styles.label}>Game Title*</label>
+                <input
+                  type="text"
+                  name="name"
+                  required
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="e.g. Elden Ring"
+                  className={styles.input}
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className={styles.label}>Genre*</label>
+                <select
+                  name="genre"
+                  value={formData.genre[0]}
+                  onChange={handleChange}
+                  className={styles.select}
+                >
+                  {genres.map((g) => (
+                    <option key={g} value={g}>{g}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className={styles.label}>Platforms*</label>
+                <div className={styles.platformChips}>
+                  {availablePlatforms.map((p) => {
+                    const selected = formData.platforms.includes(p);
+                    return (
+                      <button
+                        key={p}
+                        type="button"
+                        onClick={() => togglePlatform(p)}
+                        className={selected ? `${styles.platformChip} ${styles.platformChipActive}` : styles.platformChip}
+                        aria-pressed={selected}
+                      >
+                        {p}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className={styles.label}>Release Year*</label>
+                <input
+                  type="number"
+                  name="releaseYear"
+                  required
+                  min="1950"
+                  max={new Date().getFullYear() + 5}
+                  value={formData.releaseYear}
+                  onChange={handleChange}
+                  className={styles.input}
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className={styles.label}>Base Rating (0-10)</label>
+                <input
+                  type="number"
+                  name="rating"
+                  min="0"
+                  max="10"
+                  step="0.1"
+                  value={formData.rating}
+                  onChange={handleChange}
+                  className={styles.input}
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className={styles.label}>Cover Image URL*</label>
+                <input
+                  type="url"
+                  name="image"
+                  required
+                  value={formData.image}
+                  onChange={handleChange}
+                  placeholder="https://example.com/cover.jpg"
+                  className={styles.input}
+                />
+              </div>
+            </div>
+
+            <div className={styles.formGroup}>
+              <label className={styles.label}>Description</label>
+              <textarea
+                name="description"
+                rows={5}
+                value={formData.description}
+                onChange={handleChange}
+                placeholder="Provide a brief description..."
+                className={styles.textarea}
+              />
+            </div>
+
+            <div className={styles.formActions}>
+              <button type="button" onClick={() => navigate(-1)} className={styles.cancelBtn}>
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={loading || !formData.image || formData.platforms.length === 0}
+                className={styles.saveBtn}
+              >
+                {loading ? <Loader2 size={18} className={styles.spin} /> : <Save size={18} />}
+                <span>{loading ? 'Saving...' : 'Save Game'}</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AddGamePage;

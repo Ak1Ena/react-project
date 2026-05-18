@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  server:
+    build: ./server
+    ports:
+      - "3001:3001"
+    env_file:
+      - .env
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    restart: always
+
+  frontend:
+    build: .
+    ports:
+      - "3000:80"
+    env_file:
+      - .env
+    depends_on:
+      - server
+    restart: always
