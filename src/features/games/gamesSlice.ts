@@ -137,9 +137,26 @@ export const selectFilters = (state: RootState) => state.filters;
 export const selectFilteredGames = createSelector(
   [selectGames, selectFilters],
   (games, filters) => {
+    const isSearching = filters.searchQuery.trim().length > 2;
+    
+    // If there is a meaningful search query, we display the results from Steam directly.
+    // We don't re-filter by text because Steam already did that.
+    // We also don't filter by metadata because the Search API results lack it.
+    if (isSearching) {
+      return [...games].sort((a, b) => {
+        if (filters.sortBy === 'title-asc') return a.name.localeCompare(b.name);
+        if (filters.sortBy === 'title-desc') return b.name.localeCompare(a.name);
+        return 0;
+      });
+    }
+
+    // Default: local filtering on the curated/featured catalog
     return games
       .filter((game) => {
-        const matchesSearch = game.name.toLowerCase().includes(filters.searchQuery.toLowerCase());
+        // If query is short (1-2 chars), we still filter locally for immediate feedback
+        const matchesSearch = !filters.searchQuery.trim() || 
+          game.name.toLowerCase().includes(filters.searchQuery.toLowerCase());
+          
         const matchesGenre = filters.genre === 'All' || game.genre.includes(filters.genre);
         const matchesPlatform = filters.platform === 'All' || game.platforms.some(p => p.includes(filters.platform));
         const matchesYear = filters.year === 'All' || game.releaseYear.toString() === filters.year;

@@ -79,3 +79,22 @@
   color: var(--error);
   font-weight: 600;
 }
+
+.searchStatus {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: var(--bg);
+  border-radius: var(--radius);
+  border: 1px dashed var(--primary);
+}
+
+.searchStatus p {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+.searchStatus strong {
+  color: var(--primary);
+}

@@ -42,7 +42,7 @@ const FilterBar: FC = () => {
         <Search className={styles.searchIcon} size={20} />
         <input
           type="text"
-          placeholder="Search games..."
+          placeholder="Search all of Steam..."
           value={filters.searchQuery}
           onChange={(e) => dispatch(setSearchQuery(e.target.value))}
           className={styles.searchInput}
@@ -54,63 +54,76 @@ const FilterBar: FC = () => {
         )}
       </div>
 
-      <div className={styles.filtersControls}>
-        <div className={styles.filterGroup}>
-          <label>Genre</label>
-          <select value={filters.genre} onChange={(e) => dispatch(setGenre(e.target.value))}>
-            {genresList.map((g) => (
-              <option key={g} value={g}>{g}</option>
-            ))}
-          </select>
-        </div>
+      {filters.searchQuery.trim().length <= 2 ? (
+        <div className={styles.filtersControls}>
+          <div className={styles.filterGroup}>
+            <label>Genre</label>
+            <select value={filters.genre} onChange={(e) => dispatch(setGenre(e.target.value))}>
+              {genresList.map((g) => (
+                <option key={g} value={g}>{g}</option>
+              ))}
+            </select>
+          </div>
 
-        <div className={styles.filterGroup}>
-          <label>Platform</label>
-          <select value={filters.platform} onChange={(e) => dispatch(setPlatform(e.target.value))}>
-            {platformsList.map((p) => (
-              <option key={p} value={p}>{p}</option>
-            ))}
-          </select>
-        </div>
+          <div className={styles.filterGroup}>
+            <label>Platform</label>
+            <select value={filters.platform} onChange={(e) => dispatch(setPlatform(e.target.value))}>
+              {platformsList.map((p) => (
+                <option key={p} value={p}>{p}</option>
+              ))}
+            </select>
+          </div>
 
-        <div className={styles.filterGroup}>
-          <label>Year</label>
-          <select value={filters.year} onChange={(e) => dispatch(setYear(e.target.value))}>
-            {yearsList.map((y) => (
-              <option key={y} value={y}>{y}</option>
-            ))}
-          </select>
-        </div>
+          <div className={styles.filterGroup}>
+            <label>Year</label>
+            <select value={filters.year} onChange={(e) => dispatch(setYear(e.target.value))}>
+              {yearsList.map((y) => (
+                <option key={y} value={y}>{y}</option>
+              ))}
+            </select>
+          </div>
 
-        <div className={styles.filterGroup}>
-          <label>Min Rating: {filters.minRating}</label>
-          <input
-            type="range"
-            min="0"
-            max="10"
-            step="0.5"
-            value={filters.minRating}
-            onChange={(e) => dispatch(setMinRating(Number(e.target.value)))}
-            className={styles.ratingRange}
-          />
-        </div>
+          <div className={styles.filterGroup}>
+            <label>Min Rating: {filters.minRating}</label>
+            <input
+              type="range"
+              min="0"
+              max="10"
+              step="0.5"
+              value={filters.minRating}
+              onChange={(e) => dispatch(setMinRating(Number(e.target.value)))}
+              className={styles.ratingRange}
+            />
+          </div>
 
-        <div className={styles.filterGroup}>
-          <label>Sort By</label>
-          <select value={filters.sortBy} onChange={(e) => dispatch(setSortBy(e.target.value))}>
-            <option value="title-asc">Title (A-Z)</option>
-            <option value="title-desc">Title (Z-A)</option>
-            <option value="rating-desc">Rating (High to Low)</option>
-            <option value="rating-asc">Rating (Low to High)</option>
-            <option value="year-desc">Release Year (Newest)</option>
-            <option value="year-asc">Release Year (Oldest)</option>
-          </select>
-        </div>
+          <div className={styles.filterGroup}>
+            <label>Sort By</label>
+            <select value={filters.sortBy} onChange={(e) => dispatch(setSortBy(e.target.value))}>
+              <option value="title-asc">Title (A-Z)</option>
+              <option value="title-desc">Title (Z-A)</option>
+              <option value="rating-desc">Rating (High to Low)</option>
+              <option value="rating-asc">Rating (Low to High)</option>
+              <option value="year-desc">Release Year (Newest)</option>
+              <option value="year-asc">Release Year (Oldest)</option>
+            </select>
+          </div>
 
-        <button onClick={() => dispatch(resetFilters())} className={styles.resetButton}>
-          Reset
-        </button>
-      </div>
+          <button onClick={() => dispatch(resetFilters())} className={styles.resetButton}>
+            Reset
+          </button>
+        </div>
+      ) : (
+        <div className={styles.searchStatus}>
+          <p>Showing live results from Steam for "<strong>{filters.searchQuery}</strong>"</p>
+          <div className={styles.filterGroup}>
+            <label>Sort By</label>
+            <select value={filters.sortBy} onChange={(e) => dispatch(setSortBy(e.target.value))}>
+              <option value="title-asc">Title (A-Z)</option>
+              <option value="title-desc">Title (Z-A)</option>
+            </select>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
