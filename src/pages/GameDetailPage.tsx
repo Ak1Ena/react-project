@@ -22,7 +22,7 @@ const GameDetailPage: FC = () => {
   const { showToast } = useUI();
   const currentUser = useSelector((state: RootState) => state.auth.user);
 
-  const { data: game, isLoading: gameLoading } = useGetGameByIdQuery(id ?? '', { skip: !id });
+  const { data: game, isLoading: gameLoading, isError: gameNotFound } = useGetGameByIdQuery(id ?? '', { skip: !id });
   const { data: entries = [] } = useGetListEntriesQuery(currentUser?.id ?? '', { skip: !currentUser });
   const { data: publicReviews = [] } = useGetGameReviewsQuery(id ?? '', { skip: !id });
   const { data: allUsers = [] } = useGetUsersQuery();
@@ -47,8 +47,24 @@ const GameDetailPage: FC = () => {
     setLocalReview(existingEntry?.review || '');
   }
 
-  if (gameLoading || !game) {
+  if (gameLoading) {
     return <div className={styles.loading}>Loading...</div>;
+  }
+
+  if (gameNotFound || !game) {
+    return (
+      <div className={styles.pageContainer}>
+        <header className={styles.pageHeader}>
+          <button className={styles.backBtn} onClick={() => navigate(-1)}>
+            <ArrowLeft size={20} />
+            <span>Back to Library</span>
+          </button>
+        </header>
+        <div className={styles.loading}>
+          <p>We couldn't find that game. It may have been removed.</p>
+        </div>
+      </div>
+    );
   }
 
   const handleStatusChange = async (newStatus: ListStatus) => {

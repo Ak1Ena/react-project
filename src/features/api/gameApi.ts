@@ -20,10 +20,9 @@ export const gameApi = createApi({
       transformResponse: (response: Game[]) => response.map(ensureId),
       providesTags: ['Game'],
     }),
-    getGameById: builder.query<Game | undefined, string>({
-      query: (id) => `/api/v1/games?id=${id}`,
-      transformResponse: (response: Game[]) =>
-        response && response.length > 0 ? ensureId(response[0]) : undefined,
+    getGameById: builder.query<Game, string>({
+      query: (id) => `/api/v1/games/${id}`,
+      transformResponse: (response: Game) => ensureId(response),
       providesTags: (_result, _err, id) => [{ type: 'Game', id }],
     }),
     createGame: builder.mutation<Game, Omit<Game, 'id'>>({
