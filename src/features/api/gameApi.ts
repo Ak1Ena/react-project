@@ -16,8 +16,11 @@ export const gameApi = createApi({
     }),
     getGameById: builder.query<Game | undefined, string>({
       query: (id) => `/api/v1/games?id=${id}`,
-      transformResponse: (rows: Game[]) => rows[0],
-      providesTags: (_result, _err, id) => [{ type: 'Game', id }],
+      transformResponse: (rows: Game[], _meta, arg) =>
+        // MockAPI does substring filtering on string columns, so narrow to
+        // an exact id match before returning a single record.
+        rows.find((r) => String(r.id) === arg),
+      providesTags: (_result, _err, id) => [{ type: 'Game', id: id }],
     }),
     createGame: builder.mutation<Game, Omit<Game, 'id'>>({
       query: (game) => ({ url: '/api/v1/games', method: 'POST', body: game }),
@@ -32,11 +35,24 @@ export const gameApi = createApi({
       invalidatesTags: ['Game'],
     }),
     getListEntries: builder.query<ListEntry[], string>({
-      query: (userId) => `/api/v1/lists/?userId=${userId}`,
+      // MockAPI returns HTTP 404 for filter URLs that match zero rows
+      // instead of an empty array. Map that to [] so consumers can rely
+      // on `data` being defined.
+      queryFn: async (userId, _api, _extra, baseQuery) => {
+        const result = await baseQuery(`/api/v1/lists?userId=${userId}`);
+        if (result.error && result.error.status === 404) return { data: [] };
+        if (result.error) return { error: result.error };
+        return { data: result.data as ListEntry[] };
+      },
       providesTags: ['ListEntry'],
     }),
     getGameReviews: builder.query<ListEntry[], string>({
-      query: (gameId) => `/api/v1/lists/?gameId=${gameId}`,
+      queryFn: async (gameId, _api, _extra, baseQuery) => {
+        const result = await baseQuery(`/api/v1/lists?gameId=${gameId}`);
+        if (result.error && result.error.status === 404) return { data: [] };
+        if (result.error) return { error: result.error };
+        return { data: result.data as ListEntry[] };
+      },
       providesTags: ['ListEntry'],
     }),
     addToList: builder.mutation<ListEntry, Omit<ListEntry, 'id' | 'dateAdded'>>({

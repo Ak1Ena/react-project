@@ -1,5 +1,5 @@
 export interface Game {
-  id: string;
+  id: number;
   name: string;
   genre: string[];
   platforms: string[];

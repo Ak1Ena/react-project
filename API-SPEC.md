@@ -13,7 +13,7 @@ endpoint : /api/v1/games
 schema:
 [
 {
-    "appid": 1118200,
+    "id": 1118200,
     "name": "People Playground",
     "genre": [
       "Action",

@@ -1,14 +1,27 @@
 import { useState, type FC, type ChangeEvent, type FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Save, Sparkles, Image as ImageIcon, Loader2 } from 'lucide-react';
-import { useCreateGameMutation } from '../features/api/gameApi';
+import {
+  useCreateGameMutation,
+  useGetGameByIdQuery,
+  useUpdateGameMutation,
+} from '../features/api/gameApi';
 import { useUI } from '../context/useUI';
 import styles from './AddGamePage.module.css';
 
 const AddGamePage: FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const editId = searchParams.get('id');
+  const isEditMode = !!editId;
   const { showToast } = useUI();
-  const [createGame, { isLoading: loading }] = useCreateGameMutation();
+  const [createGame, { isLoading: creating }] = useCreateGameMutation();
+  const [updateGame, { isLoading: updating }] = useUpdateGameMutation();
+  const loading = creating || updating;
+
+  const { data: existingGame, isLoading: loadingExisting } = useGetGameByIdQuery(editId ?? '', {
+    skip: !editId,
+  });
 
   const [formData, setFormData] = useState({
     name: '',
@@ -19,6 +32,20 @@ const AddGamePage: FC = () => {
     image: '',
     description: '',
   });
+
+  const [hydratedFromId, setHydratedFromId] = useState<string | null>(null);
+  if (existingGame && hydratedFromId !== existingGame.id) {
+    setHydratedFromId(existingGame.id);
+    setFormData({
+      name: existingGame.name,
+      genre: existingGame.genre.length ? existingGame.genre : ['Action'],
+      platforms: existingGame.platforms,
+      releaseYear: existingGame.releaseYear,
+      rating: existingGame.rating,
+      image: existingGame.image,
+      description: existingGame.description,
+    });
+  }
 
   const genres = ['Action', 'RPG', 'FPS', 'Strategy', 'Adventure', 'Sports', 'Simulation'];
   const availablePlatforms = ['Windows', 'Mac', 'Linux'];
@@ -64,13 +91,36 @@ const AddGamePage: FC = () => {
       return;
     }
     try {
-      await createGame(formData).unwrap();
-      showToast('Game added successfully to catalog!', 'success');
-      navigate('/');
+      if (isEditMode && editId) {
+        await updateGame({ id: editId, game: formData }).unwrap();
+        showToast('Game updated.', 'success');
+        navigate('/admin');
+      } else {
+        await createGame(formData).unwrap();
+        showToast('Game added successfully to catalog!', 'success');
+        navigate('/');
+      }
     } catch {
-      showToast('Failed to add game. Please try again.', 'error');
+      showToast(
+        isEditMode ? 'Failed to update game. Please try again.' : 'Failed to add game. Please try again.',
+        'error',
+      );
     }
   };
+
+  if (isEditMode && loadingExisting) {
+    return (
+      <div className={styles.pageContainer}>
+        <header className={styles.pageHeader}>
+          <button className={styles.backBtn} onClick={() => navigate(-1)}>
+            <ArrowLeft size={20} />
+            <span>Back</span>
+          </button>
+        </header>
+        <p style={{ color: 'var(--text-muted)', padding: '24px' }}>Loading game...</p>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.pageContainer}>
@@ -108,8 +158,12 @@ const AddGamePage: FC = () => {
 
         <div className={styles.rightCol}>
           <header className={styles.formHeader}>
-            <h1 className={styles.title}>Add New Game</h1>
-            <p className={styles.subtitle}>Fill in the details to contribute to the catalog</p>
+            <h1 className={styles.title}>{isEditMode ? 'Edit Game' : 'Add New Game'}</h1>
+            <p className={styles.subtitle}>
+              {isEditMode
+                ? 'Update the details of this catalog entry.'
+                : 'Fill in the details to contribute to the catalog'}
+            </p>
           </header>
 
           <form onSubmit={handleSubmit} className={styles.form}>

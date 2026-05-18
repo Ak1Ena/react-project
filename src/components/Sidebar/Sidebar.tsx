@@ -7,9 +7,11 @@ import {
   Circle,
   LogOut,
   Sun,
-  Moon
+  Moon,
+  Shield
 } from 'lucide-react';
 import { selectCurrentUser, logout } from '../../features/auth/authSlice';
+import { isAdminUser } from '../../features/auth/authAPI';
 import { useGetListEntriesQuery } from '../../features/api/gameApi';
 import { useUI } from '../../context/useUI';
 import styles from './Sidebar.module.css';
@@ -17,6 +19,7 @@ import styles from './Sidebar.module.css';
 const Sidebar: FC = () => {
   const dispatch = useDispatch();
   const user = useSelector(selectCurrentUser);
+  const isAdmin = isAdminUser(user);
   const { data: entries = [] } = useGetListEntriesQuery(user?.id ?? '', { skip: !user });
   const { theme, toggleTheme } = useUI();
 
@@ -42,13 +45,22 @@ const Sidebar: FC = () => {
             <LayoutDashboard size={20} />
             <span>Dashboard</span>
           </NavLink>
-          <NavLink 
-            to="/library" 
+          <NavLink
+            to="/library"
             className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}
           >
             <Library size={20} />
             <span>Library</span>
           </NavLink>
+          {isAdmin && (
+            <NavLink
+              to="/admin"
+              className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}
+            >
+              <Shield size={20} />
+              <span>Admin</span>
+            </NavLink>
+          )}
         </div>
 
         <div className={styles.navGroup}>

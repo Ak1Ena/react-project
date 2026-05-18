@@ -71,11 +71,11 @@ const ListPage: FC = () => {
       <div className={styles.gridContainer}>
         {filteredGames.map(game => (
           <GameCard
-            key={game.id}
+            key={String(game.id)}
             game={game}
             status={displayStatus}
-            onRemove={status ? () => handleRemoveFromList(game.id) : undefined}
-            removing={status ? removingId === allEntries.find(e => e.gameId === game.id && e.status === status)?.id : false}
+            onRemove={status ? () => handleRemoveFromList(String(game.id)) : undefined}
+            removing={status ? removingId === allEntries.find(e => e.gameId === String(game.id) && e.status === status)?.id : false}
           />
         ))}
       </div>

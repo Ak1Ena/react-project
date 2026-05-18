@@ -150,7 +150,7 @@ game-library-browser/
 | Field | Type | Description |
 |-------|------|-------------|
 | id | String | Auto-generated |
-| appid | Number | Steam App ID |
+| id | Number | Steam App ID |
 | name | String | Game title |
 | genre | Array | Array of genres |
 | platforms | Array | Array of platforms |

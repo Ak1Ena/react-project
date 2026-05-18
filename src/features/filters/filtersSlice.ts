@@ -75,7 +75,7 @@ export const selectFilteredGames = createSelector(
     const query = filters.searchQuery.toLowerCase();
     return games.filter((game) => {
       if (status) {
-        const entry = entries.find((e) => e.gameId === game.id && e.status === status);
+        const entry = entries.find((e) => e.gameId === String(game.id) && e.status === status);
         if (!entry) return false;
       }
       if (query && !game.name.toLowerCase().includes(query)) return false;
