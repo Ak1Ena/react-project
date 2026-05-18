@@ -1,6 +1,6 @@
 import { useEffect, type FC } from 'react';
 import { X, CheckCircle, AlertCircle, Info } from 'lucide-react';
-import { useUI } from '../../context/UIContext';
+import { useUI } from '../../context/useUI';
 import styles from './Toast.module.css';
 
 const Toast: FC = () => {

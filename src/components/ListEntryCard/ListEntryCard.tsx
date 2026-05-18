@@ -5,7 +5,7 @@ import type { Game } from '../../features/games/gamesAPI';
 import type { ListEntry, ListStatus } from '../../features/lists/listsAPI';
 import { removeFromList, updateListEntry } from '../../features/lists/listsSlice';
 import type { AppDispatch } from '../../app/store';
-import { useUI } from '../../context/UIContext';
+import { useUI } from '../../context/useUI';
 import styles from './ListEntryCard.module.css';
 
 interface ListEntryCardProps {

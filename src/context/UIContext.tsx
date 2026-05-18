@@ -1,35 +1,16 @@
-import React, { createContext, useContext, useState } from 'react';
-import type { ReactNode } from 'react';
+import { useState } from 'react';
+import type { FC, ReactNode } from 'react';
+import { UIContext } from './UIContextDef';
+import type { ModalData, Toast } from './UIContextDef';
 
-interface Toast {
-  id: string;
-  message: string;
-  type: 'success' | 'error' | 'info';
-}
-
-interface UIContextType {
-  modalOpen: boolean;
-  modalType: string | null;
-  modalData: any | null;
-  toasts: Toast[];
-  theme: 'light' | 'dark';
-  openModal: (type: string, data?: any) => void;
-  closeModal: () => void;
-  showToast: (message: string, type: 'success' | 'error' | 'info') => void;
-  clearToast: (id: string) => void;
-  toggleTheme: () => void;
-}
-
-const UIContext = createContext<UIContextType | undefined>(undefined);
-
-export const UIProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const UIProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<string | null>(null);
-  const [modalData, setModalData] = useState<any | null>(null);
+  const [modalData, setModalData] = useState<ModalData>(null);
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
-  const openModal = (type: string, data: any = null) => {
+  const openModal = (type: string, data: ModalData = null) => {
     setModalOpen(true);
     setModalType(type);
     setModalData(data);
@@ -72,12 +53,4 @@ export const UIProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       {children}
     </UIContext.Provider>
   );
-};
-
-export const useUI = () => {
-  const context = useContext(UIContext);
-  if (context === undefined) {
-    throw new Error('useUI must be used within a UIProvider');
-  }
-  return context;
 };

@@ -5,7 +5,7 @@ import type { AppDispatch } from '../../app/store';
 import { updateListEntry } from '../../features/lists/listsSlice';
 import type { Game } from '../../features/games/gamesAPI';
 import type { ListEntry } from '../../features/lists/listsAPI';
-import { useUI } from '../../context/UIContext';
+import { useUI } from '../../context/useUI';
 
 interface EditEntryData {
   entry: ListEntry;

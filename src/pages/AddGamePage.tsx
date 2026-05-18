@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { ArrowLeft, Save, Sparkles, Image as ImageIcon, Upload, Loader2 } from 'lucide-react';
 import type { AppDispatch } from '../app/store';
 import { createGame } from '../features/games/gamesSlice';
-import { useUI } from '../context/UIContext';
+import { useUI } from '../context/useUI';
 import styles from './AddGamePage.module.css';
 
 const AddGamePage: FC = () => {

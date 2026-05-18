@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Star, ArrowLeft, Check, Gamepad2, Clock, Send, Loader2 } from 'lucide-react';
-import { useUI } from '../context/UIContext';
+import { useUI } from '../context/useUI';
 import type { RootState, AppDispatch } from '../app/store';
 import { fetchGameById, clearSelectedGame } from '../features/games/gamesSlice';
 import {
@@ -38,6 +38,16 @@ const GameDetailPage: FC = () => {
   const [pendingStatus, setPendingStatus] = useState<ListStatus | null>(null);
   const [pendingRating, setPendingRating] = useState<number | null>(null);
 
+  // Track which entry's review the textarea currently mirrors so we can
+  // reset it during render when the user navigates to a different game
+  // (the React-recommended alternative to setState-in-useEffect).
+  const [reviewSourceId, setReviewSourceId] = useState<string | null>(null);
+  const currentEntryId = existingEntry?.id ?? null;
+  if (currentEntryId !== reviewSourceId) {
+    setReviewSourceId(currentEntryId);
+    setLocalReview(existingEntry?.review || '');
+  }
+
   useEffect(() => {
     if (id) {
       dispatch(fetchGameById(id));
@@ -49,12 +59,6 @@ const GameDetailPage: FC = () => {
       dispatch(clearSelectedGame());
     };
   }, [id, dispatch]);
-
-  useEffect(() => {
-    if (existingEntry) {
-      setLocalReview(existingEntry.review || '');
-    }
-  }, [existingEntry?.id, existingEntry?.review]);
 
   if (status === 'loading' || !game) {
     return <div className={styles.loading}>Loading...</div>;
