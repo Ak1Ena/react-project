@@ -70,11 +70,6 @@ const Sidebar: FC = () => {
               <span>Wishlist</span>
               <span className={styles.count}>{getCount('wishlist')}</span>
             </NavLink>
-            <NavLink to="/my-list/dropped" className={styles.navLink}>
-              <Circle size={8} fill="var(--accent-red)" stroke="var(--accent-red)" />
-              <span>Dropped</span>
-              <span className={styles.count}>{getCount('dropped')}</span>
-            </NavLink>
           </div>
         </div>
       </nav>

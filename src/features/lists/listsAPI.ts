@@ -1,6 +1,6 @@
 import { gameMockApi } from '../../api/mockApi';
 
-export type ListStatus = 'playing' | 'completed' | 'backlog' | 'wishlist' | 'dropped';
+export type ListStatus = 'playing' | 'completed' | 'backlog' | 'wishlist';
 
 export interface ListEntry {
   id: string;

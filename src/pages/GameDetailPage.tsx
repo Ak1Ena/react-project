@@ -2,7 +2,7 @@ import { useEffect, useState, type FC } from 'react';
 import type { ReactNode } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Star, ArrowLeft, Check, Gamepad2, Clock, Send, X } from 'lucide-react';
+import { Star, ArrowLeft, Check, Gamepad2, Clock, Send } from 'lucide-react';
 import { useUI } from '../context/UIContext';
 import type { RootState, AppDispatch } from '../app/store';
 import { fetchGameById, clearSelectedGame } from '../features/games/gamesSlice';
@@ -99,7 +99,6 @@ const GameDetailPage: FC = () => {
     { id: 'completed', label: 'Completed', icon: <Check size={16} /> },
     { id: 'backlog', label: 'Backlog', icon: <Clock size={16} /> },
     { id: 'wishlist', label: 'Wishlist', icon: <Star size={16} /> },
-    { id: 'dropped', label: 'Dropped', icon: <X size={16} /> },
   ];
 
   return (
