@@ -122,7 +122,9 @@ router.get('/player-summary/:steamId', async (req, res) => {
 // 6. Get Large Catalog of Games (Combined Featured Categories)
 router.get('/featured', async (_req, res) => {
   try {
-    const response = await axios.get(`${STORE_BASE}/featuredcategories`);
+    const response = await axios.get(`${STORE_BASE}/featuredcategories`, {
+      headers: { 'User-Agent': 'Mozilla/5.0' }
+    });
     const categories = response.data;
     
     // Combine multiple categories for a larger catalog
@@ -169,8 +171,16 @@ router.get('/featured', async (_req, res) => {
 
     res.json(games);
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    res.status(500).json({ message });
+    console.error('Steam Store API failed, falling back to MockAPI:', error instanceof Error ? error.message : 'Unknown error');
+    try {
+      // Fallback to the MockAPI games list defined in .env
+      const MOCK_API_URL = process.env.VITE_GAME_API_URL || 'https://6a02c2270d92f63dd25402fc.mockapi.io';
+      const mockResponse = await axios.get(`${MOCK_API_URL}/games`);
+      res.json(mockResponse.data);
+    } catch (fallbackError) {
+      const message = fallbackError instanceof Error ? fallbackError.message : 'Unknown error';
+      res.status(500).json({ message: `Both Steam and MockAPI failed: ${message}` });
+    }
   }
 });
 
