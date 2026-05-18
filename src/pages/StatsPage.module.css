@@ -1,0 +1,279 @@
+.statsPage {
+  padding-bottom: 48px;
+}
+
+.pageHeader {
+  margin-bottom: 32px;
+}
+
+.pageHeader h1 {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.035em;
+  margin-bottom: 8px;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+}
+
+.pageHeader p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* ── Overview grid ── */
+.overviewGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+  margin-bottom: 36px;
+}
+
+.overviewCard {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--card-shadow);
+  padding: 20px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  transition: var(--transition-slow);
+  position: relative;
+  overflow: hidden;
+}
+
+.overviewCard:hover {
+  border-color: var(--card-border-hover);
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
+}
+
+.overviewCard.highlighted {
+  border-color: var(--primary-mid);
+}
+
+.overviewCard.highlighted::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, var(--primary-light) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.overviewIcon {
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--primary-light);
+  border-radius: 10px;
+  margin-bottom: 8px;
+}
+
+.overviewValue {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+}
+
+.overviewLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 2px;
+}
+
+/* ── Sections ── */
+.section {
+  margin-bottom: 32px;
+}
+
+.sectionTitle {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  margin-bottom: 14px;
+}
+
+/* ── List breakdown cards ── */
+.listGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+.listCard {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  box-shadow: var(--card-shadow);
+  padding: 18px;
+  transition: var(--transition-slow);
+}
+
+.listCard:hover {
+  border-color: var(--card-border-hover);
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
+}
+
+.listCardTop {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.listCardIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.listCardCount {
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+}
+
+.listCardLabel {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-top: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.progressBar {
+  height: 5px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.6s ease;
+}
+
+.progressLabel {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* ── Genre breakdown ── */
+.genreList {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+}
+
+.genreRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--card-border);
+  transition: var(--transition);
+}
+
+.genreRow:last-child { border-bottom: none; }
+
+.genreRow:hover { background: var(--bg-tertiary); }
+
+.genreName {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 100px;
+}
+
+.genreBarTrack {
+  flex: 1;
+  height: 6px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.genreBarFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), oklch(0.65 0.22 295));
+  border-radius: var(--radius-full);
+  transition: width 0.5s ease;
+}
+
+.genreCount {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--primary);
+  min-width: 24px;
+  text-align: right;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* ── States ── */
+.loading {
+  text-align: center;
+  padding: 80px;
+  color: var(--text-muted);
+}
+
+.emptyState {
+  text-align: center;
+  padding: 64px 40px;
+  color: var(--text-secondary);
+  background: var(--card-bg);
+  border: 1px dashed var(--card-border-hover);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.emptyState h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+}
+
+.emptyState p {
+  font-size: 0.9rem;
+  margin: 0;
+  color: var(--text-secondary);
+}

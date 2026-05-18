@@ -14,7 +14,7 @@ const GameCard: FC<GameCardProps> = ({ game }) => {
       <Link to={`/games/${game.id}`} className={styles.gameCardImageLink}>
         <img src={game.image} alt={game.name} className={styles.gameCardImage} />
         <div className={styles.gameCardRating}>
-          <Star size={16} fill="currentColor" />
+          <Star size={13} fill="currentColor" />
           <span>{game.rating}</span>
         </div>
       </Link>
@@ -22,8 +22,10 @@ const GameCard: FC<GameCardProps> = ({ game }) => {
         <h3 className={styles.gameCardTitle}>
           <Link to={`/games/${game.id}`}>{game.name}</Link>
         </h3>
-        <div className={styles.gameCardInfo}>
-          <span className="badge-genre">{game.genre.join(', ')}</span>
+        <div className={styles.gameCardGenres}>
+          {game.genre.slice(0, 2).map((g) => (
+            <span key={g} className="badge-genre">{g}</span>
+          ))}
         </div>
         <div className={styles.gameCardDetails}>
           <div className={styles.gameCardDetail}>

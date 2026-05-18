@@ -1,107 +1,180 @@
+.addGamePage {
+  padding-bottom: 40px;
+}
+
 .backButton {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   color: var(--text-secondary);
-  margin-bottom: 20px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-bottom: 24px;
+  padding: 7px 14px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
   cursor: pointer;
-  background: none;
-  border: none;
   font-family: inherit;
-  font-size: 1rem;
+}
+
+.backButton:hover {
+  color: var(--primary);
+  border-color: var(--primary-mid);
+  background: var(--primary-light);
 }
 
 .formContainer {
   max-width: 800px;
   margin: 0 auto;
-  background-color: var(--card-bg);
-  padding: 32px;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  padding: 36px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--card-shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative gradient blob */
+.formContainer::before {
+  content: '';
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(circle, var(--primary-light) 0%, transparent 65%);
+  pointer-events: none;
 }
 
 .formContainer h1 {
   margin-bottom: 32px;
-  text-align: center;
-  font-size: 2rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+  position: relative;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
 }
 
 .formGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  gap: 0 24px;
+  position: relative;
 }
 
 @media (max-width: 600px) {
-  .formGrid {
-    grid-template-columns: 1fr;
-  }
+  .formGrid { grid-template-columns: 1fr; }
+  .formContainer { padding: 24px; }
 }
 
 .formGroup {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   margin-bottom: 20px;
 }
 
-.formGroup.fullWidth {
-  grid-column: 1 / -1;
-}
+.formGroup.fullWidth { grid-column: 1 / -1; }
 
 .formGroup label {
-  font-weight: 600;
-  font-size: 0.875rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .formGroup input,
 .formGroup select,
 .formGroup textarea {
-  padding: 10px 12px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background-color: var(--bg);
+  padding: 11px 14px;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-tertiary);
   color: var(--text-primary);
-  font-size: 1rem;
+  font-size: 0.9rem;
+  transition: var(--transition);
+  font-family: inherit;
+}
+
+.formGroup input::placeholder,
+.formGroup textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.formGroup input:focus,
+.formGroup select:focus,
+.formGroup textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-glow);
+  outline: none;
+  background: var(--card-bg);
+}
+
+.formGroup textarea {
+  resize: vertical;
+  min-height: 110px;
 }
 
 .formActions {
   display: flex;
   justify-content: flex-end;
-  gap: 16px;
-  margin-top: 20px;
+  gap: 10px;
+  margin-top: 8px;
+  padding-top: 24px;
+  border-top: 1px solid var(--card-border);
 }
 
 .btnPrimary {
-  background-color: var(--primary);
-  color: white;
-  padding: 8px 16px;
-  border-radius: var(--radius);
-  font-weight: 600;
+  background: var(--primary);
+  color: #0b0c14;
+  padding: 10px 24px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 0.875rem;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  transition: background-color 0.2s;
+  transition: var(--transition);
+  box-shadow: 0 2px 12px var(--primary-glow);
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
 }
 
 .btnPrimary:hover:not(:disabled) {
-  background-color: var(--primary-hover);
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px var(--primary-glow);
 }
 
 .btnPrimary:disabled {
-  opacity: 0.7;
+  opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
 }
 
 .btnSecondary {
-  background-color: var(--border);
-  color: var(--text-primary);
-  padding: 8px 16px;
-  border-radius: var(--radius);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--card-border);
+  color: var(--text-secondary);
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
   font-weight: 600;
-  transition: background-color 0.2s;
+  font-size: 0.875rem;
+  transition: var(--transition);
+  cursor: pointer;
+  font-family: inherit;
 }
 
 .btnSecondary:hover {
-  background-color: #cbd5e1;
+  background: var(--card-bg);
+  color: var(--text-primary);
 }
+
+[data-theme='light'] .btnPrimary { color: #fff; }
+[data-theme='light'] .btnSecondary { background: #f1f5f9; border-color: #e2e8f0; }

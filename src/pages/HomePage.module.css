@@ -1,21 +1,43 @@
+.homePage {
+  padding-bottom: 40px;
+}
+
 .pageHeader {
-  margin-bottom: 32px;
-  text-align: center;
+  margin-bottom: 28px;
 }
 
 .pageHeader h1 {
-  font-size: 2.5rem;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 700;
+  color: var(--text-primary);
   margin-bottom: 8px;
+  letter-spacing: -0.03em;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  line-height: 1.1;
+}
+
+.pageHeader h1 span {
+  color: var(--primary);
 }
 
 .pageHeader p {
   color: var(--text-secondary);
-  font-size: 1.1rem;
+  font-size: 0.95rem;
+  margin: 0;
+  line-height: 1.5;
 }
 
 .errorMessage {
   text-align: center;
-  padding: 40px;
-  font-size: 1.2rem;
+  padding: 14px 20px;
+  font-size: 0.875rem;
   color: var(--error);
+  background: var(--error-light);
+  border-radius: var(--radius);
+  border: 1px solid oklch(0.72 0.20 25 / 0.35);
+  margin-bottom: 24px;
+}
+
+[data-theme='light'] .errorMessage {
+  border-color: #fca5a5;
 }
