@@ -1,16 +1,22 @@
 import { type FC } from 'react';
 import { NavLink } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { 
   LayoutDashboard, 
   Library, 
   Compass, 
   BarChart3, 
   Settings,
-  Circle
+  Circle,
+  LogOut
 } from 'lucide-react';
+import { selectCurrentUser, logout } from '../../features/auth/authSlice';
 import styles from './Sidebar.module.css';
 
 const Sidebar: FC = () => {
+  const dispatch = useDispatch();
+  const user = useSelector(selectCurrentUser);
+
   return (
     <aside className={styles.sidebar}>
       <div className={styles.logo}>
@@ -99,18 +105,26 @@ const Sidebar: FC = () => {
         </div>
       </nav>
 
-      <div className={styles.footer}>
-        <div className={styles.userProfile}>
-          <div className={styles.avatar}>AM</div>
-          <div className={styles.userInfo}>
-            <span className={styles.userName}>Alex Marrow</span>
-            <span className={styles.userLevel}>Lv 14 · 312h tracked</span>
+      {user && (
+        <div className={styles.footer}>
+          <div className={styles.userProfile}>
+            <div className={styles.avatar}>
+              {user.username.substring(0, 2).toUpperCase()}
+            </div>
+            <div className={styles.userInfo}>
+              <span className={styles.userName}>{user.username}</span>
+              <span className={styles.userLevel}>Lv 14 · 312h tracked</span>
+            </div>
+            <button 
+              className={styles.logoutBtn} 
+              onClick={() => dispatch(logout())}
+              title="Logout"
+            >
+              <LogOut size={16} />
+            </button>
           </div>
-          <button className={styles.logoutBtn}>
-            <Settings size={16} />
-          </button>
         </div>
-      </div>
+      )}
     </aside>
   );
 };
