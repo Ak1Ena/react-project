@@ -127,11 +127,6 @@
   text-overflow: ellipsis;
 }
 
-.userLevel {
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
 .logoutBtn {
   margin-left: auto;
   color: var(--text-muted);

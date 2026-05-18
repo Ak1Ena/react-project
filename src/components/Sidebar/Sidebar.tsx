@@ -113,7 +113,6 @@ const Sidebar: FC = () => {
             </div>
             <div className={styles.userInfo}>
               <span className={styles.userName}>{user.username}</span>
-              <span className={styles.userLevel}>Lv 14 · 312h tracked</span>
             </div>
             <button 
               className={styles.logoutBtn} 
