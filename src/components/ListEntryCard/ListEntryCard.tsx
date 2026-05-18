@@ -1,20 +1,37 @@
-import { type FC, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { Star, Trash2, Edit3, MoveRight, Save } from 'lucide-react';
+import { type FC, useState, useEffect, useMemo, memo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Star, Trash2, Edit3, MoveRight, Save, Trophy, Clock, Calendar } from 'lucide-react';
 import type { Game } from '../../features/games/gamesAPI';
 import type { ListEntry, ListStatus } from '../../features/lists/listsAPI';
 import { removeFromList, updateListEntry } from '../../features/lists/listsSlice';
-import type { AppDispatch } from '../../app/store';
+import { selectGamesStatus } from '../../features/games/gamesSlice';
+import type { AppDispatch, RootState } from '../../app/store';
 import { openModal } from '../../features/ui/uiSlice';
 import styles from './ListEntryCard.module.css';
+import { fetchGameAchievements } from '../../features/steam/steamSlice';
 
 interface ListEntryCardProps {
   entry: ListEntry;
-  game: Game;
+  game?: Game;
 }
 
-const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
+const ListEntryCard: FC<ListEntryCardProps> = memo(({ entry, game }) => {
   const dispatch = useDispatch<AppDispatch>();
+  
+  // Granular selectors to prevent unnecessary re-renders
+  const steamId = useSelector((state: RootState) => (state as any).steam?.steamId);
+  const achievements = useSelector((state: RootState) => (state as any).steam?.achievements[game?.id || entry.gameId]);
+  const ownedGames = useSelector((state: RootState) => (state as any).steam?.ownedGames);
+  
+  // Memoize fallback stats
+  const steamStatsFallback = useMemo(() => {
+    if (!Array.isArray(ownedGames)) return null;
+    return ownedGames.find((og: any) => og.appid.toString() === entry.gameId);
+  }, [ownedGames, entry.gameId]);
+
+  const displayPlaytime = entry.playtime ?? steamStatsFallback?.playtime_forever;
+  const displayLastPlayed = entry.lastPlayed ?? (steamStatsFallback as any)?.rtime_last_played;
+
   const [hoverRating, setHoverRating] = useState(0);
   const [reviewInput, setReviewInput] = useState(entry.review || '');
   const [isEditingReview, setIsEditingReview] = useState(!entry.review);
@@ -34,7 +51,9 @@ const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
   };
 
   const handleEditNotes = () => {
-    dispatch(openModal({ type: 'EDIT_ENTRY', data: { entry, game } }));
+    if (game) {
+      dispatch(openModal({ type: 'EDIT_ENTRY', data: { entry, game } }));
+    }
   };
 
   const handlePostReview = () => {
@@ -43,6 +62,37 @@ const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
       setIsEditingReview(false);
     }
   };
+
+  const gamesStatus = useSelector(selectGamesStatus);
+
+  useEffect(() => {
+    // Only fetch if we have a steamId and haven't fetched these achievements yet
+    if (steamId && (game?.id || entry.gameId) && !achievements) {
+      dispatch(fetchGameAchievements({ steamId, appId: game?.id || entry.gameId }));
+    }
+  }, [steamId, game?.id, entry.gameId, achievements, dispatch]);
+
+  if (!game) {
+    if (gamesStatus === 'loading') {
+      return (
+        <div className={`${styles.listEntryCard} ${styles.loading}`}>
+          <div className={styles.listEntryContent}>
+            <h3>Loading game info...</h3>
+            <div className={styles.skeletonText}></div>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className={styles.listEntryCard}>
+        <div className={styles.listEntryContent}>
+          <h3>Unknown Game (ID: {entry.gameId})</h3>
+          <button onClick={handleRemove} className={styles.removeBtn}>Remove</button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.listEntryCard}>
@@ -97,6 +147,44 @@ const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
           </div>
         </div>
 
+        {(achievements || displayPlaytime !== undefined || displayLastPlayed) && (
+          <div className={styles.steamStats}>
+            {achievements && achievements.total > 0 && (
+              <div className={styles.achievementSection}>
+                <div className={styles.achievementHeader}>
+                  <div className={styles.statItem}>
+                    <Trophy size={14} className={styles.trophyIcon} />
+                    <span>Achievements</span>
+                  </div>
+                  <span>{achievements.achieved} / {achievements.total}</span>
+                </div>
+                <div className={styles.progressBar}>
+                  <div 
+                    className={styles.progressFill} 
+                    style={{ width: `${(achievements.achieved / achievements.total) * 100}%` }}
+                  ></div>
+                </div>
+              </div>
+            )}
+            
+            <div className={styles.statItem}>
+              {displayPlaytime !== undefined && (
+                <div className={styles.statBadge} title="Total Playtime">
+                  <Clock size={14} className={styles.clockIcon} />
+                  <span>{Math.round(displayPlaytime / 60)}h</span>
+                </div>
+              )}
+
+              {displayLastPlayed && (
+                <div className={styles.statBadge} title="Last Played">
+                  <Calendar size={14} className={styles.clockIcon} />
+                  <span>{new Date(displayLastPlayed * 1000).toLocaleDateString()}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         <div className={styles.listEntryDetails}>
           {entry.notes && (
             <p className={styles.listEntryNotes}>
@@ -126,13 +214,13 @@ const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
             ) : (
               <div className={styles.listEntryReview}>
                 <div className={styles.reviewBlockHeader}>
-                  <h4>Review:</h4>
-                  <button onClick={() => setIsEditingReview(true)} className={styles.editReviewInlineBtn}>
-                    <Edit3 size={12} />
-                  </button>
-                </div>
-                <p>{entry.review}</p>
+                <h4>Review:</h4>
+                <button onClick={() => setIsEditingReview(true)} className={styles.editReviewInlineBtn}>
+                  <Edit3 size={12} />
+                </button>
               </div>
+              <p>{entry.review}</p>
+            </div>
             )}
           </div>
         </div>
@@ -143,6 +231,6 @@ const ListEntryCard: FC<ListEntryCardProps> = ({ entry, game }) => {
       </div>
     </div>
   );
-};
+});
 
 export default ListEntryCard;

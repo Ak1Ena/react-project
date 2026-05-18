@@ -24,6 +24,41 @@
   color: var(--text-secondary);
 }
 
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--border);
+}
+
+.divider span {
+  padding: 0 12px;
+}
+
+.steamLoginBtn {
+  display: block;
+  margin: 0 auto;
+  transition: opacity 0.2s;
+  text-align: center;
+}
+
+.steamLoginBtn:hover {
+  opacity: 0.8;
+}
+
+.steamLoginBtn img {
+  height: 35px;
+}
+
 .authFooter a {
   color: var(--primary);
   font-weight: 600;

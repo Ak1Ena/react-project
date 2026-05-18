@@ -83,6 +83,11 @@ const GameDetailPage: FC = () => {
               <div className={styles.badgeRating}>
                 <Star size={16} fill="currentColor" />
                 <span>{game.rating}</span>
+                {game.positive !== undefined && (
+                  <span className={styles.reviewCounts}>
+                    ({game.positive.toLocaleString()} 👍 / {game.negative?.toLocaleString()} 👎)
+                  </span>
+                )}
               </div>
             </div>
             
@@ -139,7 +144,7 @@ const GameDetailPage: FC = () => {
             {reviewsWithText.length > 0 ? (
               <div className={styles.reviewsList}>
                 {reviewsWithText.map((review) => {
-                  const reviewer = users.find(u => u.id === review.userId);
+                  const reviewer = users.find(u => u.id === review.userId) || (currentUser?.id === review.userId ? currentUser : null);
                   return (
                     <div key={review.id} className={styles.reviewCard}>
                       <div className={styles.reviewHeader}>

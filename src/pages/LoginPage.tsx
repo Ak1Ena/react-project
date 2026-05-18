@@ -70,6 +70,14 @@ const LoginPage: FC = () => {
         </button>
       </form>
 
+      <div className={styles.divider}>
+        <span>OR</span>
+      </div>
+
+      <a href="http://localhost:3001/api/auth/steam" className={styles.steamLoginBtn}>
+        <img src="https://community.cloudflare.steamstatic.com/public/images/signinthroughsteam/sits_01.png" alt="Login with Steam" />
+      </a>
+
       <div className={styles.authFooter}>
         <p>
           Don't have an account? <Link to="/register">Register here</Link>

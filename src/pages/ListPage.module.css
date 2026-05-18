@@ -3,6 +3,49 @@
   text-align: center;
 }
 
+.headerTitle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+}
+
+.syncBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background-color: #1b2838;
+  color: #66c0f4;
+  border: 1px solid #66c0f4;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.syncBtn:hover:not(:disabled) {
+  background-color: #2a475e;
+  border-color: white;
+  color: white;
+}
+
+.syncBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 .pageHeader h1 {
   font-size: 2.5rem;
   margin-bottom: 8px;
@@ -61,6 +104,13 @@
   gap: 8px;
   transition: background-color 0.2s;
   margin-top: 16px;
+}
+
+.paginationWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  padding-bottom: 40px;
 }
 
 .btnPrimary:hover {

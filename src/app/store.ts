@@ -5,6 +5,7 @@ import listsReducer from '../features/lists/listsSlice';
 import filtersReducer from '../features/filters/filtersSlice';
 import uiReducer from '../features/ui/uiSlice';
 import authReducer from '../features/auth/authSlice';
+import steamReducer from '../features/steam/steamSlice';
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     filters: filtersReducer,
     ui: uiReducer,
     auth: authReducer,
+    steam: steamReducer,
   },
 });
 
