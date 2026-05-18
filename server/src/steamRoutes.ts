@@ -120,66 +120,91 @@ router.get('/player-summary/:steamId', async (req, res) => {
 });
 
 // 6. Get Large Catalog of Games (Combined Featured Categories)
-router.get('/featured', async (_req, res) => {
+router.get('/featured', async (req, res) => {
+  const limit = parseInt(req.query.limit as string) || 24;
+  const offset = parseInt(req.query.offset as string) || 0;
+
   try {
-    const response = await axios.get(`${STORE_BASE}/featuredcategories`, {
+    // 1. Fetch from Steam
+    const steamResponse = await axios.get(`${STORE_BASE}/featuredcategories`, {
       headers: { 'User-Agent': 'Mozilla/5.0' }
     });
-    const categories = response.data;
+    const categories = steamResponse.data;
     
-    // Combine multiple categories for a larger catalog
-    const allItems = [
+    const allSteamItems = [
       ...(categories.top_sellers?.items || []),
       ...(categories.new_releases?.items || []),
       ...(categories.specials?.items || []),
       ...(categories.coming_soon?.items || [])
     ];
 
-    // Filter duplicates by app ID
     const uniqueIds = new Set();
-    const uniqueItems = allItems.filter(item => {
-      if (uniqueIds.has(item.id)) return false;
-      uniqueIds.add(item.id);
-      return true;
+    const steamGames = allSteamItems
+      .filter(item => {
+        if (uniqueIds.has(item.id)) return false;
+        uniqueIds.add(item.id);
+        return true;
+      })
+      .map((item: any) => {
+        const positive = (item.id % 5000) + 1000;
+        const negative = (item.id % 1000) + 100;
+        const rating = parseFloat(((positive / (positive + negative)) * 10).toFixed(1));
+        
+        return {
+          id: item.id.toString(),
+          appid: item.id,
+          name: item.name,
+          genre: ['Featured'],
+          platforms: [
+            item.windows_available ? 'Windows' : '',
+            item.mac_available ? 'Mac' : '',
+            item.linux_available ? 'Linux' : ''
+          ].filter(Boolean),
+          releaseYear: 0,
+          rating,
+          positive,
+          negative,
+          image: item.large_capsule_image || item.header_image,
+          description: item.headline || 'Featured on Steam.',
+          source: 'steam'
+        };
+      });
+
+    // 2. Fetch from MockAPI to augment the catalog
+    const MOCK_API_URL = process.env.VITE_GAME_API_URL || 'https://6a02c2270d92f63dd25402fc.mockapi.io';
+    const mockResponse = await axios.get(`${MOCK_API_URL}/games`);
+    const mockGames = mockResponse.data.map((g: any) => ({ ...g, source: 'mockapi' }));
+
+    // 3. Combine both (prioritize Steam but ensure MockAPI games are added if not present)
+    const combinedGames = [...steamGames];
+    mockGames.forEach((mg: any) => {
+      if (!uniqueIds.has(mg.appid)) {
+        combinedGames.push(mg);
+        uniqueIds.add(mg.appid);
+      }
     });
 
-    // Transform to our Game interface
-    const games = uniqueItems.map((item: any) => {
-      // Stable mock reviews based on ID
-      const positive = (item.id % 5000) + 1000;
-      const negative = (item.id % 1000) + 100;
-      const rating = parseFloat(((positive / (positive + negative)) * 10).toFixed(1));
-      
-      return {
-        id: item.id.toString(),
-        appid: item.id,
-        name: item.name,
-        genre: ['Featured'],
-        platforms: [
-          item.windows_available ? 'Windows' : '',
-          item.mac_available ? 'Mac' : '',
-          item.linux_available ? 'Linux' : ''
-        ].filter(Boolean),
-        releaseYear: 0,
-        rating,
-        positive,
-        negative,
-        image: item.large_capsule_image || item.header_image,
-        description: item.headline || 'Featured on Steam.'
-      };
+    res.json({
+      items: combinedGames.slice(offset, offset + limit),
+      total: combinedGames.length,
+      limit,
+      offset
     });
-
-    res.json(games);
   } catch (error) {
-    console.error('Steam Store API failed, falling back to MockAPI:', error instanceof Error ? error.message : 'Unknown error');
+    console.error('Steam/MockAPI merge failed:', error instanceof Error ? error.message : 'Unknown error');
     try {
-      // Fallback to the MockAPI games list defined in .env
       const MOCK_API_URL = process.env.VITE_GAME_API_URL || 'https://6a02c2270d92f63dd25402fc.mockapi.io';
       const mockResponse = await axios.get(`${MOCK_API_URL}/games`);
-      res.json(mockResponse.data);
+      const games = mockResponse.data;
+      res.json({
+        items: games.slice(offset, offset + limit),
+        total: games.length,
+        limit,
+        offset
+      });
     } catch (fallbackError) {
       const message = fallbackError instanceof Error ? fallbackError.message : 'Unknown error';
-      res.status(500).json({ message: `Both Steam and MockAPI failed: ${message}` });
+      res.status(500).json({ message: `Failed to fetch game catalog: ${message}` });
     }
   }
 });
@@ -220,7 +245,8 @@ router.get('/search', async (req, res) => {
         positive,
         negative,
         image: item.tiny_image ? item.tiny_image.replace('capsule_184x69', 'header') : '',
-        description: `Steam search result for ${item.name}`
+        description: `Steam search result for ${item.name}`,
+        source: 'steam'
       };
     });
 
