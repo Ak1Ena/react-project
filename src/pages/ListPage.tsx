@@ -1,63 +1,86 @@
-import { useEffect, type FC } from 'react';
-import { useParams, NavLink } from 'react-router-dom';
+import { type FC, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import type { RootState, AppDispatch } from '../app/store';
+import { Sparkles, Plus } from 'lucide-react';
 import { fetchListEntries, selectEntriesByStatus } from '../features/lists/listsSlice';
-import { fetchGames } from '../features/games/gamesSlice';
-import ListEntryCard from '../components/ListEntryCard/ListEntryCard';
+import { fetchGames, selectGames } from '../features/games/gamesSlice';
+import type { RootState, AppDispatch } from '../app/store';
+import FilterBar from '../components/FilterBar/FilterBar';
+import GameCard from '../components/GameCard/GameCard';
 import styles from './ListPage.module.css';
 
 const ListPage: FC = () => {
-  const { status: currentStatus } = useParams<{ status: string }>();
+  const { status } = useParams<{ status: string }>();
   const dispatch = useDispatch<AppDispatch>();
-  const filteredEntries = useSelector((state: RootState) => selectEntriesByStatus(state, currentStatus));
-  const { status: listStatus } = useSelector((state: RootState) => state.lists);
-  const { items: games, status: gamesStatus } = useSelector((state: RootState) => state.games);
+  const entries = useSelector((state: RootState) => selectEntriesByStatus(state, status));
+  const games = useSelector(selectGames);
+  const filters = useSelector((state: RootState) => state.filters);
 
   useEffect(() => {
-    if (listStatus === 'idle') dispatch(fetchListEntries());
-    if (gamesStatus === 'idle') dispatch(fetchGames());
-  }, [listStatus, gamesStatus, dispatch]);
+    dispatch(fetchGames());
+    dispatch(fetchListEntries());
+  }, [dispatch]);
 
-  const getGame = (gameId: string) => games.find((g) => g.id === gameId);
+  const filteredGames = games.filter((game) => {
+    // If status is provided, only show games in that list. Otherwise, show all games (Library view).
+    if (status) {
+      const entry = entries.find((e) => e.gameId === game.id && e.status === status);
+      if (!entry) return false;
+    }
+
+    if (filters.searchQuery && !game.name.toLowerCase().includes(filters.searchQuery.toLowerCase())) {
+      return false;
+    }
+    if (filters.genre !== 'All' && !game.genre.includes(filters.genre)) {
+      return false;
+    }
+    if (filters.platform !== 'All' && !game.platforms.some(p => p.includes(filters.platform))) {
+      return false;
+    }
+    if (filters.year !== 'All') {
+        if (filters.year === '≤2022') {
+            if (game.releaseYear > 2022) return false;
+        } else if (game.releaseYear.toString() !== filters.year) {
+            return false;
+        }
+    }
+    if (game.rating < filters.minRating) {
+      return false;
+    }
+
+    return true;
+  });
+
+  const displayStatus = status ? status.charAt(0).toUpperCase() + status.slice(1) : 'Library';
 
   return (
     <div className={styles.listPage}>
-      <header className={styles.pageHeader}>
-        <h1>My Personal Lists</h1>
-        <div className={styles.listTabs}>
-          <NavLink to="/my-list/playing" className={({ isActive }) => isActive ? `${styles.tab} ${styles.active}` : styles.tab}>Playing</NavLink>
-          <NavLink to="/my-list/completed" className={({ isActive }) => isActive ? `${styles.tab} ${styles.active}` : styles.tab}>Completed</NavLink>
-          <NavLink to="/my-list/backlog" className={({ isActive }) => isActive ? `${styles.tab} ${styles.active}` : styles.tab}>Backlog</NavLink>
-          <NavLink to="/my-list/wishlist" className={({ isActive }) => isActive ? `${styles.tab} ${styles.active}` : styles.tab}>Wishlist</NavLink>
+      <header className={styles.header}>
+        <div className={styles.headerInfo}>
+          <h1 className={styles.title}>{displayStatus}</h1>
+          <p className={styles.subtitle}>
+            {filteredGames.length} titles · auto-synced from your connected platforms
+          </p>
+        </div>
+        <div className={styles.headerActions}>
+          <button className={styles.secondaryBtn}>
+            <Sparkles size={16} />
+            <span>Recommendations</span>
+          </button>
+          <button className={styles.secondaryBtn}>
+            <Plus size={16} />
+            <span>Add list</span>
+          </button>
         </div>
       </header>
 
-      {(listStatus === 'failed' || gamesStatus === 'failed') && (
-        <div className={styles.errorMessage}>Failed to load your list. Please try again.</div>
-      )}
+      <FilterBar totalResults={filteredGames.length} />
 
-      {(listStatus === 'loading' || gamesStatus === 'loading') ? (
-        <div className={styles.loading}>Loading your list...</div>
-      ) : (
-        <div className={styles.listContainer}>
-          {filteredEntries.length === 0 ? (
-            <div className={styles.emptyState}>
-              <p>No games in your {currentStatus ? currentStatus.charAt(0).toUpperCase() + currentStatus.slice(1) : ''} list yet.</p>
-              <NavLink to="/" className={styles.btnPrimary}>Browse Games</NavLink>
-            </div>
-          ) : (
-            <div className={styles.listGrid}>
-              {filteredEntries.map((entry) => {
-                const game = getGame(entry.gameId);
-                return game ? (
-                  <ListEntryCard key={entry.id} entry={entry} game={game} />
-                ) : null;
-              })}
-            </div>
-          )}
-        </div>
-      )}
+      <div className={styles.gridContainer}>
+        {filteredGames.map(game => (
+          <GameCard key={game.id} game={game} status={displayStatus} />
+        ))}
+      </div>
     </div>
   );
 };

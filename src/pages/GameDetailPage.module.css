@@ -1,248 +1,288 @@
-.gameDetailPage {
-  padding: 20px 0;
-}
-
-.backButton {
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
   display: flex;
   align-items: center;
-  gap: 4px;
-  color: var(--text-secondary);
-  margin-bottom: 20px;
-  cursor: pointer;
+  justify-content: center;
+  padding: 40px;
 }
 
-.gameDetailContainer {
-  background-color: var(--card-bg);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
+.container {
+  background-color: var(--bg-card);
+  width: 100%;
+  max-width: 1000px;
+  height: 80vh;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border);
+  display: flex;
+  position: relative;
   overflow: hidden;
 }
 
-.gameDetailHeader {
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: 32px;
-  padding: 32px;
-  border-bottom: 1px solid var(--border);
+.closeBtn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 32px;
+  height: 32px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  color: var(--text-muted);
+  z-index: 10;
 }
 
-@media (max-width: 768px) {
-  .gameDetailHeader {
-    grid-template-columns: 1fr;
-  }
+.closeBtn:hover {
+  color: white;
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
-.gameDetailCover img {
-  width: 100%;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-}
-
-.gameDetailInfo h1 {
-  font-size: 2.5rem;
-  margin-bottom: 16px;
-}
-
-.gameDetailBadges {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.gameDetailMeta {
-  display: flex;
-  gap: 24px;
-  margin-bottom: 32px;
-  color: var(--text-secondary);
-}
-
-.metaItem {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.addToListControl {
-  display: flex;
-  gap: 12px;
-}
-
-.statusSelect {
-  padding: 8px 12px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background-color: var(--bg);
-}
-
-.alreadyInList {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--success);
-  font-weight: 600;
-}
-
-.gameDetailBody {
-  padding: 32px;
-}
-
-.gameDescription h2 {
-  margin-bottom: 16px;
-}
-
-.gameDescription p {
-  color: var(--text-secondary);
-  font-size: 1.1rem;
-  line-height: 1.6;
-}
-
-.gameReviews {
-  margin-top: 48px;
-  border-top: 1px solid var(--border);
-  padding-top: 32px;
-}
-
-.gameReviews h2 {
-  margin-bottom: 24px;
-}
-
-.reviewsList {
+.leftCol {
+  width: 360px;
+  border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  gap: 20px;
 }
 
-.reviewCard {
-  background-color: var(--bg);
-  padding: 20px;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-}
-
-.reviewHeader {
+.heroCard {
+  height: 400px;
+  background: linear-gradient(135deg, #7f1d1d, #ef4444);
+  position: relative;
+  padding: 32px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
-.reviewerName {
+.patternOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(45deg, rgba(0,0,0,0.1) 25%, transparent 25%, transparent 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1) 75%, transparent 75%, transparent);
+  background-size: 8px 8px;
+  opacity: 0.5;
+}
+
+.heroTitle {
+  font-size: 32px;
+  font-weight: 800;
+  color: white;
+  z-index: 2;
+  line-height: 1.1;
+}
+
+.trackSection {
+  padding: 32px;
+  flex: 1;
+  background-color: #1a1c23;
+}
+
+.sectionTitle {
+  font-size: 11px;
   font-weight: 700;
-  color: var(--text);
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  letter-spacing: 1px;
 }
 
-.reviewerInfo {
+.statusList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.statusItem {
   display: flex;
   align-items: center;
   gap: 12px;
+  padding: 12px 16px;
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  transition: var(--transition);
 }
 
-.statusBadge {
-  font-size: 0.7rem;
-  padding: 2px 8px;
-  border-radius: 4px;
-  text-transform: uppercase;
-  font-weight: 700;
+.statusItem:hover {
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
-.statusPlaying {
-  background-color: #dcfce7;
-  color: #166534;
+.statusItem.active {
+  background-color: rgba(198, 255, 0, 0.1);
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
-.statusCompleted {
-  background-color: #dbeafe;
-  color: #1e40af;
+.checkIcon {
+  margin-left: auto;
 }
 
-.statusBacklog {
-  background-color: #fef3c7;
-  color: #92400e;
+.rightCol {
+  flex: 1;
+  padding: 48px;
+  overflow-y: auto;
 }
 
-.statusWishlist {
-  background-color: #fce7f3;
-  color: #9d174d;
+.header {
+  margin-bottom: 32px;
 }
 
-.reviewerRating {
+.title {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.infoRow {
   display: flex;
-  align-items: center;
-  gap: 4px;
-  color: #f59e0b;
-  font-weight: 600;
-  font-size: 0.875rem;
-}
-
-.reviewText {
-  color: var(--text-secondary);
-  line-height: 1.5;
-  margin-bottom: 12px;
-  white-space: pre-wrap;
-}
-
-.reviewDate {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  opacity: 0.8;
-}
-
-.noReviews {
-  text-align: center;
-  padding: 32px;
-  background-color: var(--bg);
-  border-radius: var(--radius);
-  color: var(--text-secondary);
-  font-style: italic;
-}
-
-.badgeGenre {
-  background-color: #ede9fe;
-  color: #7c3aed;
-  padding: 2px 8px;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-.badgeRating {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: #f59e0b;
-  font-weight: 700;
-}
-
-.btnPrimary {
-  background-color: var(--primary);
-  color: white;
-  padding: 8px 16px;
-  border-radius: var(--radius);
-  font-weight: 600;
-  display: inline-flex;
   align-items: center;
   gap: 8px;
-  transition: background-color 0.2s;
-}
-
-.btnPrimary:hover {
-  background-color: var(--primary-hover);
-}
-
-.btnLink {
-  color: var(--primary);
+  font-size: 13px;
+  color: var(--text-muted);
   font-weight: 600;
-  margin-left: 8px;
 }
 
-.btnLink:hover {
-  text-decoration: underline;
+.dot {
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
+.commRating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: white;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.statCard {
+  background-color: var(--bg-sidebar);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.statLabel {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.statValue {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.progressSection {
+  margin-bottom: 32px;
+}
+
+.progressHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.progressLabel {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.progressHint {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.progressTrack {
+  height: 8px;
+  background-color: var(--bg-sidebar);
+  border-radius: 4px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.progressBar {
+  height: 100%;
+  background-color: var(--primary);
+  border-radius: 4px;
+}
+
+.progressPercent {
+  position: absolute;
+  right: 0;
+  top: -24px;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.inputLabel {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.ratingSection {
+  margin-bottom: 24px;
+}
+
+.stars {
+  display: flex;
+  gap: 4px;
+}
+
+.reviewSection {
+  margin-bottom: 24px;
+}
+
+.reviewArea {
+  width: 100%;
+  min-height: 100px;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  color: white;
+  font-family: inherit;
+  resize: none;
+}
+
+.platformBadge {
+  display: inline-block;
+  padding: 4px 12px;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
 }
 
 .loading {
-  text-align: center;
-  padding: 40px;
-  font-size: 1.2rem;
-  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: var(--text-muted);
 }

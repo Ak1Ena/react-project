@@ -1,13 +1,12 @@
 import { useEffect, useState, type FC } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Star, Calendar, Monitor, ChevronLeft, Plus, Check } from 'lucide-react';
+import { Star, X, Check, Gamepad2, Clock, BarChart2, Calendar } from 'lucide-react';
 import type { RootState, AppDispatch } from '../app/store';
 import { fetchGameById, clearSelectedGame } from '../features/games/gamesSlice';
-import { addToList, fetchListEntries, fetchGameReviews } from '../features/lists/listsSlice';
+import { addToList, fetchListEntries, updateListEntry } from '../features/lists/listsSlice';
 import type { ListStatus } from '../features/lists/listsAPI';
 import { showToast } from '../features/ui/uiSlice';
-import { selectCurrentUser, fetchAllUsers } from '../features/auth/authSlice';
 import styles from './GameDetailPage.module.css';
 
 const GameDetailPage: FC = () => {
@@ -15,155 +14,169 @@ const GameDetailPage: FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const { selectedGame: game, status } = useSelector((state: RootState) => state.games);
-  const { entries, publicReviews } = useSelector((state: RootState) => state.lists);
-  const { users } = useSelector((state: RootState) => state.auth);
-  const currentUser = useSelector(selectCurrentUser);
+  const { entries } = useSelector((state: RootState) => state.lists);
+  const currentUser = useSelector((state: RootState) => state.auth.user);
   
-  const [selectedStatus, setSelectedStatus] = useState<ListStatus>('backlog');
+  const [rating, setRating] = useState(0);
+  const [review, setReview] = useState('');
+  const [progress, setProgress] = useState(23);
 
   useEffect(() => {
     if (id) {
       dispatch(fetchGameById(id));
       dispatch(fetchListEntries());
-      dispatch(fetchGameReviews(id));
-      dispatch(fetchAllUsers());
     }
     return () => {
       dispatch(clearSelectedGame());
     };
   }, [id, dispatch]);
 
-  if (status === 'failed') {
-    return <div className={styles.errorMessage}>Failed to load game details.</div>;
-  }
+  const existingEntry = entries.find((e) => e.gameId === game?.id);
+
+  useEffect(() => {
+    if (existingEntry) {
+      setRating(existingEntry.personalRating || 0);
+      setReview(existingEntry.review || '');
+    }
+  }, [existingEntry]);
 
   if (status === 'loading' || !game) {
-    return <div className={styles.loading}>Loading game details...</div>;
+    return <div className={styles.loading}>Loading...</div>;
   }
 
-  const existingEntry = entries.find((e) => e.gameId === game.id);
-
-  const handleAddToList = () => {
-    if (!currentUser) {
-      dispatch(showToast({ message: 'Please log in to add games to your list.', type: 'error' }));
-      return;
+  const handleStatusChange = (newStatus: ListStatus) => {
+    if (!currentUser) return;
+    if (existingEntry) {
+      dispatch(updateListEntry({ id: existingEntry.id, entry: { status: newStatus } }));
+    } else {
+      dispatch(addToList({
+        gameId: game.id,
+        userId: currentUser.id,
+        status: newStatus,
+        notes: '',
+        review: '',
+        personalRating: 0,
+      }));
     }
-
-    dispatch(addToList({
-      gameId: game.id,
-      userId: currentUser.id,
-      status: selectedStatus,
-      notes: '',
-      review: '',
-      personalRating: 0,
-    })).then(() => {
-      dispatch(showToast({ message: `${game.name} added to your ${selectedStatus} list!`, type: 'success' }));
-      dispatch(fetchGameReviews(game.id));
-    });
   };
 
-  const reviewsWithText = publicReviews.filter(r => r.review && r.review.trim().length > 0);
+  const statuses: { id: ListStatus; label: string; icon: any }[] = [
+    { id: 'playing', label: 'Playing', icon: <Gamepad2 size={16} /> },
+    { id: 'completed', label: 'Completed', icon: <Check size={16} /> },
+    { id: 'backlog', label: 'Backlog', icon: <Clock size={16} /> },
+    { id: 'wishlist', label: 'Wishlist', icon: <Star size={16} /> },
+  ];
 
   return (
-    <div className={styles.gameDetailPage}>
-      <button onClick={() => navigate(-1)} className={styles.backButton}>
-        <ChevronLeft size={20} />
-        Back
-      </button>
+    <div className={styles.overlay}>
+      <div className={styles.container}>
+        <button className={styles.closeBtn} onClick={() => navigate(-1)}>
+          <X size={20} />
+        </button>
 
-      <div className={styles.gameDetailContainer}>
-        <div className={styles.gameDetailHeader}>
-          <div className={styles.gameDetailCover}>
-            <img src={game.image} alt={game.name} />
+        <div className={styles.leftCol}>
+          <div className={styles.heroCard}>
+            <div className={styles.patternOverlay}></div>
+            <h2 className={styles.heroTitle}>{game.name}</h2>
           </div>
-          <div className={styles.gameDetailInfo}>
-            <h1>{game.name}</h1>
-            <div className={styles.gameDetailBadges}>
-              <span className={styles.badgeGenre}>{game.genre.join(', ')}</span>
-              <div className={styles.badgeRating}>
-                <Star size={16} fill="currentColor" />
-                <span>{game.rating}</span>
-              </div>
-            </div>
-            
-            <div className={styles.gameDetailMeta}>
-              <div className={styles.metaItem}>
-                <Monitor size={18} />
-                <span>{game.platforms.join(', ')}</span>
-              </div>
-              <div className={styles.metaItem}>
-                <Calendar size={18} />
-                <span>{game.releaseYear}</span>
-              </div>
-            </div>
 
-            <div className={styles.gameDetailActions}>
-              {existingEntry ? (
-                <div className={styles.alreadyInList}>
-                  <Check size={20} />
-                  <span>Already in your {existingEntry.status} list</span>
-                  <button onClick={() => navigate(`/my-list/${existingEntry.status}`)} className={styles.btnLink}>
-                    View in list
-                  </button>
-                </div>
-              ) : (
-                <div className={styles.addToListControl}>
-                  <select 
-                    value={selectedStatus} 
-                    onChange={(e) => setSelectedStatus(e.target.value as ListStatus)}
-                    className={styles.statusSelect}
-                  >
-                    <option value="playing">Playing</option>
-                    <option value="completed">Completed</option>
-                    <option value="backlog">Backlog</option>
-                    <option value="wishlist">Wishlist</option>
-                  </select>
-                  <button onClick={handleAddToList} className={styles.btnPrimary}>
-                    <Plus size={20} />
-                    Add to List
-                  </button>
-                </div>
-              )}
+          <div className={styles.trackSection}>
+            <h3 className={styles.sectionTitle}>TRACK IN</h3>
+            <div className={styles.statusList}>
+              {statuses.map(s => (
+                <button 
+                  key={s.id} 
+                  className={existingEntry?.status === s.id ? `${styles.statusItem} ${styles.active}` : styles.statusItem}
+                  onClick={() => handleStatusChange(s.id)}
+                >
+                  {s.icon}
+                  <span>{s.label}</span>
+                  {existingEntry?.status === s.id && <Check size={14} className={styles.checkIcon} />}
+                </button>
+              ))}
             </div>
           </div>
         </div>
 
-        <div className={styles.gameDetailBody}>
-          <section className={styles.gameDescription}>
-            <h2>Description</h2>
-            <p>{game.description}</p>
-          </section>
-
-          <section className={styles.gameReviews}>
-            <h2>Community Reviews ({reviewsWithText.length})</h2>
-            {reviewsWithText.length > 0 ? (
-              <div className={styles.reviewsList}>
-                {reviewsWithText.map((review) => {
-                  const reviewer = users.find(u => u.id === review.userId);
-                  return (
-                    <div key={review.id} className={styles.reviewCard}>
-                      <div className={styles.reviewHeader}>
-                        <div className={styles.reviewerInfo}>
-                          <span className={styles.reviewerName}>{reviewer?.username || 'Unknown User'}</span>
-                          <span className={`${styles.statusBadge} ${styles['status' + review.status.charAt(0).toUpperCase() + review.status.slice(1)]}`}>
-                            {review.status}
-                          </span>
-                        </div>
-                        <div className={styles.reviewerRating}>
-                          <Star size={14} fill={review.personalRating > 0 ? "currentColor" : "none"} />
-                          <span>{review.personalRating}/10</span>
-                        </div>
-                      </div>
-                      <p className={styles.reviewText}>{review.review}</p>
-                      <span className={styles.reviewDate}>{new Date(review.dateAdded).toLocaleDateString()}</span>
-                    </div>
-                  );
-                })}
+        <div className={styles.rightCol}>
+          <header className={styles.header}>
+            <h1 className={styles.title}>{game.name}</h1>
+            <div className={styles.infoRow}>
+              <span>Two Brick Games</span>
+              <span className={styles.dot}>·</span>
+              <span>{game.releaseYear}</span>
+              <span className={styles.dot}>·</span>
+              <span>Strategy · RPG</span>
+              <span className={styles.dot}>·</span>
+              <div className={styles.commRating}>
+                <Star size={14} fill="var(--primary)" color="var(--primary)" />
+                <strong>{game.rating} community</strong>
               </div>
-            ) : (
-              <p className={styles.noReviews}>No reviews yet. Be the first to review this game!</p>
-            )}
-          </section>
+            </div>
+          </header>
+
+          <div className={styles.statsGrid}>
+            <div className={styles.statCard}>
+              <span className={styles.statLabel}>STATUS</span>
+              <span className={styles.statValue} style={{ color: 'var(--primary)' }}>Playing</span>
+            </div>
+            <div className={styles.statCard}>
+              <span className={styles.statLabel}>HOURS</span>
+              <span className={styles.statValue}>12h</span>
+            </div>
+            <div className={styles.statCard}>
+              <span className={styles.statLabel}>PROGRESS</span>
+              <span className={styles.statValue}>23%</span>
+            </div>
+            <div className={styles.statCard}>
+              <span className={styles.statLabel}>LAST PLAYED</span>
+              <span className={styles.statValue}>Yesterday</span>
+            </div>
+          </div>
+
+          <div className={styles.progressSection}>
+            <div className={styles.progressHeader}>
+              <span className={styles.progressLabel}>PROGRESS</span>
+              <span className={styles.progressHint}>click bar to set</span>
+            </div>
+            <div className={styles.progressTrack}>
+              <div className={styles.progressBar} style={{ width: `${progress}%` }}></div>
+              <span className={styles.progressPercent}>{progress}%</span>
+            </div>
+          </div>
+
+          <div className={styles.ratingSection}>
+            <h3 className={styles.inputLabel}>YOUR RATING</h3>
+            <div className={styles.stars}>
+              {[1, 2, 3, 4, 5].map(s => (
+                <Star 
+                  key={s} 
+                  size={20} 
+                  fill={rating >= s ? "var(--primary)" : "none"} 
+                  color={rating >= s ? "var(--primary)" : "var(--text-muted)"}
+                  onClick={() => setRating(s)}
+                  style={{ cursor: 'pointer' }}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className={styles.reviewSection}>
+            <h3 className={styles.inputLabel}>YOUR REVIEW</h3>
+            <textarea 
+              className={styles.reviewArea}
+              placeholder="Jot down a thought about this one..."
+              value={review}
+              onChange={(e) => setReview(e.target.value)}
+            />
+          </div>
+
+          <div className={styles.platformsSection}>
+            <h3 className={styles.inputLabel}>PLATFORMS</h3>
+            <div className={styles.platforms}>
+              <span className={styles.platformBadge}>PC</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

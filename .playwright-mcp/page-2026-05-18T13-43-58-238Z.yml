@@ -1,0 +1,138 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - img [ref=e7]
+      - generic [ref=e9]: gamelibrary
+    - navigation [ref=e10]:
+      - generic [ref=e11]:
+        - link "Dashboard" [ref=e12] [cursor=pointer]:
+          - /url: /
+          - img [ref=e13]
+          - generic [ref=e18]: Dashboard
+        - link "Library" [ref=e19] [cursor=pointer]:
+          - /url: /library
+          - img [ref=e20]
+          - generic [ref=e22]: Library
+        - link "Discover" [ref=e23] [cursor=pointer]:
+          - /url: /discover
+          - img [ref=e24]
+          - generic [ref=e27]: Discover
+        - link "Stats" [ref=e28] [cursor=pointer]:
+          - /url: /stats
+          - img [ref=e29]
+          - generic [ref=e31]: Stats
+      - generic [ref=e32]:
+        - heading "LISTS" [level=3] [ref=e33]
+        - generic [ref=e34]:
+          - link "Playing 6" [ref=e35] [cursor=pointer]:
+            - /url: /my-list/playing
+            - img [ref=e36]
+            - generic [ref=e38]: Playing
+            - generic [ref=e39]: "6"
+          - link "Completed 8" [ref=e40] [cursor=pointer]:
+            - /url: /my-list/completed
+            - img [ref=e41]
+            - generic [ref=e43]: Completed
+            - generic [ref=e44]: "8"
+          - link "Backlog 3" [ref=e45] [cursor=pointer]:
+            - /url: /my-list/backlog
+            - img [ref=e46]
+            - generic [ref=e48]: Backlog
+            - generic [ref=e49]: "3"
+          - link "Wishlist 5" [ref=e50] [cursor=pointer]:
+            - /url: /my-list/wishlist
+            - img [ref=e51]
+            - generic [ref=e53]: Wishlist
+            - generic [ref=e54]: "5"
+          - link "Dropped 2" [ref=e55] [cursor=pointer]:
+            - /url: /my-list/dropped
+            - img [ref=e56]
+            - generic [ref=e58]: Dropped
+            - generic [ref=e59]: "2"
+          - link "Favorites 9" [ref=e60] [cursor=pointer]:
+            - /url: /my-list/favorites
+            - img [ref=e61]
+            - generic [ref=e63]: Favorites
+            - generic [ref=e64]: "9"
+      - generic [ref=e65]:
+        - heading "ACCOUNT" [level=3] [ref=e66]
+        - link "Settings" [ref=e68] [cursor=pointer]:
+          - /url: /settings
+          - img [ref=e69]
+          - generic [ref=e72]: Settings
+    - generic [ref=e74]:
+      - generic [ref=e75]: AM
+      - generic [ref=e76]:
+        - generic [ref=e77]: Alex Marrow
+        - generic [ref=e78]: Lv 14 · 312h tracked
+      - button [ref=e79] [cursor=pointer]:
+        - img [ref=e80]
+  - generic [ref=e83]:
+    - banner [ref=e84]:
+      - generic [ref=e85]:
+        - img [ref=e86]
+        - textbox "Search 50,000+ games, studios, genres..." [ref=e89]
+        - generic [ref=e90]:
+          - generic [ref=e91]: ⌘
+          - generic [ref=e92]: K
+      - generic [ref=e93]:
+        - button [ref=e94] [cursor=pointer]:
+          - img [ref=e95]
+        - button [ref=e99] [cursor=pointer]:
+          - img [ref=e100]
+        - button "Add game" [ref=e101] [cursor=pointer]:
+          - img [ref=e102]
+          - generic [ref=e103]: Add game
+    - main [ref=e104]:
+      - generic [ref=e105]:
+        - generic [ref=e106]:
+          - generic [ref=e107]:
+            - heading "Library" [level=1] [ref=e108]
+            - paragraph [ref=e109]: 0 titles · auto-synced from your connected platforms
+          - generic [ref=e110]:
+            - button "Recommendations" [ref=e111] [cursor=pointer]:
+              - img [ref=e112]
+              - generic [ref=e115]: Recommendations
+            - button "Add list" [ref=e116] [cursor=pointer]:
+              - img [ref=e117]
+              - generic [ref=e118]: Add list
+        - generic [ref=e120]:
+          - generic [ref=e121]:
+            - generic [ref=e122]: GENRE
+            - generic [ref=e123]:
+              - button "Action" [ref=e124] [cursor=pointer]
+              - button "RPG" [ref=e125] [cursor=pointer]
+              - button "Roguelike" [ref=e126] [cursor=pointer]
+              - button "Strategy" [ref=e127] [cursor=pointer]
+              - button "Indie" [ref=e128] [cursor=pointer]
+              - button "Adventure" [ref=e129] [cursor=pointer]
+          - generic [ref=e130]:
+            - generic [ref=e131]: PLATFORM
+            - generic [ref=e132]:
+              - button "PC" [ref=e133] [cursor=pointer]
+              - button "PS5" [ref=e134] [cursor=pointer]
+              - button "Xbox" [ref=e135] [cursor=pointer]
+              - button "Switch" [ref=e136] [cursor=pointer]
+            - generic [ref=e138]: YEAR
+            - generic [ref=e139]:
+              - button "2025" [ref=e140] [cursor=pointer]
+              - button "2024" [ref=e141] [cursor=pointer]
+              - button "2023" [ref=e142] [cursor=pointer]
+              - button "≤2022" [ref=e143] [cursor=pointer]
+          - generic [ref=e144]:
+            - generic [ref=e145]: RATING
+            - generic [ref=e146]:
+              - button "9+" [ref=e147] [cursor=pointer]
+              - button "8+" [ref=e148] [cursor=pointer]
+              - button "7+" [ref=e149] [cursor=pointer]
+            - generic [ref=e150]:
+              - generic [ref=e151]: 0 results
+              - combobox [ref=e152]:
+                - option "Recently updated"
+                - option "Highest rated"
+                - option "A-Z" [selected]
+              - generic [ref=e153]:
+                - button [ref=e154] [cursor=pointer]:
+                  - img [ref=e155]
+                - button [ref=e160] [cursor=pointer]:
+                  - img [ref=e161]

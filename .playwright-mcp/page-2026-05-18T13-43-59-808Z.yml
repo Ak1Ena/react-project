@@ -1,0 +1,2034 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - img [ref=e7]
+      - generic [ref=e9]: gamelibrary
+    - navigation [ref=e10]:
+      - generic [ref=e11]:
+        - link "Dashboard" [ref=e12] [cursor=pointer]:
+          - /url: /
+          - img [ref=e13]
+          - generic [ref=e18]: Dashboard
+        - link "Library" [ref=e19] [cursor=pointer]:
+          - /url: /library
+          - img [ref=e20]
+          - generic [ref=e22]: Library
+        - link "Discover" [ref=e23] [cursor=pointer]:
+          - /url: /discover
+          - img [ref=e24]
+          - generic [ref=e27]: Discover
+        - link "Stats" [ref=e28] [cursor=pointer]:
+          - /url: /stats
+          - img [ref=e29]
+          - generic [ref=e31]: Stats
+      - generic [ref=e32]:
+        - heading "LISTS" [level=3] [ref=e33]
+        - generic [ref=e34]:
+          - link "Playing 6" [ref=e35] [cursor=pointer]:
+            - /url: /my-list/playing
+            - img [ref=e36]
+            - generic [ref=e38]: Playing
+            - generic [ref=e39]: "6"
+          - link "Completed 8" [ref=e40] [cursor=pointer]:
+            - /url: /my-list/completed
+            - img [ref=e41]
+            - generic [ref=e43]: Completed
+            - generic [ref=e44]: "8"
+          - link "Backlog 3" [ref=e45] [cursor=pointer]:
+            - /url: /my-list/backlog
+            - img [ref=e46]
+            - generic [ref=e48]: Backlog
+            - generic [ref=e49]: "3"
+          - link "Wishlist 5" [ref=e50] [cursor=pointer]:
+            - /url: /my-list/wishlist
+            - img [ref=e51]
+            - generic [ref=e53]: Wishlist
+            - generic [ref=e54]: "5"
+          - link "Dropped 2" [ref=e55] [cursor=pointer]:
+            - /url: /my-list/dropped
+            - img [ref=e56]
+            - generic [ref=e58]: Dropped
+            - generic [ref=e59]: "2"
+          - link "Favorites 9" [ref=e60] [cursor=pointer]:
+            - /url: /my-list/favorites
+            - img [ref=e61]
+            - generic [ref=e63]: Favorites
+            - generic [ref=e64]: "9"
+      - generic [ref=e65]:
+        - heading "ACCOUNT" [level=3] [ref=e66]
+        - link "Settings" [ref=e68] [cursor=pointer]:
+          - /url: /settings
+          - img [ref=e69]
+          - generic [ref=e72]: Settings
+    - generic [ref=e74]:
+      - generic [ref=e75]: AM
+      - generic [ref=e76]:
+        - generic [ref=e77]: Alex Marrow
+        - generic [ref=e78]: Lv 14 · 312h tracked
+      - button [ref=e79] [cursor=pointer]:
+        - img [ref=e80]
+  - generic [ref=e83]:
+    - banner [ref=e84]:
+      - generic [ref=e85]:
+        - img [ref=e86]
+        - textbox "Search 50,000+ games, studios, genres..." [ref=e89]
+        - generic [ref=e90]:
+          - generic [ref=e91]: ⌘
+          - generic [ref=e92]: K
+      - generic [ref=e93]:
+        - button [ref=e94] [cursor=pointer]:
+          - img [ref=e95]
+        - button [ref=e99] [cursor=pointer]:
+          - img [ref=e100]
+        - button "Add game" [ref=e101] [cursor=pointer]:
+          - img [ref=e102]
+          - generic [ref=e103]: Add game
+    - main [ref=e104]:
+      - generic [ref=e105]:
+        - generic [ref=e106]:
+          - generic [ref=e107]:
+            - heading "Library" [level=1] [ref=e108]
+            - paragraph [ref=e109]: 100 titles · auto-synced from your connected platforms
+          - generic [ref=e110]:
+            - button "Recommendations" [ref=e111] [cursor=pointer]:
+              - img [ref=e112]
+              - generic [ref=e115]: Recommendations
+            - button "Add list" [ref=e116] [cursor=pointer]:
+              - img [ref=e117]
+              - generic [ref=e118]: Add list
+        - generic [ref=e120]:
+          - generic [ref=e121]:
+            - generic [ref=e122]: GENRE
+            - generic [ref=e123]:
+              - button "Action" [ref=e124] [cursor=pointer]
+              - button "RPG" [ref=e125] [cursor=pointer]
+              - button "Roguelike" [ref=e126] [cursor=pointer]
+              - button "Strategy" [ref=e127] [cursor=pointer]
+              - button "Indie" [ref=e128] [cursor=pointer]
+              - button "Adventure" [ref=e129] [cursor=pointer]
+          - generic [ref=e130]:
+            - generic [ref=e131]: PLATFORM
+            - generic [ref=e132]:
+              - button "PC" [ref=e133] [cursor=pointer]
+              - button "PS5" [ref=e134] [cursor=pointer]
+              - button "Xbox" [ref=e135] [cursor=pointer]
+              - button "Switch" [ref=e136] [cursor=pointer]
+            - generic [ref=e138]: YEAR
+            - generic [ref=e139]:
+              - button "2025" [ref=e140] [cursor=pointer]
+              - button "2024" [ref=e141] [cursor=pointer]
+              - button "2023" [ref=e142] [cursor=pointer]
+              - button "≤2022" [ref=e143] [cursor=pointer]
+          - generic [ref=e144]:
+            - generic [ref=e145]: RATING
+            - generic [ref=e146]:
+              - button "9+" [ref=e147] [cursor=pointer]
+              - button "8+" [ref=e148] [cursor=pointer]
+              - button "7+" [ref=e149] [cursor=pointer]
+            - generic [ref=e150]:
+              - generic [ref=e151]: 100 results
+              - combobox [ref=e152]:
+                - option "Recently updated"
+                - option "Highest rated"
+                - option "A-Z" [selected]
+              - generic [ref=e153]:
+                - button [ref=e154] [cursor=pointer]:
+                  - img [ref=e155]
+                - button [ref=e160] [cursor=pointer]:
+                  - img [ref=e161]
+        - generic [ref=e162]:
+          - generic [ref=e163]:
+            - link "Library Counter-Strike 2" [ref=e164] [cursor=pointer]:
+              - /url: /games/8466b5b0ea0c4a28be94cdfdf12b2997
+              - generic [ref=e165]: Library
+              - button [ref=e166]:
+                - img [ref=e167]
+              - heading "Counter-Strike 2" [level=3] [ref=e169]
+            - generic [ref=e170]:
+              - heading "Counter-Strike 2" [level=4] [ref=e172]
+              - generic [ref=e173]:
+                - generic [ref=e174]: Action
+                - generic [ref=e175]: ·
+                - generic [ref=e176]: "2012"
+                - generic [ref=e177]: ·
+                - generic [ref=e178]:
+                  - img [ref=e179]
+                  - generic [ref=e181]: "8.7"
+              - generic [ref=e182]:
+                - generic [ref=e183]: Windows
+                - generic [ref=e184]: Linux
+          - generic [ref=e186]:
+            - link "Library Grand Theft Auto V Legacy" [ref=e187] [cursor=pointer]:
+              - /url: /games/b94b6ab773b04009893211fe36ff1760
+              - generic [ref=e188]: Library
+              - button [ref=e189]:
+                - img [ref=e190]
+              - heading "Grand Theft Auto V Legacy" [level=3] [ref=e192]
+            - generic [ref=e193]:
+              - heading "Grand Theft Auto V Legacy" [level=4] [ref=e195]
+              - generic [ref=e196]:
+                - generic [ref=e197]: Action
+                - generic [ref=e198]: ·
+                - generic [ref=e199]: "2015"
+                - generic [ref=e200]: ·
+                - generic [ref=e201]:
+                  - img [ref=e202]
+                  - generic [ref=e204]: "9.6"
+              - generic [ref=e206]: Windows
+          - generic [ref=e208]:
+            - 'link "Library PUBG: BATTLEGROUNDS" [ref=e209] [cursor=pointer]':
+              - /url: /games/2e1c218cd1e0490ab9041773077e523a
+              - generic [ref=e210]: Library
+              - button [ref=e211]:
+                - img [ref=e212]
+              - 'heading "PUBG: BATTLEGROUNDS" [level=3] [ref=e214]'
+            - generic [ref=e215]:
+              - 'heading "PUBG: BATTLEGROUNDS" [level=4] [ref=e217]'
+              - generic [ref=e218]:
+                - generic [ref=e219]: Action
+                - generic [ref=e220]: ·
+                - generic [ref=e221]: "2017"
+                - generic [ref=e222]: ·
+                - generic [ref=e223]:
+                  - img [ref=e224]
+                  - generic [ref=e226]: "5.9"
+              - generic [ref=e228]: Windows
+          - generic [ref=e230]:
+            - link "Library Tom Clancy's Rainbow Six® Siege X" [ref=e231] [cursor=pointer]:
+              - /url: /games/4954853240cc444e91835879e33d3b5d
+              - generic [ref=e232]: Library
+              - button [ref=e233]:
+                - img [ref=e234]
+              - heading "Tom Clancy's Rainbow Six® Siege X" [level=3] [ref=e236]
+            - generic [ref=e237]:
+              - heading "Tom Clancy's Rainbow Six® Siege X" [level=4] [ref=e239]
+              - generic [ref=e240]:
+                - generic [ref=e241]: Action
+                - generic [ref=e242]: ·
+                - generic [ref=e243]: "2015"
+                - generic [ref=e244]: ·
+                - generic [ref=e245]:
+                  - img [ref=e246]
+                  - generic [ref=e248]: "8.3"
+              - generic [ref=e250]: Windows
+          - generic [ref=e252]:
+            - link "Library Tom Clancy's Rainbow Six® Siege X" [ref=e253] [cursor=pointer]:
+              - /url: /games/ab0b3515dcd440f4813a77341990e1ea
+              - generic [ref=e254]: Library
+              - button [ref=e255]:
+                - img [ref=e256]
+              - heading "Tom Clancy's Rainbow Six® Siege X" [level=3] [ref=e258]
+            - generic [ref=e259]:
+              - heading "Tom Clancy's Rainbow Six® Siege X" [level=4] [ref=e261]
+              - generic [ref=e262]:
+                - generic [ref=e263]: Action
+                - generic [ref=e264]: ·
+                - generic [ref=e265]: "2015"
+                - generic [ref=e266]: ·
+                - generic [ref=e267]:
+                  - img [ref=e268]
+                  - generic [ref=e270]: "8.4"
+              - generic [ref=e272]: Windows
+          - generic [ref=e274]:
+            - link "Library Tom Clancy's Rainbow Six® Siege X" [ref=e275] [cursor=pointer]:
+              - /url: /games/51eed2bb7ca1496ab8e45ca72bd6af78
+              - generic [ref=e276]: Library
+              - button [ref=e277]:
+                - img [ref=e278]
+              - heading "Tom Clancy's Rainbow Six® Siege X" [level=3] [ref=e280]
+            - generic [ref=e281]:
+              - heading "Tom Clancy's Rainbow Six® Siege X" [level=4] [ref=e283]
+              - generic [ref=e284]:
+                - generic [ref=e285]: Action
+                - generic [ref=e286]: ·
+                - generic [ref=e287]: "2015"
+                - generic [ref=e288]: ·
+                - generic [ref=e289]:
+                  - img [ref=e290]
+                  - generic [ref=e292]: "8.3"
+              - generic [ref=e294]: Windows
+          - generic [ref=e296]:
+            - link "Library Tom Clancy's Rainbow Six® Siege X" [ref=e297] [cursor=pointer]:
+              - /url: /games/2481db3d00154a81abb264bc9de2ff0a
+              - generic [ref=e298]: Library
+              - button [ref=e299]:
+                - img [ref=e300]
+              - heading "Tom Clancy's Rainbow Six® Siege X" [level=3] [ref=e302]
+            - generic [ref=e303]:
+              - heading "Tom Clancy's Rainbow Six® Siege X" [level=4] [ref=e305]
+              - generic [ref=e306]:
+                - generic [ref=e307]: Action
+                - generic [ref=e308]: ·
+                - generic [ref=e309]: "2015"
+                - generic [ref=e310]: ·
+                - generic [ref=e311]:
+                  - img [ref=e312]
+                  - generic [ref=e314]: "8.3"
+              - generic [ref=e316]: Windows
+          - generic [ref=e318]:
+            - link "Library Tom Clancy's Rainbow Six® Siege X" [ref=e319] [cursor=pointer]:
+              - /url: /games/3db6a02555af4cae89e17087b36a5809
+              - generic [ref=e320]: Library
+              - button [ref=e321]:
+                - img [ref=e322]
+              - heading "Tom Clancy's Rainbow Six® Siege X" [level=3] [ref=e324]
+            - generic [ref=e325]:
+              - heading "Tom Clancy's Rainbow Six® Siege X" [level=4] [ref=e327]
+              - generic [ref=e328]:
+                - generic [ref=e329]: Action
+                - generic [ref=e330]: ·
+                - generic [ref=e331]: "2015"
+                - generic [ref=e332]: ·
+                - generic [ref=e333]:
+                  - img [ref=e334]
+                  - generic [ref=e336]: "8.3"
+              - generic [ref=e338]: Windows
+          - generic [ref=e340]:
+            - link "Library Terraria" [ref=e341] [cursor=pointer]:
+              - /url: /games/c62d4e1601a5434298dc95efd95a8c04
+              - generic [ref=e342]: Library
+              - button [ref=e343]:
+                - img [ref=e344]
+              - heading "Terraria" [level=3] [ref=e346]
+            - generic [ref=e347]:
+              - heading "Terraria" [level=4] [ref=e349]
+              - generic [ref=e350]:
+                - generic [ref=e351]: Action
+                - generic [ref=e352]: ·
+                - generic [ref=e353]: "2011"
+                - generic [ref=e354]: ·
+                - generic [ref=e355]:
+                  - img [ref=e356]
+                  - generic [ref=e358]: "8.3"
+              - generic [ref=e359]:
+                - generic [ref=e360]: Windows
+                - generic [ref=e361]: Mac
+                - generic [ref=e362]: Linux
+          - generic [ref=e364]:
+            - link "Library Rust" [ref=e365] [cursor=pointer]:
+              - /url: /games/6632b4388e8941548ac2ad2a39df1147
+              - generic [ref=e366]: Library
+              - button [ref=e367]:
+                - img [ref=e368]
+              - heading "Rust" [level=3] [ref=e370]
+            - generic [ref=e371]:
+              - heading "Rust" [level=4] [ref=e373]
+              - generic [ref=e374]:
+                - generic [ref=e375]: Action
+                - generic [ref=e376]: ·
+                - generic [ref=e377]: "2018"
+                - generic [ref=e378]: ·
+                - generic [ref=e379]:
+                  - img [ref=e380]
+                  - generic [ref=e382]: "6.9"
+              - generic [ref=e383]:
+                - generic [ref=e384]: Windows
+                - generic [ref=e385]: Mac
+          - generic [ref=e387]:
+            - link "Library Garry's Mod" [ref=e388] [cursor=pointer]:
+              - /url: /games/83bf5df063ba4bdfbb1beb1839711c31
+              - generic [ref=e389]: Library
+              - button [ref=e390]:
+                - img [ref=e391]
+              - heading "Garry's Mod" [level=3] [ref=e393]
+            - generic [ref=e394]:
+              - heading "Garry's Mod" [level=4] [ref=e396]
+              - generic [ref=e397]:
+                - generic [ref=e398]: Casual
+                - generic [ref=e399]: ·
+                - generic [ref=e400]: "2006"
+                - generic [ref=e401]: ·
+                - generic [ref=e402]:
+                  - img [ref=e403]
+                  - generic [ref=e405]: "9.7"
+              - generic [ref=e406]:
+                - generic [ref=e407]: Windows
+                - generic [ref=e408]: Mac
+                - generic [ref=e409]: Linux
+          - generic [ref=e411]:
+            - link "Library Wallpaper Engine" [ref=e412] [cursor=pointer]:
+              - /url: /games/aefa9ae96de948baa7fa9c19f7393086
+              - generic [ref=e413]: Library
+              - button [ref=e414]:
+                - img [ref=e415]
+              - heading "Wallpaper Engine" [level=3] [ref=e417]
+            - generic [ref=e418]:
+              - heading "Wallpaper Engine" [level=4] [ref=e420]
+              - generic [ref=e421]:
+                - generic [ref=e422]: Casual
+                - generic [ref=e423]: ·
+                - generic [ref=e424]: "2018"
+                - generic [ref=e425]: ·
+                - generic [ref=e426]:
+                  - img [ref=e427]
+                  - generic [ref=e429]: "9.8"
+              - generic [ref=e431]: Windows
+          - generic [ref=e433]:
+            - 'link "Library Black Myth: Wukong" [ref=e434] [cursor=pointer]':
+              - /url: /games/cc3bdc3f6bd4466091872cc17dcb3d9e
+              - generic [ref=e435]: Library
+              - button [ref=e436]:
+                - img [ref=e437]
+              - 'heading "Black Myth: Wukong" [level=3] [ref=e439]'
+            - generic [ref=e440]:
+              - 'heading "Black Myth: Wukong" [level=4] [ref=e442]'
+              - generic [ref=e443]:
+                - generic [ref=e444]: Action
+                - generic [ref=e445]: ·
+                - generic [ref=e446]: "2024"
+                - generic [ref=e447]: ·
+                - generic [ref=e448]:
+                  - img [ref=e449]
+                  - generic [ref=e451]: "9.7"
+              - generic [ref=e453]: Windows
+          - generic [ref=e455]:
+            - link "Library Stardew Valley" [ref=e456] [cursor=pointer]:
+              - /url: /games/6ebd2f3d685748b4aac62b8d88848e3d
+              - generic [ref=e457]: Library
+              - button [ref=e458]:
+                - img [ref=e459]
+              - heading "Stardew Valley" [level=3] [ref=e461]
+            - generic [ref=e462]:
+              - heading "Stardew Valley" [level=4] [ref=e464]
+              - generic [ref=e465]:
+                - generic [ref=e466]: Indie
+                - generic [ref=e467]: ·
+                - generic [ref=e468]: "2016"
+                - generic [ref=e469]: ·
+                - generic [ref=e470]:
+                  - img [ref=e471]
+                  - generic [ref=e473]: "8.9"
+              - generic [ref=e474]:
+                - generic [ref=e475]: Windows
+                - generic [ref=e476]: Mac
+                - generic [ref=e477]: Linux
+          - generic [ref=e479]:
+            - link "Library Cyberpunk 2077" [ref=e480] [cursor=pointer]:
+              - /url: /games/33f454f1ab174fdba124d93de1146552
+              - generic [ref=e481]: Library
+              - button [ref=e482]:
+                - img [ref=e483]
+              - heading "Cyberpunk 2077" [level=3] [ref=e485]
+            - generic [ref=e486]:
+              - heading "Cyberpunk 2077" [level=4] [ref=e488]
+              - generic [ref=e489]:
+                - generic [ref=e490]: RPG
+                - generic [ref=e491]: ·
+                - generic [ref=e492]: "2020"
+                - generic [ref=e493]: ·
+                - generic [ref=e494]:
+                  - img [ref=e495]
+                  - generic [ref=e497]: "8.6"
+              - generic [ref=e498]:
+                - generic [ref=e499]: Windows
+                - generic [ref=e500]: Mac
+          - generic [ref=e502]:
+            - 'link "Library The Witcher 3: Wild Hunt" [ref=e503] [cursor=pointer]':
+              - /url: /games/bc11d568533e4ef0a2421b9089330fb3
+              - generic [ref=e504]: Library
+              - button [ref=e505]:
+                - img [ref=e506]
+              - 'heading "The Witcher 3: Wild Hunt" [level=3] [ref=e508]'
+            - generic [ref=e509]:
+              - 'heading "The Witcher 3: Wild Hunt" [level=4] [ref=e511]'
+              - generic [ref=e512]:
+                - generic [ref=e513]: RPG
+                - generic [ref=e514]: ·
+                - generic [ref=e515]: "2015"
+                - generic [ref=e516]: ·
+                - generic [ref=e517]:
+                  - img [ref=e518]
+                  - generic [ref=e520]: "9.3"
+              - generic [ref=e522]: Windows
+          - generic [ref=e524]:
+            - link "Library ELDEN RING" [ref=e525] [cursor=pointer]:
+              - /url: /games/9cff4009dd3d40e9a5b6544627a0d5a5
+              - generic [ref=e526]: Library
+              - button [ref=e527]:
+                - img [ref=e528]
+              - heading "ELDEN RING" [level=3] [ref=e530]
+            - generic [ref=e531]:
+              - heading "ELDEN RING" [level=4] [ref=e533]
+              - generic [ref=e534]:
+                - generic [ref=e535]: Action
+                - generic [ref=e536]: ·
+                - generic [ref=e537]: "2022"
+                - generic [ref=e538]: ·
+                - generic [ref=e539]:
+                  - img [ref=e540]
+                  - generic [ref=e542]: "9.4"
+              - generic [ref=e544]: Windows
+          - generic [ref=e546]:
+            - link "Library HELLDIVERS™ 2" [ref=e547] [cursor=pointer]:
+              - /url: /games/bef0508cbeb249cf8b1d8bc110969b61
+              - generic [ref=e548]: Library
+              - button [ref=e549]:
+                - img [ref=e550]
+              - heading "HELLDIVERS™ 2" [level=3] [ref=e552]
+            - generic [ref=e553]:
+              - heading "HELLDIVERS™ 2" [level=4] [ref=e555]
+              - generic [ref=e556]:
+                - generic [ref=e557]: Action
+                - generic [ref=e558]: ·
+                - generic [ref=e559]: "2024"
+                - generic [ref=e560]: ·
+                - generic [ref=e561]:
+                  - img [ref=e562]
+                  - generic [ref=e564]: "7.6"
+              - generic [ref=e566]: Windows
+          - generic [ref=e568]:
+            - link "Library Left 4 Dead 2" [ref=e569] [cursor=pointer]:
+              - /url: /games/4760da1435464ff691f1f110d968ab15
+              - generic [ref=e570]: Library
+              - button [ref=e571]:
+                - img [ref=e572]
+              - heading "Left 4 Dead 2" [level=3] [ref=e574]
+            - generic [ref=e575]:
+              - heading "Left 4 Dead 2" [level=4] [ref=e577]
+              - generic [ref=e578]:
+                - generic [ref=e579]: Action
+                - generic [ref=e580]: ·
+                - generic [ref=e581]: "2009"
+                - generic [ref=e582]: ·
+                - generic [ref=e583]:
+                  - img [ref=e584]
+                  - generic [ref=e586]: "8.9"
+              - generic [ref=e587]:
+                - generic [ref=e588]: Windows
+                - generic [ref=e589]: Linux
+          - generic [ref=e591]:
+            - link "Library Red Dead Redemption 2" [ref=e592] [cursor=pointer]:
+              - /url: /games/bb2457b6a87843d88718212b201c67ec
+              - generic [ref=e593]: Library
+              - button [ref=e594]:
+                - img [ref=e595]
+              - heading "Red Dead Redemption 2" [level=3] [ref=e597]
+            - generic [ref=e598]:
+              - heading "Red Dead Redemption 2" [level=4] [ref=e600]
+              - generic [ref=e601]:
+                - generic [ref=e602]: Action
+                - generic [ref=e603]: ·
+                - generic [ref=e604]: "2019"
+                - generic [ref=e605]: ·
+                - generic [ref=e606]:
+                  - img [ref=e607]
+                  - generic [ref=e609]: "9.3"
+              - generic [ref=e611]: Windows
+          - generic [ref=e613]:
+            - link "Library Euro Truck Simulator 2" [ref=e614] [cursor=pointer]:
+              - /url: /games/602705f2ffd4419a83131c814819e2da
+              - generic [ref=e615]: Library
+              - button [ref=e616]:
+                - img [ref=e617]
+              - heading "Euro Truck Simulator 2" [level=3] [ref=e619]
+            - generic [ref=e620]:
+              - heading "Euro Truck Simulator 2" [level=4] [ref=e622]
+              - generic [ref=e623]:
+                - generic [ref=e624]: Indie
+                - generic [ref=e625]: ·
+                - generic [ref=e626]: "2012"
+                - generic [ref=e627]: ·
+                - generic [ref=e628]:
+                  - img [ref=e629]
+                  - generic [ref=e631]: "7.9"
+              - generic [ref=e632]:
+                - generic [ref=e633]: Windows
+                - generic [ref=e634]: Mac
+                - generic [ref=e635]: Linux
+          - generic [ref=e637]:
+            - link "Library Baldur's Gate 3" [ref=e638] [cursor=pointer]:
+              - /url: /games/04f94ca3a812441a92ce267ecb5003a0
+              - generic [ref=e639]: Library
+              - button [ref=e640]:
+                - img [ref=e641]
+              - heading "Baldur's Gate 3" [level=3] [ref=e643]
+            - generic [ref=e644]:
+              - heading "Baldur's Gate 3" [level=4] [ref=e646]
+              - generic [ref=e647]:
+                - generic [ref=e648]: Adventure
+                - generic [ref=e649]: ·
+                - generic [ref=e650]: "2023"
+                - generic [ref=e651]: ·
+                - generic [ref=e652]:
+                  - img [ref=e653]
+                  - generic [ref=e655]: "9.6"
+              - generic [ref=e656]:
+                - generic [ref=e657]: Windows
+                - generic [ref=e658]: Mac
+          - generic [ref=e660]:
+            - link "Library Phasmophobia" [ref=e661] [cursor=pointer]:
+              - /url: /games/d5c632700694415599594dc1003a2499
+              - generic [ref=e662]: Library
+              - button [ref=e663]:
+                - img [ref=e664]
+              - heading "Phasmophobia" [level=3] [ref=e666]
+            - generic [ref=e667]:
+              - heading "Phasmophobia" [level=4] [ref=e669]
+              - generic [ref=e670]:
+                - generic [ref=e671]: Action
+                - generic [ref=e672]: ·
+                - generic [ref=e673]: "2020"
+                - generic [ref=e674]: ·
+                - generic [ref=e675]:
+                  - img [ref=e676]
+                  - generic [ref=e678]: "9.6"
+              - generic [ref=e680]: Windows
+          - generic [ref=e682]:
+            - link "Library Among Us" [ref=e683] [cursor=pointer]:
+              - /url: /games/208f2b92af0745cbabe12b4ef816f4c9
+              - generic [ref=e684]: Library
+              - button [ref=e685]:
+                - img [ref=e686]
+              - heading "Among Us" [level=3] [ref=e688]
+            - generic [ref=e689]:
+              - heading "Among Us" [level=4] [ref=e691]
+              - generic [ref=e692]:
+                - generic [ref=e693]: Casual
+                - generic [ref=e694]: ·
+                - generic [ref=e695]: "2018"
+                - generic [ref=e696]: ·
+                - generic [ref=e697]:
+                  - img [ref=e698]
+                  - generic [ref=e700]: "8.5"
+              - generic [ref=e702]: Windows
+          - generic [ref=e704]:
+            - link "Library Dead by Daylight" [ref=e705] [cursor=pointer]:
+              - /url: /games/2b5ba74573484ccb9953c09c19a0838d
+              - generic [ref=e706]: Library
+              - button [ref=e707]:
+                - img [ref=e708]
+              - heading "Dead by Daylight" [level=3] [ref=e710]
+            - generic [ref=e711]:
+              - heading "Dead by Daylight" [level=4] [ref=e713]
+              - generic [ref=e714]:
+                - generic [ref=e715]: Action
+                - generic [ref=e716]: ·
+                - generic [ref=e717]: "2016"
+                - generic [ref=e718]: ·
+                - generic [ref=e719]:
+                  - img [ref=e720]
+                  - generic [ref=e722]: "7.9"
+              - generic [ref=e724]: Windows
+          - generic [ref=e726]:
+            - 'link "Library ARK: Survival Evolved" [ref=e727] [cursor=pointer]':
+              - /url: /games/8a2c4a1b1828481485f4e4d137a0cb1c
+              - generic [ref=e728]: Library
+              - button [ref=e729]:
+                - img [ref=e730]
+              - 'heading "ARK: Survival Evolved" [level=3] [ref=e732]'
+            - generic [ref=e733]:
+              - 'heading "ARK: Survival Evolved" [level=4] [ref=e735]'
+              - generic [ref=e736]:
+                - generic [ref=e737]: Action
+                - generic [ref=e738]: ·
+                - generic [ref=e739]: "2017"
+                - generic [ref=e740]: ·
+                - generic [ref=e741]:
+                  - img [ref=e742]
+                  - generic [ref=e744]: "7"
+              - generic [ref=e745]:
+                - generic [ref=e746]: Windows
+                - generic [ref=e747]: Mac
+          - generic [ref=e749]:
+            - link "Library The Forest" [ref=e750] [cursor=pointer]:
+              - /url: /games/d0173a679b7a4a458b6b18b9520e1781
+              - generic [ref=e751]: Library
+              - button [ref=e752]:
+                - img [ref=e753]
+              - heading "The Forest" [level=3] [ref=e755]
+            - generic [ref=e756]:
+              - heading "The Forest" [level=4] [ref=e758]
+              - generic [ref=e759]:
+                - generic [ref=e760]: Action
+                - generic [ref=e761]: ·
+                - generic [ref=e762]: "2018"
+                - generic [ref=e763]: ·
+                - generic [ref=e764]:
+                  - img [ref=e765]
+                  - generic [ref=e767]: "8.3"
+              - generic [ref=e769]: Windows
+          - generic [ref=e771]:
+            - link "Library Geometry Dash" [ref=e772] [cursor=pointer]:
+              - /url: /games/70af774b3ffa43859a752580f35d2482
+              - generic [ref=e773]: Library
+              - button [ref=e774]:
+                - img [ref=e775]
+              - heading "Geometry Dash" [level=3] [ref=e777]
+            - generic [ref=e778]:
+              - heading "Geometry Dash" [level=4] [ref=e780]
+              - generic [ref=e781]:
+                - generic [ref=e782]: Action
+                - generic [ref=e783]: ·
+                - generic [ref=e784]: "2014"
+                - generic [ref=e785]: ·
+                - generic [ref=e786]:
+                  - img [ref=e787]
+                  - generic [ref=e789]: "9.3"
+              - generic [ref=e790]:
+                - generic [ref=e791]: Windows
+                - generic [ref=e792]: Mac
+          - generic [ref=e794]:
+            - link "Library Hollow Knight" [ref=e795] [cursor=pointer]:
+              - /url: /games/91ddf1eb49f642adbe652a86f75f337e
+              - generic [ref=e796]: Library
+              - button [ref=e797]:
+                - img [ref=e798]
+              - heading "Hollow Knight" [level=3] [ref=e800]
+            - generic [ref=e801]:
+              - heading "Hollow Knight" [level=4] [ref=e803]
+              - generic [ref=e804]:
+                - generic [ref=e805]: Action
+                - generic [ref=e806]: ·
+                - generic [ref=e807]: "2017"
+                - generic [ref=e808]: ·
+                - generic [ref=e809]:
+                  - img [ref=e810]
+                  - generic [ref=e812]: "8.7"
+              - generic [ref=e813]:
+                - generic [ref=e814]: Windows
+                - generic [ref=e815]: Mac
+                - generic [ref=e816]: Linux
+          - generic [ref=e818]:
+            - link "Library Valheim" [ref=e819] [cursor=pointer]:
+              - /url: /games/73831884e8f64bffb060ed651775f34c
+              - generic [ref=e820]: Library
+              - button [ref=e821]:
+                - img [ref=e822]
+              - heading "Valheim" [level=3] [ref=e824]
+            - generic [ref=e825]:
+              - heading "Valheim" [level=4] [ref=e827]
+              - generic [ref=e828]:
+                - generic [ref=e829]: Action
+                - generic [ref=e830]: ·
+                - generic [ref=e831]: "2021"
+                - generic [ref=e832]: ·
+                - generic [ref=e833]:
+                  - img [ref=e834]
+                  - generic [ref=e836]: "9.4"
+              - generic [ref=e837]:
+                - generic [ref=e838]: Windows
+                - generic [ref=e839]: Mac
+                - generic [ref=e840]: Linux
+          - generic [ref=e842]:
+            - link "Library PAYDAY 2" [ref=e843] [cursor=pointer]:
+              - /url: /games/bb24c13435714d33b56a8c746055a2ec
+              - generic [ref=e844]: Library
+              - button [ref=e845]:
+                - img [ref=e846]
+              - heading "PAYDAY 2" [level=3] [ref=e848]
+            - generic [ref=e849]:
+              - heading "PAYDAY 2" [level=4] [ref=e851]
+              - generic [ref=e852]:
+                - generic [ref=e853]: Action
+                - generic [ref=e854]: ·
+                - generic [ref=e855]: "2013"
+                - generic [ref=e856]: ·
+                - generic [ref=e857]:
+                  - img [ref=e858]
+                  - generic [ref=e860]: "7.9"
+              - generic [ref=e861]:
+                - generic [ref=e862]: Windows
+                - generic [ref=e863]: Linux
+          - generic [ref=e865]:
+            - link "Library Rocket League®" [ref=e866] [cursor=pointer]:
+              - /url: /games/2317b8ef3c774534966c9dd99459c96a
+              - generic [ref=e867]: Library
+              - button [ref=e868]:
+                - img [ref=e869]
+              - heading "Rocket League®" [level=3] [ref=e871]
+            - generic [ref=e872]:
+              - heading "Rocket League®" [level=4] [ref=e874]
+              - generic [ref=e875]:
+                - generic [ref=e876]: Action
+                - generic [ref=e877]: ·
+                - generic [ref=e878]: "2015"
+                - generic [ref=e879]: ·
+                - generic [ref=e880]:
+                  - img [ref=e881]
+                  - generic [ref=e883]: "8.6"
+              - generic [ref=e885]: Windows
+          - generic [ref=e887]:
+            - link "Library Fall Guys" [ref=e888] [cursor=pointer]:
+              - /url: /games/7fcefd6920c24acb8674948c5196e4c0
+              - generic [ref=e889]: Library
+              - button [ref=e890]:
+                - img [ref=e891]
+              - heading "Fall Guys" [level=3] [ref=e893]
+            - generic [ref=e894]:
+              - heading "Fall Guys" [level=4] [ref=e896]
+              - generic [ref=e897]:
+                - generic [ref=e898]: Action
+                - generic [ref=e899]: ·
+                - generic [ref=e900]: "2020"
+                - generic [ref=e901]: ·
+                - generic [ref=e902]:
+                  - img [ref=e903]
+                  - generic [ref=e905]: "8"
+              - generic [ref=e907]: Windows
+          - generic [ref=e909]:
+            - link "Library Call of Duty®" [ref=e910] [cursor=pointer]:
+              - /url: /games/c968bf7895f74f259e0f773d026886c0
+              - generic [ref=e911]: Library
+              - button [ref=e912]:
+                - img [ref=e913]
+              - heading "Call of Duty®" [level=3] [ref=e915]
+            - generic [ref=e916]:
+              - heading "Call of Duty®" [level=4] [ref=e918]
+              - generic [ref=e919]:
+                - generic [ref=e920]: Action
+                - generic [ref=e921]: ·
+                - generic [ref=e922]: "2022"
+                - generic [ref=e923]: ·
+                - generic [ref=e924]:
+                  - img [ref=e925]
+                  - generic [ref=e927]: "5.9"
+              - generic [ref=e929]: Windows
+          - generic [ref=e931]:
+            - link "Library Lethal Company" [ref=e932] [cursor=pointer]:
+              - /url: /games/2ffff0ecc9214acda204d88db662b367
+              - generic [ref=e933]: Library
+              - button [ref=e934]:
+                - img [ref=e935]
+              - heading "Lethal Company" [level=3] [ref=e937]
+            - generic [ref=e938]:
+              - heading "Lethal Company" [level=4] [ref=e940]
+              - generic [ref=e941]:
+                - generic [ref=e942]: Action
+                - generic [ref=e943]: ·
+                - generic [ref=e944]: "2023"
+                - generic [ref=e945]: ·
+                - generic [ref=e946]:
+                  - img [ref=e947]
+                  - generic [ref=e949]: "9.7"
+              - generic [ref=e951]: Windows
+          - generic [ref=e953]:
+            - link "Library Portal 2" [ref=e954] [cursor=pointer]:
+              - /url: /games/5244a0c34fde41da8ef7233f8858e0fd
+              - generic [ref=e955]: Library
+              - button [ref=e956]:
+                - img [ref=e957]
+              - heading "Portal 2" [level=3] [ref=e959]
+            - generic [ref=e960]:
+              - heading "Portal 2" [level=4] [ref=e962]
+              - generic [ref=e963]:
+                - generic [ref=e964]: Action
+                - generic [ref=e965]: ·
+                - generic [ref=e966]: "2011"
+                - generic [ref=e967]: ·
+                - generic [ref=e968]:
+                  - img [ref=e969]
+                  - generic [ref=e971]: "9.5"
+              - generic [ref=e972]:
+                - generic [ref=e973]: Windows
+                - generic [ref=e974]: Linux
+          - generic [ref=e976]:
+            - link "Library Portal 2" [ref=e977] [cursor=pointer]:
+              - /url: /games/b7403e28612442d6a2502619d645b4d0
+              - generic [ref=e978]: Library
+              - button [ref=e979]:
+                - img [ref=e980]
+              - heading "Portal 2" [level=3] [ref=e982]
+            - generic [ref=e983]:
+              - heading "Portal 2" [level=4] [ref=e985]
+              - generic [ref=e986]:
+                - generic [ref=e987]: Action
+                - generic [ref=e988]: ·
+                - generic [ref=e989]: "2011"
+                - generic [ref=e990]: ·
+                - generic [ref=e991]:
+                  - img [ref=e992]
+                  - generic [ref=e994]: "9.5"
+              - generic [ref=e995]:
+                - generic [ref=e996]: Windows
+                - generic [ref=e997]: Linux
+          - generic [ref=e999]:
+            - link "Library DayZ" [ref=e1000] [cursor=pointer]:
+              - /url: /games/b1cea7e924e24208b9e33131ca26bdf2
+              - generic [ref=e1001]: Library
+              - button [ref=e1002]:
+                - img [ref=e1003]
+              - heading "DayZ" [level=3] [ref=e1005]
+            - generic [ref=e1006]:
+              - heading "DayZ" [level=4] [ref=e1008]
+              - generic [ref=e1009]:
+                - generic [ref=e1010]: Action
+                - generic [ref=e1011]: ·
+                - generic [ref=e1012]: "2018"
+                - generic [ref=e1013]: ·
+                - generic [ref=e1014]:
+                  - img [ref=e1015]
+                  - generic [ref=e1017]: "7.7"
+              - generic [ref=e1019]: Windows
+          - generic [ref=e1021]:
+            - link "Library Dying Light" [ref=e1022] [cursor=pointer]:
+              - /url: /games/47d1e5f739034ad8879305449c76c369
+              - generic [ref=e1023]: Library
+              - button [ref=e1024]:
+                - img [ref=e1025]
+              - heading "Dying Light" [level=3] [ref=e1027]
+            - generic [ref=e1028]:
+              - heading "Dying Light" [level=4] [ref=e1030]
+              - generic [ref=e1031]:
+                - generic [ref=e1032]: Action
+                - generic [ref=e1033]: ·
+                - generic [ref=e1034]: "2015"
+                - generic [ref=e1035]: ·
+                - generic [ref=e1036]:
+                  - img [ref=e1037]
+                  - generic [ref=e1039]: "8.7"
+              - generic [ref=e1040]:
+                - generic [ref=e1041]: Windows
+                - generic [ref=e1042]: Mac
+                - generic [ref=e1043]: Linux
+          - generic [ref=e1045]:
+            - link "Library Don't Starve Together" [ref=e1046] [cursor=pointer]:
+              - /url: /games/8ec4591891424f5b8b39de03f8170691
+              - generic [ref=e1047]: Library
+              - button [ref=e1048]:
+                - img [ref=e1049]
+              - heading "Don't Starve Together" [level=3] [ref=e1051]
+            - generic [ref=e1052]:
+              - heading "Don't Starve Together" [level=4] [ref=e1054]
+              - generic [ref=e1055]:
+                - generic [ref=e1056]: Action
+                - generic [ref=e1057]: ·
+                - generic [ref=e1058]: "2016"
+                - generic [ref=e1059]: ·
+                - generic [ref=e1060]:
+                  - img [ref=e1061]
+                  - generic [ref=e1063]: "8.3"
+              - generic [ref=e1064]:
+                - generic [ref=e1065]: Windows
+                - generic [ref=e1066]: Mac
+                - generic [ref=e1067]: Linux
+          - generic [ref=e1069]:
+            - link "Library Palworld" [ref=e1070] [cursor=pointer]:
+              - /url: /games/884ae8c8e7634d13b209a2a0dbb81b9a
+              - generic [ref=e1071]: Library
+              - button [ref=e1072]:
+                - img [ref=e1073]
+              - heading "Palworld" [level=3] [ref=e1075]
+            - generic [ref=e1076]:
+              - heading "Palworld" [level=4] [ref=e1078]
+              - generic [ref=e1079]:
+                - generic [ref=e1080]: Action
+                - generic [ref=e1081]: ·
+                - generic [ref=e1082]: "2024"
+                - generic [ref=e1083]: ·
+                - generic [ref=e1084]:
+                  - img [ref=e1085]
+                  - generic [ref=e1087]: "9.4"
+              - generic [ref=e1089]: Windows
+          - generic [ref=e1091]:
+            - 'link "Library Hollow Knight: Silksong" [ref=e1092] [cursor=pointer]':
+              - /url: /games/0f48586457e441fbabb1e48649fa955d
+              - generic [ref=e1093]: Library
+              - button [ref=e1094]:
+                - img [ref=e1095]
+              - 'heading "Hollow Knight: Silksong" [level=3] [ref=e1097]'
+            - generic [ref=e1098]:
+              - 'heading "Hollow Knight: Silksong" [level=4] [ref=e1100]'
+              - generic [ref=e1101]:
+                - generic [ref=e1102]: Action
+                - generic [ref=e1103]: ·
+                - generic [ref=e1104]: "2025"
+                - generic [ref=e1105]: ·
+                - generic [ref=e1106]:
+                  - img [ref=e1107]
+                  - generic [ref=e1109]: "9"
+              - generic [ref=e1110]:
+                - generic [ref=e1111]: Windows
+                - generic [ref=e1112]: Mac
+                - generic [ref=e1113]: Linux
+          - generic [ref=e1115]:
+            - 'link "Library The Binding of Isaac: Rebirth" [ref=e1116] [cursor=pointer]':
+              - /url: /games/7c15cd13381045bd801d644d6147c659
+              - generic [ref=e1117]: Library
+              - button [ref=e1118]:
+                - img [ref=e1119]
+              - 'heading "The Binding of Isaac: Rebirth" [level=3] [ref=e1121]'
+            - generic [ref=e1122]:
+              - 'heading "The Binding of Isaac: Rebirth" [level=4] [ref=e1124]'
+              - generic [ref=e1125]:
+                - generic [ref=e1126]: Action
+                - generic [ref=e1127]: ·
+                - generic [ref=e1128]: "2014"
+                - generic [ref=e1129]: ·
+                - generic [ref=e1130]:
+                  - img [ref=e1131]
+                  - generic [ref=e1133]: "9.7"
+              - generic [ref=e1134]:
+                - generic [ref=e1135]: Windows
+                - generic [ref=e1136]: Mac
+                - generic [ref=e1137]: Linux
+          - generic [ref=e1139]:
+            - link "Library BeamNG.drive" [ref=e1140] [cursor=pointer]:
+              - /url: /games/06a67abcc2ee473eb2bf523bd9ae162c
+              - generic [ref=e1141]: Library
+              - button [ref=e1142]:
+                - img [ref=e1143]
+              - heading "BeamNG.drive" [level=3] [ref=e1145]
+            - generic [ref=e1146]:
+              - heading "BeamNG.drive" [level=4] [ref=e1148]
+              - generic [ref=e1149]:
+                - generic [ref=e1150]: Racing
+                - generic [ref=e1151]: ·
+                - generic [ref=e1152]: "2015"
+                - generic [ref=e1153]: ·
+                - generic [ref=e1154]:
+                  - img [ref=e1155]
+                  - generic [ref=e1157]: "9.7"
+              - generic [ref=e1159]: Windows
+          - generic [ref=e1161]:
+            - link "Library Bloons TD 6" [ref=e1162] [cursor=pointer]:
+              - /url: /games/6529522b5a7145beb441212b91209453
+              - generic [ref=e1163]: Library
+              - button [ref=e1164]:
+                - img [ref=e1165]
+              - heading "Bloons TD 6" [level=3] [ref=e1167]
+            - generic [ref=e1168]:
+              - heading "Bloons TD 6" [level=4] [ref=e1170]
+              - generic [ref=e1171]:
+                - generic [ref=e1172]: Strategy
+                - generic [ref=e1173]: ·
+                - generic [ref=e1174]: "2018"
+                - generic [ref=e1175]: ·
+                - generic [ref=e1176]:
+                  - img [ref=e1177]
+                  - generic [ref=e1179]: "9.7"
+              - generic [ref=e1180]:
+                - generic [ref=e1181]: Windows
+                - generic [ref=e1182]: Mac
+          - generic [ref=e1184]:
+            - link "Library Project Zomboid" [ref=e1185] [cursor=pointer]:
+              - /url: /games/da9874307ea64885b9daba72edf6a133
+              - generic [ref=e1186]: Library
+              - button [ref=e1187]:
+                - img [ref=e1188]
+              - heading "Project Zomboid" [level=3] [ref=e1190]
+            - generic [ref=e1191]:
+              - heading "Project Zomboid" [level=4] [ref=e1193]
+              - generic [ref=e1194]:
+                - generic [ref=e1195]: Indie
+                - generic [ref=e1196]: ·
+                - generic [ref=e1197]: "2013"
+                - generic [ref=e1198]: ·
+                - generic [ref=e1199]:
+                  - img [ref=e1200]
+                  - generic [ref=e1202]: "9.4"
+              - generic [ref=e1203]:
+                - generic [ref=e1204]: Windows
+                - generic [ref=e1205]: Mac
+                - generic [ref=e1206]: Linux
+          - generic [ref=e1208]:
+            - 'link "Library Sea of Thieves: 2025 Edition" [ref=e1209] [cursor=pointer]':
+              - /url: /games/7244d7d7c6614a25ac6a781c6da5ac31
+              - generic [ref=e1210]: Library
+              - button [ref=e1211]:
+                - img [ref=e1212]
+              - 'heading "Sea of Thieves: 2025 Edition" [level=3] [ref=e1214]'
+            - generic [ref=e1215]:
+              - 'heading "Sea of Thieves: 2025 Edition" [level=4] [ref=e1217]'
+              - generic [ref=e1218]:
+                - generic [ref=e1219]: Action
+                - generic [ref=e1220]: ·
+                - generic [ref=e1221]: "2020"
+                - generic [ref=e1222]: ·
+                - generic [ref=e1223]:
+                  - img [ref=e1224]
+                  - generic [ref=e1226]: "8.9"
+              - generic [ref=e1228]: Windows
+          - generic [ref=e1230]:
+            - 'link "Library Monster Hunter: World" [ref=e1231] [cursor=pointer]':
+              - /url: /games/ccf506b7de4d4b95b86741df340e9eae
+              - generic [ref=e1232]: Library
+              - button [ref=e1233]:
+                - img [ref=e1234]
+              - 'heading "Monster Hunter: World" [level=3] [ref=e1236]'
+            - generic [ref=e1237]:
+              - 'heading "Monster Hunter: World" [level=4] [ref=e1239]'
+              - generic [ref=e1240]:
+                - generic [ref=e1241]: Action
+                - generic [ref=e1242]: ·
+                - generic [ref=e1243]: "2018"
+                - generic [ref=e1244]: ·
+                - generic [ref=e1245]:
+                  - img [ref=e1246]
+                  - generic [ref=e1248]: "8.8"
+              - generic [ref=e1250]: Windows
+          - generic [ref=e1252]:
+            - link "Library Raft" [ref=e1253] [cursor=pointer]:
+              - /url: /games/d2961f90be6a475cb46c377b356b4357
+              - generic [ref=e1254]: Library
+              - button [ref=e1255]:
+                - img [ref=e1256]
+              - heading "Raft" [level=3] [ref=e1258]
+            - generic [ref=e1259]:
+              - heading "Raft" [level=4] [ref=e1261]
+              - generic [ref=e1262]:
+                - generic [ref=e1263]: Adventure
+                - generic [ref=e1264]: ·
+                - generic [ref=e1265]: "2022"
+                - generic [ref=e1266]: ·
+                - generic [ref=e1267]:
+                  - img [ref=e1268]
+                  - generic [ref=e1270]: "9.3"
+              - generic [ref=e1272]: Windows
+          - generic [ref=e1274]:
+            - link "Library Subnautica" [ref=e1275] [cursor=pointer]:
+              - /url: /games/3e6d9789edfd48ec86844fe942922478
+              - generic [ref=e1276]: Library
+              - button [ref=e1277]:
+                - img [ref=e1278]
+              - heading "Subnautica" [level=3] [ref=e1280]
+            - generic [ref=e1281]:
+              - heading "Subnautica" [level=4] [ref=e1283]
+              - generic [ref=e1284]:
+                - generic [ref=e1285]: Adventure
+                - generic [ref=e1286]: ·
+                - generic [ref=e1287]: "2018"
+                - generic [ref=e1288]: ·
+                - generic [ref=e1289]:
+                  - img [ref=e1290]
+                  - generic [ref=e1292]: "8.7"
+              - generic [ref=e1293]:
+                - generic [ref=e1294]: Windows
+                - generic [ref=e1295]: Mac
+          - generic [ref=e1297]:
+            - link "Library No Man's Sky" [ref=e1298] [cursor=pointer]:
+              - /url: /games/c21f98b32168446c86f59c3602d57ea1
+              - generic [ref=e1299]: Library
+              - button [ref=e1300]:
+                - img [ref=e1301]
+              - heading "No Man's Sky" [level=3] [ref=e1303]
+            - generic [ref=e1304]:
+              - heading "No Man's Sky" [level=4] [ref=e1306]
+              - generic [ref=e1307]:
+                - generic [ref=e1308]: Action
+                - generic [ref=e1309]: ·
+                - generic [ref=e1310]: "2016"
+                - generic [ref=e1311]: ·
+                - generic [ref=e1312]:
+                  - img [ref=e1313]
+                  - generic [ref=e1315]: "6.1"
+              - generic [ref=e1316]:
+                - generic [ref=e1317]: Windows
+                - generic [ref=e1318]: Mac
+          - generic [ref=e1320]:
+            - link "Library Deep Rock Galactic" [ref=e1321] [cursor=pointer]:
+              - /url: /games/fe23efd873bc4da9be854d599b11b76d
+              - generic [ref=e1322]: Library
+              - button [ref=e1323]:
+                - img [ref=e1324]
+              - heading "Deep Rock Galactic" [level=3] [ref=e1326]
+            - generic [ref=e1327]:
+              - heading "Deep Rock Galactic" [level=4] [ref=e1329]
+              - generic [ref=e1330]:
+                - generic [ref=e1331]: Action
+                - generic [ref=e1332]: ·
+                - generic [ref=e1333]: "2020"
+                - generic [ref=e1334]: ·
+                - generic [ref=e1335]:
+                  - img [ref=e1336]
+                  - generic [ref=e1338]: "8.5"
+              - generic [ref=e1340]: Windows
+          - generic [ref=e1342]:
+            - link "Library People Playground" [ref=e1343] [cursor=pointer]:
+              - /url: /games/57f0cc922d594deb88d790a551f0eb91
+              - generic [ref=e1344]: Library
+              - button [ref=e1345]:
+                - img [ref=e1346]
+              - heading "People Playground" [level=3] [ref=e1348]
+            - generic [ref=e1349]:
+              - heading "People Playground" [level=4] [ref=e1351]
+              - generic [ref=e1352]:
+                - generic [ref=e1353]: Action
+                - generic [ref=e1354]: ·
+                - generic [ref=e1355]: "2019"
+                - generic [ref=e1356]: ·
+                - generic [ref=e1357]:
+                  - img [ref=e1358]
+                  - generic [ref=e1360]: "9.9"
+              - generic [ref=e1362]: Windows
+          - generic [ref=e1364]:
+            - link "Library Undertale" [ref=e1365] [cursor=pointer]:
+              - /url: /games/68a2ee6d7e644876a3791a013cd65b09
+              - generic [ref=e1366]: Library
+              - button [ref=e1367]:
+                - img [ref=e1368]
+              - heading "Undertale" [level=3] [ref=e1370]
+            - generic [ref=e1371]:
+              - heading "Undertale" [level=4] [ref=e1373]
+              - generic [ref=e1374]:
+                - generic [ref=e1375]: Indie
+                - generic [ref=e1376]: ·
+                - generic [ref=e1377]: "2015"
+                - generic [ref=e1378]: ·
+                - generic [ref=e1379]:
+                  - img [ref=e1380]
+                  - generic [ref=e1382]: "9.2"
+              - generic [ref=e1383]:
+                - generic [ref=e1384]: Windows
+                - generic [ref=e1385]: Mac
+                - generic [ref=e1386]: Linux
+          - generic [ref=e1388]:
+            - link "Library Fallout 4" [ref=e1389] [cursor=pointer]:
+              - /url: /games/acc65b48038f433cb40029f412ba1986
+              - generic [ref=e1390]: Library
+              - button [ref=e1391]:
+                - img [ref=e1392]
+              - heading "Fallout 4" [level=3] [ref=e1394]
+            - generic [ref=e1395]:
+              - heading "Fallout 4" [level=4] [ref=e1397]
+              - generic [ref=e1398]:
+                - generic [ref=e1399]: RPG
+                - generic [ref=e1400]: ·
+                - generic [ref=e1401]: "2015"
+                - generic [ref=e1402]: ·
+                - generic [ref=e1403]:
+                  - img [ref=e1404]
+                  - generic [ref=e1406]: "8.4"
+              - generic [ref=e1408]: Windows
+          - generic [ref=e1410]:
+            - link "Library Hades" [ref=e1411] [cursor=pointer]:
+              - /url: /games/78ceb6e1c0044505b809f04fd9ffb36c
+              - generic [ref=e1412]: Library
+              - button [ref=e1413]:
+                - img [ref=e1414]
+              - heading "Hades" [level=3] [ref=e1416]
+            - generic [ref=e1417]:
+              - heading "Hades" [level=4] [ref=e1419]
+              - generic [ref=e1420]:
+                - generic [ref=e1421]: Action
+                - generic [ref=e1422]: ·
+                - generic [ref=e1423]: "2020"
+                - generic [ref=e1424]: ·
+                - generic [ref=e1425]:
+                  - img [ref=e1426]
+                  - generic [ref=e1428]: "9.3"
+              - generic [ref=e1429]:
+                - generic [ref=e1430]: Windows
+                - generic [ref=e1431]: Mac
+          - generic [ref=e1433]:
+            - link "Library DARK SOULS™ III" [ref=e1434] [cursor=pointer]:
+              - /url: /games/2edbd36efbbc48ee87df6116c2d7f967
+              - generic [ref=e1435]: Library
+              - button [ref=e1436]:
+                - img [ref=e1437]
+              - heading "DARK SOULS™ III" [level=3] [ref=e1439]
+            - generic [ref=e1440]:
+              - heading "DARK SOULS™ III" [level=4] [ref=e1442]
+              - generic [ref=e1443]:
+                - generic [ref=e1444]: Action
+                - generic [ref=e1445]: ·
+                - generic [ref=e1446]: "2016"
+                - generic [ref=e1447]: ·
+                - generic [ref=e1448]:
+                  - img [ref=e1449]
+                  - generic [ref=e1451]: "8.9"
+              - generic [ref=e1453]: Windows
+          - generic [ref=e1455]:
+            - link "Library R.E.P.O." [ref=e1456] [cursor=pointer]:
+              - /url: /games/748b323c5a174bd7a34729c31292b073
+              - generic [ref=e1457]: Library
+              - button [ref=e1458]:
+                - img [ref=e1459]
+              - heading "R.E.P.O." [level=3] [ref=e1461]
+            - generic [ref=e1462]:
+              - heading "R.E.P.O." [level=4] [ref=e1464]
+              - generic [ref=e1465]:
+                - generic [ref=e1466]: Action
+                - generic [ref=e1467]: ·
+                - generic [ref=e1468]: "2025"
+                - generic [ref=e1469]: ·
+                - generic [ref=e1470]:
+                  - img [ref=e1471]
+                  - generic [ref=e1473]: "9.7"
+              - generic [ref=e1475]: Windows
+          - generic [ref=e1477]:
+            - link "Library 7 Days to Die" [ref=e1478] [cursor=pointer]:
+              - /url: /games/35999ce5f90b4172859c8dba31644241
+              - generic [ref=e1479]: Library
+              - button [ref=e1480]:
+                - img [ref=e1481]
+              - heading "7 Days to Die" [level=3] [ref=e1483]
+            - generic [ref=e1484]:
+              - heading "7 Days to Die" [level=4] [ref=e1486]
+              - generic [ref=e1487]:
+                - generic [ref=e1488]: Action
+                - generic [ref=e1489]: ·
+                - generic [ref=e1490]: "2024"
+                - generic [ref=e1491]: ·
+                - generic [ref=e1492]:
+                  - img [ref=e1493]
+                  - generic [ref=e1495]: "8.9"
+              - generic [ref=e1496]:
+                - generic [ref=e1497]: Windows
+                - generic [ref=e1498]: Mac
+                - generic [ref=e1499]: Linux
+          - generic [ref=e1501]:
+            - link "Library Sid Meier’s Civilization® VI" [ref=e1502] [cursor=pointer]:
+              - /url: /games/07b01c6640d34820903aa1a96d435dbb
+              - generic [ref=e1503]: Library
+              - button [ref=e1504]:
+                - img [ref=e1505]
+              - heading "Sid Meier’s Civilization® VI" [level=3] [ref=e1507]
+            - generic [ref=e1508]:
+              - heading "Sid Meier’s Civilization® VI" [level=4] [ref=e1510]
+              - generic [ref=e1511]:
+                - generic [ref=e1512]: Strategy
+                - generic [ref=e1513]: ·
+                - generic [ref=e1514]: "2016"
+                - generic [ref=e1515]: ·
+                - generic [ref=e1516]:
+                  - img [ref=e1517]
+                  - generic [ref=e1519]: "8.8"
+              - generic [ref=e1520]:
+                - generic [ref=e1521]: Windows
+                - generic [ref=e1522]: Mac
+                - generic [ref=e1523]: Linux
+          - generic [ref=e1525]:
+            - link "Library Hearts of Iron IV" [ref=e1526] [cursor=pointer]:
+              - /url: /games/5fc11083bdf04e83ad068aa8551acd95
+              - generic [ref=e1527]: Library
+              - button [ref=e1528]:
+                - img [ref=e1529]
+              - heading "Hearts of Iron IV" [level=3] [ref=e1531]
+            - generic [ref=e1532]:
+              - heading "Hearts of Iron IV" [level=4] [ref=e1534]
+              - generic [ref=e1535]:
+                - generic [ref=e1536]: Simulation
+                - generic [ref=e1537]: ·
+                - generic [ref=e1538]: "2016"
+                - generic [ref=e1539]: ·
+                - generic [ref=e1540]:
+                  - img [ref=e1541]
+                  - generic [ref=e1543]: "8.3"
+              - generic [ref=e1544]:
+                - generic [ref=e1545]: Windows
+                - generic [ref=e1546]: Mac
+                - generic [ref=e1547]: Linux
+          - generic [ref=e1549]:
+            - link "Library Hogwarts Legacy" [ref=e1550] [cursor=pointer]:
+              - /url: /games/20419931c2fc43f5becb74e6cf81c38a
+              - generic [ref=e1551]: Library
+              - button [ref=e1552]:
+                - img [ref=e1553]
+              - heading "Hogwarts Legacy" [level=3] [ref=e1555]
+            - generic [ref=e1556]:
+              - heading "Hogwarts Legacy" [level=4] [ref=e1558]
+              - generic [ref=e1559]:
+                - generic [ref=e1560]: Action
+                - generic [ref=e1561]: ·
+                - generic [ref=e1562]: "2023"
+                - generic [ref=e1563]: ·
+                - generic [ref=e1564]:
+                  - img [ref=e1565]
+                  - generic [ref=e1567]: "8.3"
+              - generic [ref=e1569]: Windows
+          - generic [ref=e1571]:
+            - link "Library Battlefield™ 2042" [ref=e1572] [cursor=pointer]:
+              - /url: /games/d07ec1fff8104c34a2ef2beb6ae76d07
+              - generic [ref=e1573]: Library
+              - button [ref=e1574]:
+                - img [ref=e1575]
+              - heading "Battlefield™ 2042" [level=3] [ref=e1577]
+            - generic [ref=e1578]:
+              - heading "Battlefield™ 2042" [level=4] [ref=e1580]
+              - generic [ref=e1581]:
+                - generic [ref=e1582]: Action
+                - generic [ref=e1583]: ·
+                - generic [ref=e1584]: "2021"
+                - generic [ref=e1585]: ·
+                - generic [ref=e1586]:
+                  - img [ref=e1587]
+                  - generic [ref=e1589]: "4.7"
+              - generic [ref=e1591]: Windows
+          - generic [ref=e1593]:
+            - 'link "Library New World: Aeternum" [ref=e1594] [cursor=pointer]':
+              - /url: /games/4a0d8bd488d146f88969142c991a253a
+              - generic [ref=e1595]: Library
+              - button [ref=e1596]:
+                - img [ref=e1597]
+              - 'heading "New World: Aeternum" [level=3] [ref=e1599]'
+            - generic [ref=e1600]:
+              - 'heading "New World: Aeternum" [level=4] [ref=e1602]'
+              - generic [ref=e1603]:
+                - generic [ref=e1604]: Action
+                - generic [ref=e1605]: ·
+                - generic [ref=e1606]: "2021"
+                - generic [ref=e1607]: ·
+                - generic [ref=e1608]:
+                  - img [ref=e1609]
+                  - generic [ref=e1611]: "6.9"
+              - generic [ref=e1613]: Windows
+          - generic [ref=e1615]:
+            - link "Library Sons Of The Forest" [ref=e1616] [cursor=pointer]:
+              - /url: /games/bfd3b25af11840609b62c386546eab91
+              - generic [ref=e1617]: Library
+              - button [ref=e1618]:
+                - img [ref=e1619]
+              - heading "Sons Of The Forest" [level=3] [ref=e1621]
+            - generic [ref=e1622]:
+              - heading "Sons Of The Forest" [level=4] [ref=e1624]
+              - generic [ref=e1625]:
+                - generic [ref=e1626]: Action
+                - generic [ref=e1627]: ·
+                - generic [ref=e1628]: "2024"
+                - generic [ref=e1629]: ·
+                - generic [ref=e1630]:
+                  - img [ref=e1631]
+                  - generic [ref=e1633]: "8.8"
+              - generic [ref=e1635]: Windows
+          - generic [ref=e1637]:
+            - 'link "Library Sekiro™: Shadows Die Twice - GOTY Edition" [ref=e1638] [cursor=pointer]':
+              - /url: /games/7b7e43ec988848e5912a641e64f81e14
+              - generic [ref=e1639]: Library
+              - button [ref=e1640]:
+                - img [ref=e1641]
+              - 'heading "Sekiro™: Shadows Die Twice - GOTY Edition" [level=3] [ref=e1643]'
+            - generic [ref=e1644]:
+              - 'heading "Sekiro™: Shadows Die Twice - GOTY Edition" [level=4] [ref=e1646]'
+              - generic [ref=e1647]:
+                - generic [ref=e1648]: Action
+                - generic [ref=e1649]: ·
+                - generic [ref=e1650]: "2019"
+                - generic [ref=e1651]: ·
+                - generic [ref=e1652]:
+                  - img [ref=e1653]
+                  - generic [ref=e1655]: "8.8"
+              - generic [ref=e1657]: Windows
+          - generic [ref=e1659]:
+            - link "Library Vampire Survivors" [ref=e1660] [cursor=pointer]:
+              - /url: /games/1baf715bd3d04debbf9f0b13928be305
+              - generic [ref=e1661]: Library
+              - button [ref=e1662]:
+                - img [ref=e1663]
+              - heading "Vampire Survivors" [level=3] [ref=e1665]
+            - generic [ref=e1666]:
+              - heading "Vampire Survivors" [level=4] [ref=e1668]
+              - generic [ref=e1669]:
+                - generic [ref=e1670]: Action
+                - generic [ref=e1671]: ·
+                - generic [ref=e1672]: "2022"
+                - generic [ref=e1673]: ·
+                - generic [ref=e1674]:
+                  - img [ref=e1675]
+                  - generic [ref=e1677]: "8.6"
+              - generic [ref=e1678]:
+                - generic [ref=e1679]: Windows
+                - generic [ref=e1680]: Mac
+          - generic [ref=e1682]:
+            - link "Library Schedule I" [ref=e1683] [cursor=pointer]:
+              - /url: /games/39fb8924a2e24f8693f126b0ddb80d47
+              - generic [ref=e1684]: Library
+              - button [ref=e1685]:
+                - img [ref=e1686]
+              - heading "Schedule I" [level=3] [ref=e1688]
+            - generic [ref=e1689]:
+              - heading "Schedule I" [level=4] [ref=e1691]
+              - generic [ref=e1692]:
+                - generic [ref=e1693]: Action
+                - generic [ref=e1694]: ·
+                - generic [ref=e1695]: "2025"
+                - generic [ref=e1696]: ·
+                - generic [ref=e1697]:
+                  - img [ref=e1698]
+                  - generic [ref=e1700]: "9.8"
+              - generic [ref=e1702]: Windows
+          - generic [ref=e1704]:
+            - link "Library Titanfall® 2" [ref=e1705] [cursor=pointer]:
+              - /url: /games/d61eb1f9f20146bb85862b382a2baaeb
+              - generic [ref=e1706]: Library
+              - button [ref=e1707]:
+                - img [ref=e1708]
+              - heading "Titanfall® 2" [level=3] [ref=e1710]
+            - generic [ref=e1711]:
+              - heading "Titanfall® 2" [level=4] [ref=e1713]
+              - generic [ref=e1714]:
+                - generic [ref=e1715]: Action
+                - generic [ref=e1716]: ·
+                - generic [ref=e1717]: "2020"
+                - generic [ref=e1718]: ·
+                - generic [ref=e1719]:
+                  - img [ref=e1720]
+                  - generic [ref=e1722]: "8.6"
+              - generic [ref=e1724]: Windows
+          - generic [ref=e1726]:
+            - link "Library Ready or Not" [ref=e1727] [cursor=pointer]:
+              - /url: /games/3ca6d7434f814bbd953bdc310c199971
+              - generic [ref=e1728]: Library
+              - button [ref=e1729]:
+                - img [ref=e1730]
+              - heading "Ready or Not" [level=3] [ref=e1732]
+            - generic [ref=e1733]:
+              - heading "Ready or Not" [level=4] [ref=e1735]
+              - generic [ref=e1736]:
+                - generic [ref=e1737]: Action
+                - generic [ref=e1738]: ·
+                - generic [ref=e1739]: "2023"
+                - generic [ref=e1740]: ·
+                - generic [ref=e1741]:
+                  - img [ref=e1742]
+                  - generic [ref=e1744]: "8.9"
+              - generic [ref=e1746]: Windows
+          - generic [ref=e1748]:
+            - link "Library Battlefield™ 6" [ref=e1749] [cursor=pointer]:
+              - /url: /games/e340a377b5bd46c8a582008dea13ee67
+              - generic [ref=e1750]: Library
+              - button [ref=e1751]:
+                - img [ref=e1752]
+              - heading "Battlefield™ 6" [level=3] [ref=e1754]
+            - generic [ref=e1755]:
+              - heading "Battlefield™ 6" [level=4] [ref=e1757]
+              - generic [ref=e1758]:
+                - generic [ref=e1759]: Action
+                - generic [ref=e1760]: ·
+                - generic [ref=e1761]: "2025"
+                - generic [ref=e1762]: ·
+                - generic [ref=e1763]:
+                  - img [ref=e1764]
+                  - generic [ref=e1766]: "8.2"
+              - generic [ref=e1768]: Windows
+          - generic [ref=e1770]:
+            - link "Library Forza Horizon 5" [ref=e1771] [cursor=pointer]:
+              - /url: /games/7d6f9415f70d4e27961e0b657b6f717f
+              - generic [ref=e1772]: Library
+              - button [ref=e1773]:
+                - img [ref=e1774]
+              - heading "Forza Horizon 5" [level=3] [ref=e1776]
+            - generic [ref=e1777]:
+              - heading "Forza Horizon 5" [level=4] [ref=e1779]
+              - generic [ref=e1780]:
+                - generic [ref=e1781]: Action
+                - generic [ref=e1782]: ·
+                - generic [ref=e1783]: "2021"
+                - generic [ref=e1784]: ·
+                - generic [ref=e1785]:
+                  - img [ref=e1786]
+                  - generic [ref=e1788]: "8.9"
+              - generic [ref=e1790]: Windows
+          - generic [ref=e1792]:
+            - link "Library Risk of Rain 2" [ref=e1793] [cursor=pointer]:
+              - /url: /games/e57bd065ed9b4d7d9c09440aa94d3c11
+              - generic [ref=e1794]: Library
+              - button [ref=e1795]:
+                - img [ref=e1796]
+              - heading "Risk of Rain 2" [level=3] [ref=e1798]
+            - generic [ref=e1799]:
+              - heading "Risk of Rain 2" [level=4] [ref=e1801]
+              - generic [ref=e1802]:
+                - generic [ref=e1803]: Action
+                - generic [ref=e1804]: ·
+                - generic [ref=e1805]: "2020"
+                - generic [ref=e1806]: ·
+                - generic [ref=e1807]:
+                  - img [ref=e1808]
+                  - generic [ref=e1810]: "8.5"
+              - generic [ref=e1812]: Windows
+          - generic [ref=e1814]:
+            - 'link "Library Halo: The Master Chief Collection" [ref=e1815] [cursor=pointer]':
+              - /url: /games/0586824b1d5e4d03b2030a50a3e7957c
+              - generic [ref=e1816]: Library
+              - button [ref=e1817]:
+                - img [ref=e1818]
+              - 'heading "Halo: The Master Chief Collection" [level=3] [ref=e1820]'
+            - generic [ref=e1821]:
+              - 'heading "Halo: The Master Chief Collection" [level=4] [ref=e1823]'
+              - generic [ref=e1824]:
+                - generic [ref=e1825]: Action
+                - generic [ref=e1826]: ·
+                - generic [ref=e1827]: "2019"
+                - generic [ref=e1828]: ·
+                - generic [ref=e1829]:
+                  - img [ref=e1830]
+                  - generic [ref=e1832]: "9.2"
+              - generic [ref=e1834]: Windows
+          - generic [ref=e1836]:
+            - link "Library Battlefield™ V" [ref=e1837] [cursor=pointer]:
+              - /url: /games/3e76fc0f6c6e4cdfbd8866e25b67a33c
+              - generic [ref=e1838]: Library
+              - button [ref=e1839]:
+                - img [ref=e1840]
+              - heading "Battlefield™ V" [level=3] [ref=e1842]
+            - generic [ref=e1843]:
+              - heading "Battlefield™ V" [level=4] [ref=e1845]
+              - generic [ref=e1846]:
+                - generic [ref=e1847]: Action
+                - generic [ref=e1848]: ·
+                - generic [ref=e1849]: "2020"
+                - generic [ref=e1850]: ·
+                - generic [ref=e1851]:
+                  - img [ref=e1852]
+                  - generic [ref=e1854]: "7.1"
+              - generic [ref=e1856]: Windows
+          - generic [ref=e1858]:
+            - link "Library Arma 3" [ref=e1859] [cursor=pointer]:
+              - /url: /games/c61defa4bdac4f6891fec67fbd1a28bd
+              - generic [ref=e1860]: Library
+              - button [ref=e1861]:
+                - img [ref=e1862]
+              - heading "Arma 3" [level=3] [ref=e1864]
+            - generic [ref=e1865]:
+              - heading "Arma 3" [level=4] [ref=e1867]
+              - generic [ref=e1868]:
+                - generic [ref=e1869]: Action
+                - generic [ref=e1870]: ·
+                - generic [ref=e1871]: "2013"
+                - generic [ref=e1872]: ·
+                - generic [ref=e1873]:
+                  - img [ref=e1874]
+                  - generic [ref=e1876]: "7.4"
+              - generic [ref=e1877]:
+                - generic [ref=e1878]: Windows
+                - generic [ref=e1879]: Mac
+          - generic [ref=e1881]:
+            - 'link "Library Mount & Blade II: Bannerlord" [ref=e1882] [cursor=pointer]':
+              - /url: /games/52785de17eaa4908b95f824888d3ead1
+              - generic [ref=e1883]: Library
+              - button [ref=e1884]:
+                - img [ref=e1885]
+              - 'heading "Mount & Blade II: Bannerlord" [level=3] [ref=e1887]'
+            - generic [ref=e1888]:
+              - 'heading "Mount & Blade II: Bannerlord" [level=4] [ref=e1890]'
+              - generic [ref=e1891]:
+                - generic [ref=e1892]: Action
+                - generic [ref=e1893]: ·
+                - generic [ref=e1894]: "2022"
+                - generic [ref=e1895]: ·
+                - generic [ref=e1896]:
+                  - img [ref=e1897]
+                  - generic [ref=e1899]: "7.7"
+              - generic [ref=e1901]: Windows
+          - generic [ref=e1903]:
+            - link "Library Satisfactory" [ref=e1904] [cursor=pointer]:
+              - /url: /games/03faeb0439734f449947773e56a1b926
+              - generic [ref=e1905]: Library
+              - button [ref=e1906]:
+                - img [ref=e1907]
+              - heading "Satisfactory" [level=3] [ref=e1909]
+            - generic [ref=e1910]:
+              - heading "Satisfactory" [level=4] [ref=e1912]
+              - generic [ref=e1913]:
+                - generic [ref=e1914]: Adventure
+                - generic [ref=e1915]: ·
+                - generic [ref=e1916]: "2024"
+                - generic [ref=e1917]: ·
+                - generic [ref=e1918]:
+                  - img [ref=e1919]
+                  - generic [ref=e1921]: "9.1"
+              - generic [ref=e1923]: Windows
+          - generic [ref=e1925]:
+            - link "Library PEAK" [ref=e1926] [cursor=pointer]:
+              - /url: /games/80ebb7a7f57a4b1f8d452d36db1cb8b8
+              - generic [ref=e1927]: Library
+              - button [ref=e1928]:
+                - img [ref=e1929]
+              - heading "PEAK" [level=3] [ref=e1931]
+            - generic [ref=e1932]:
+              - heading "PEAK" [level=4] [ref=e1934]
+              - generic [ref=e1935]:
+                - generic [ref=e1936]: Action
+                - generic [ref=e1937]: ·
+                - generic [ref=e1938]: "2025"
+                - generic [ref=e1939]: ·
+                - generic [ref=e1940]:
+                  - img [ref=e1941]
+                  - generic [ref=e1943]: "0"
+              - generic [ref=e1945]: Windows
+          - generic [ref=e1947]:
+            - link "Library Borderlands 2" [ref=e1948] [cursor=pointer]:
+              - /url: /games/3af6ac13994f45c0aaca9aedb810550c
+              - generic [ref=e1949]: Library
+              - button [ref=e1950]:
+                - img [ref=e1951]
+              - heading "Borderlands 2" [level=3] [ref=e1953]
+            - generic [ref=e1954]:
+              - heading "Borderlands 2" [level=4] [ref=e1956]
+              - generic [ref=e1957]:
+                - generic [ref=e1958]: Action
+                - generic [ref=e1959]: ·
+                - generic [ref=e1960]: "2012"
+                - generic [ref=e1961]: ·
+                - generic [ref=e1962]:
+                  - img [ref=e1963]
+                  - generic [ref=e1965]: "8.9"
+              - generic [ref=e1966]:
+                - generic [ref=e1967]: Windows
+                - generic [ref=e1968]: Mac
+                - generic [ref=e1969]: Linux
+          - generic [ref=e1971]:
+            - 'link "Library Cities: Skylines" [ref=e1972] [cursor=pointer]':
+              - /url: /games/eb6f98e23f3348f9b0871166a1dcb970
+              - generic [ref=e1973]: Library
+              - button [ref=e1974]:
+                - img [ref=e1975]
+              - 'heading "Cities: Skylines" [level=3] [ref=e1977]'
+            - generic [ref=e1978]:
+              - 'heading "Cities: Skylines" [level=4] [ref=e1980]'
+              - generic [ref=e1981]:
+                - generic [ref=e1982]: Simulation
+                - generic [ref=e1983]: ·
+                - generic [ref=e1984]: "2015"
+                - generic [ref=e1985]: ·
+                - generic [ref=e1986]:
+                  - img [ref=e1987]
+                  - generic [ref=e1989]: "8.5"
+              - generic [ref=e1990]:
+                - generic [ref=e1991]: Windows
+                - generic [ref=e1992]: Mac
+                - generic [ref=e1993]: Linux
+          - generic [ref=e1995]:
+            - 'link "Library Hunt: Showdown 1896" [ref=e1996] [cursor=pointer]':
+              - /url: /games/d7c014cbdca0487480ba4614e21165d4
+              - generic [ref=e1997]: Library
+              - button [ref=e1998]:
+                - img [ref=e1999]
+              - 'heading "Hunt: Showdown 1896" [level=3] [ref=e2001]'
+            - generic [ref=e2002]:
+              - 'heading "Hunt: Showdown 1896" [level=4] [ref=e2004]'
+              - generic [ref=e2005]:
+                - generic [ref=e2006]: Action
+                - generic [ref=e2007]: ·
+                - generic [ref=e2008]: "2019"
+                - generic [ref=e2009]: ·
+                - generic [ref=e2010]:
+                  - img [ref=e2011]
+                  - generic [ref=e2013]: "8.1"
+              - generic [ref=e2015]: Windows
+          - generic [ref=e2017]:
+            - 'link "Library The Elder Scrolls V: Skyrim Special Edition" [ref=e2018] [cursor=pointer]':
+              - /url: /games/51f0ac2401fe46c5a662dcded924a3ca
+              - generic [ref=e2019]: Library
+              - button [ref=e2020]:
+                - img [ref=e2021]
+              - 'heading "The Elder Scrolls V: Skyrim Special Edition" [level=3] [ref=e2023]'
+            - generic [ref=e2024]:
+              - 'heading "The Elder Scrolls V: Skyrim Special Edition" [level=4] [ref=e2026]'
+              - generic [ref=e2027]:
+                - generic [ref=e2028]: RPG
+                - generic [ref=e2029]: ·
+                - generic [ref=e2030]: "2016"
+                - generic [ref=e2031]: ·
+                - generic [ref=e2032]:
+                  - img [ref=e2033]
+                  - generic [ref=e2035]: "7.4"
+              - generic [ref=e2037]: Windows
+          - generic [ref=e2039]:
+            - link "Library It Takes Two Friend's Pass" [ref=e2040] [cursor=pointer]:
+              - /url: /games/6173dd7cec1d4f4eb06fce996e699ce5
+              - generic [ref=e2041]: Library
+              - button [ref=e2042]:
+                - img [ref=e2043]
+              - heading "It Takes Two Friend's Pass" [level=3] [ref=e2045]
+            - generic [ref=e2046]:
+              - heading "It Takes Two Friend's Pass" [level=4] [ref=e2048]
+              - generic [ref=e2049]:
+                - generic [ref=e2050]: Action
+                - generic [ref=e2051]: ·
+                - generic [ref=e2052]: "2021"
+                - generic [ref=e2053]: ·
+                - generic [ref=e2054]:
+                  - img [ref=e2055]
+                  - generic [ref=e2057]: "8.9"
+              - generic [ref=e2059]: Windows
+          - generic [ref=e2061]:
+            - 'link "Library NARAKA: BLADEPOINT" [ref=e2062] [cursor=pointer]':
+              - /url: /games/e2530f20b11a42b0b6a2ef8d279d124e
+              - generic [ref=e2063]: Library
+              - button [ref=e2064]:
+                - img [ref=e2065]
+              - 'heading "NARAKA: BLADEPOINT" [level=3] [ref=e2067]'
+            - generic [ref=e2068]:
+              - 'heading "NARAKA: BLADEPOINT" [level=4] [ref=e2070]'
+              - generic [ref=e2071]:
+                - generic [ref=e2072]: Action
+                - generic [ref=e2073]: ·
+                - generic [ref=e2074]: "2021"
+                - generic [ref=e2075]: ·
+                - generic [ref=e2076]:
+                  - img [ref=e2077]
+                  - generic [ref=e2079]: "7"
+              - generic [ref=e2081]: Windows
+          - generic [ref=e2083]:
+            - link "Library It Takes Two" [ref=e2084] [cursor=pointer]:
+              - /url: /games/bbfaaff77deb46a8a148ca8f50edffe4
+              - generic [ref=e2085]: Library
+              - button [ref=e2086]:
+                - img [ref=e2087]
+              - heading "It Takes Two" [level=3] [ref=e2089]
+            - generic [ref=e2090]:
+              - heading "It Takes Two" [level=4] [ref=e2092]
+              - generic [ref=e2093]:
+                - generic [ref=e2094]: Action
+                - generic [ref=e2095]: ·
+                - generic [ref=e2096]: "2021"
+                - generic [ref=e2097]: ·
+                - generic [ref=e2098]:
+                  - img [ref=e2099]
+                  - generic [ref=e2101]: "8.9"
+              - generic [ref=e2103]: Windows
+          - generic [ref=e2105]:
+            - link "Library RimWorld" [ref=e2106] [cursor=pointer]:
+              - /url: /games/28467fe2b21a4b6aa831dac995ba5955
+              - generic [ref=e2107]: Library
+              - button [ref=e2108]:
+                - img [ref=e2109]
+              - heading "RimWorld" [level=3] [ref=e2111]
+            - generic [ref=e2112]:
+              - heading "RimWorld" [level=4] [ref=e2114]
+              - generic [ref=e2115]:
+                - generic [ref=e2116]: Indie
+                - generic [ref=e2117]: ·
+                - generic [ref=e2118]: "2018"
+                - generic [ref=e2119]: ·
+                - generic [ref=e2120]:
+                  - img [ref=e2121]
+                  - generic [ref=e2123]: "8.7"
+              - generic [ref=e2124]:
+                - generic [ref=e2125]: Windows
+                - generic [ref=e2126]: Mac
+                - generic [ref=e2127]: Linux
+          - generic [ref=e2129]:
+            - link "Library 鬼谷八荒 Tale of Immortal" [ref=e2130] [cursor=pointer]:
+              - /url: /games/8dcbb0821f0c40d9a886f93328a44b44
+              - generic [ref=e2131]: Library
+              - button [ref=e2132]:
+                - img [ref=e2133]
+              - heading "鬼谷八荒 Tale of Immortal" [level=3] [ref=e2135]
+            - generic [ref=e2136]:
+              - heading "鬼谷八荒 Tale of Immortal" [level=4] [ref=e2138]
+              - generic [ref=e2139]:
+                - generic [ref=e2140]: Action
+                - generic [ref=e2141]: ·
+                - generic [ref=e2142]: "2023"
+                - generic [ref=e2143]: ·
+                - generic [ref=e2144]:
+                  - img [ref=e2145]
+                  - generic [ref=e2147]: "5.3"
+              - generic [ref=e2149]: Windows
+          - generic [ref=e2151]:
+            - 'link "Library Fallout: New Vegas" [ref=e2152] [cursor=pointer]':
+              - /url: /games/4ea78ab396ce4f4cbc7a7e4a9d2ec252
+              - generic [ref=e2153]: Library
+              - button [ref=e2154]:
+                - img [ref=e2155]
+              - 'heading "Fallout: New Vegas" [level=3] [ref=e2157]'
+            - generic [ref=e2158]:
+              - 'heading "Fallout: New Vegas" [level=4] [ref=e2160]'
+              - generic [ref=e2161]:
+                - generic [ref=e2162]: Action
+                - generic [ref=e2163]: ·
+                - generic [ref=e2164]: "2010"
+                - generic [ref=e2165]: ·
+                - generic [ref=e2166]:
+                  - img [ref=e2167]
+                  - generic [ref=e2169]: "8.4"
+              - generic [ref=e2171]: Windows
+          - generic [ref=e2173]:
+            - link "Library Half-Life 2" [ref=e2174] [cursor=pointer]:
+              - /url: /games/6f66af8def1846479497a9c655763108
+              - generic [ref=e2175]: Library
+              - button [ref=e2176]:
+                - img [ref=e2177]
+              - heading "Half-Life 2" [level=3] [ref=e2179]
+            - generic [ref=e2180]:
+              - heading "Half-Life 2" [level=4] [ref=e2182]
+              - generic [ref=e2183]:
+                - generic [ref=e2184]: Action
+                - generic [ref=e2185]: ·
+                - generic [ref=e2186]: "2004"
+                - generic [ref=e2187]: ·
+                - generic [ref=e2188]:
+                  - img [ref=e2189]
+                  - generic [ref=e2191]: "9.6"
+              - generic [ref=e2192]:
+                - generic [ref=e2193]: Windows
+                - generic [ref=e2194]: Linux
+          - generic [ref=e2196]:
+            - link "Library Factorio" [ref=e2197] [cursor=pointer]:
+              - /url: /games/4b49e8cef0db499a8f30c3a238b0c557
+              - generic [ref=e2198]: Library
+              - button [ref=e2199]:
+                - img [ref=e2200]
+              - heading "Factorio" [level=3] [ref=e2202]
+            - generic [ref=e2203]:
+              - heading "Factorio" [level=4] [ref=e2205]
+              - generic [ref=e2206]:
+                - generic [ref=e2207]: Casual
+                - generic [ref=e2208]: ·
+                - generic [ref=e2209]: "2020"
+                - generic [ref=e2210]: ·
+                - generic [ref=e2211]:
+                  - img [ref=e2212]
+                  - generic [ref=e2214]: "9"
+              - generic [ref=e2215]:
+                - generic [ref=e2216]: Windows
+                - generic [ref=e2217]: Mac
+                - generic [ref=e2218]: Linux
+          - generic [ref=e2220]:
+            - link "Library DOOM Eternal" [ref=e2221] [cursor=pointer]:
+              - /url: /games/1ef29205b37a4ac9a9c0733ae2dbe48f
+              - generic [ref=e2222]: Library
+              - button [ref=e2223]:
+                - img [ref=e2224]
+              - heading "DOOM Eternal" [level=3] [ref=e2226]
+            - generic [ref=e2227]:
+              - heading "DOOM Eternal" [level=4] [ref=e2229]
+              - generic [ref=e2230]:
+                - generic [ref=e2231]: Action
+                - generic [ref=e2232]: ·
+                - generic [ref=e2233]: "2020"
+                - generic [ref=e2234]: ·
+                - generic [ref=e2235]:
+                  - img [ref=e2236]
+                  - generic [ref=e2238]: "8.8"
+              - generic [ref=e2240]: Windows
+          - generic [ref=e2242]:
+            - link "Library Monster Hunter Wilds" [ref=e2243] [cursor=pointer]:
+              - /url: /games/2607b9b1fa59446aaf7b013d99ea95e0
+              - generic [ref=e2244]: Library
+              - button [ref=e2245]:
+                - img [ref=e2246]
+              - heading "Monster Hunter Wilds" [level=3] [ref=e2248]
+            - generic [ref=e2249]:
+              - heading "Monster Hunter Wilds" [level=4] [ref=e2251]
+              - generic [ref=e2252]:
+                - generic [ref=e2253]: Action
+                - generic [ref=e2254]: ·
+                - generic [ref=e2255]: "2025"
+                - generic [ref=e2256]: ·
+                - generic [ref=e2257]:
+                  - img [ref=e2258]
+                  - generic [ref=e2260]: "5.8"
+              - generic [ref=e2262]: Windows
+          - generic [ref=e2264]:
+            - link "Library ARC Raiders" [ref=e2265] [cursor=pointer]:
+              - /url: /games/404b439534d14feb90c9e62e68a19f16
+              - generic [ref=e2266]: Library
+              - button [ref=e2267]:
+                - img [ref=e2268]
+              - heading "ARC Raiders" [level=3] [ref=e2270]
+            - generic [ref=e2271]:
+              - heading "ARC Raiders" [level=4] [ref=e2273]
+              - generic [ref=e2274]:
+                - generic [ref=e2275]: Action
+                - generic [ref=e2276]: ·
+                - generic [ref=e2277]: "2025"
+                - generic [ref=e2278]: ·
+                - generic [ref=e2279]:
+                  - img [ref=e2280]
+                  - generic [ref=e2282]: "0"
+              - generic [ref=e2284]: Windows
+          - generic [ref=e2286]:
+            - link "Library Battlefield™ 1" [ref=e2287] [cursor=pointer]:
+              - /url: /games/6067370ead134bcfbb19fa42497dc2a1
+              - generic [ref=e2288]: Library
+              - button [ref=e2289]:
+                - img [ref=e2290]
+              - heading "Battlefield™ 1" [level=3] [ref=e2292]
+            - generic [ref=e2293]:
+              - heading "Battlefield™ 1" [level=4] [ref=e2295]
+              - generic [ref=e2296]:
+                - generic [ref=e2297]: Action
+                - generic [ref=e2298]: ·
+                - generic [ref=e2299]: "2020"
+                - generic [ref=e2300]: ·
+                - generic [ref=e2301]:
+                  - img [ref=e2302]
+                  - generic [ref=e2304]: "8.6"
+              - generic [ref=e2306]: Windows
+          - generic [ref=e2308]:
+            - 'link "Library The Elder Scrolls V: Skyrim" [ref=e2309] [cursor=pointer]':
+              - /url: /games/fc40a17ed85c462f8a66f5c4e3a05850
+              - generic [ref=e2310]: Library
+              - button [ref=e2311]:
+                - img [ref=e2312]
+              - 'heading "The Elder Scrolls V: Skyrim" [level=3] [ref=e2314]'
+            - generic [ref=e2315]:
+              - 'heading "The Elder Scrolls V: Skyrim" [level=4] [ref=e2317]'
+              - generic [ref=e2318]:
+                - generic [ref=e2319]: RPG
+                - generic [ref=e2320]: ·
+                - generic [ref=e2321]: "2011"
+                - generic [ref=e2322]: ·
+                - generic [ref=e2323]:
+                  - img [ref=e2324]
+                  - generic [ref=e2326]: "9.4"
+              - generic [ref=e2328]: Windows
+          - generic [ref=e2330]:
+            - link "Library Cuphead" [ref=e2331] [cursor=pointer]:
+              - /url: /games/0ed025df6bd4461d8376e973f4ca057c
+              - generic [ref=e2332]: Library
+              - button [ref=e2333]:
+                - img [ref=e2334]
+              - heading "Cuphead" [level=3] [ref=e2336]
+            - generic [ref=e2337]:
+              - heading "Cuphead" [level=4] [ref=e2339]
+              - generic [ref=e2340]:
+                - generic [ref=e2341]: Action
+                - generic [ref=e2342]: ·
+                - generic [ref=e2343]: "2017"
+                - generic [ref=e2344]: ·
+                - generic [ref=e2345]:
+                  - img [ref=e2346]
+                  - generic [ref=e2348]: "8.8"
+              - generic [ref=e2349]:
+                - generic [ref=e2350]: Windows
+                - generic [ref=e2351]: Mac
+          - generic [ref=e2353]:
+            - link "Library ULTRAKILL" [ref=e2354] [cursor=pointer]:
+              - /url: /games/d41caafa78f14361b1a31e68ffb8df5c
+              - generic [ref=e2355]: Library
+              - button [ref=e2356]:
+                - img [ref=e2357]
+              - heading "ULTRAKILL" [level=3] [ref=e2359]
+            - generic [ref=e2360]:
+              - heading "ULTRAKILL" [level=4] [ref=e2362]
+              - generic [ref=e2363]:
+                - generic [ref=e2364]: Action
+                - generic [ref=e2365]: ·
+                - generic [ref=e2366]: "2020"
+                - generic [ref=e2367]: ·
+                - generic [ref=e2368]:
+                  - img [ref=e2369]
+                  - generic [ref=e2371]: "9.8"
+              - generic [ref=e2373]: Windows
+          - generic [ref=e2375]:
+            - 'link "Library Detroit: Become Human" [ref=e2376] [cursor=pointer]':
+              - /url: /games/c9493afc9bba4605890fcff287286da3
+              - generic [ref=e2377]: Library
+              - button [ref=e2378]:
+                - img [ref=e2379]
+              - 'heading "Detroit: Become Human" [level=3] [ref=e2381]'
+            - generic [ref=e2382]:
+              - 'heading "Detroit: Become Human" [level=4] [ref=e2384]'
+              - generic [ref=e2385]:
+                - generic [ref=e2386]: Action
+                - generic [ref=e2387]: ·
+                - generic [ref=e2388]: "2020"
+                - generic [ref=e2389]: ·
+                - generic [ref=e2390]:
+                  - img [ref=e2391]
+                  - generic [ref=e2393]: "8"
+              - generic [ref=e2395]: Windows
+          - generic [ref=e2397]:
+            - 'link "Library Divinity: Original Sin 2 - Definitive Edition" [ref=e2398] [cursor=pointer]':
+              - /url: /games/0f6dab2ecf3b4553b287308c9d8888e2
+              - generic [ref=e2399]: Library
+              - button [ref=e2400]:
+                - img [ref=e2401]
+              - 'heading "Divinity: Original Sin 2 - Definitive Edition" [level=3] [ref=e2403]'
+            - generic [ref=e2404]:
+              - 'heading "Divinity: Original Sin 2 - Definitive Edition" [level=4] [ref=e2406]'
+              - generic [ref=e2407]:
+                - generic [ref=e2408]: Adventure
+                - generic [ref=e2409]: ·
+                - generic [ref=e2410]: "2017"
+                - generic [ref=e2411]: ·
+                - generic [ref=e2412]:
+                  - img [ref=e2413]
+                  - generic [ref=e2415]: "9.3"
+              - generic [ref=e2416]:
+                - generic [ref=e2417]: Windows
+                - generic [ref=e2418]: Mac
