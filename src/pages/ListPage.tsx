@@ -1,8 +1,14 @@
-import { type FC } from 'react';
+import { useState, type FC } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { useGetGamesQuery, useGetListEntriesQuery } from '../features/api/gameApi';
+import {
+  useGetGamesQuery,
+  useGetListEntriesQuery,
+  useRemoveFromListMutation,
+} from '../features/api/gameApi';
 import type { RootState } from '../app/store';
+import { selectFilteredGames } from '../features/filters/filtersSlice';
+import { useUI } from '../context/useUI';
 import FilterBar from '../components/FilterBar/FilterBar';
 import GameCard from '../components/GameCard/GameCard';
 import Spinner from '../components/Spinner/Spinner';
@@ -11,43 +17,33 @@ import styles from './ListPage.module.css';
 const ListPage: FC = () => {
   const { status } = useParams<{ status: string }>();
   const currentUser = useSelector((state: RootState) => state.auth.user);
-  const filters = useSelector((state: RootState) => state.filters);
+  const { showToast } = useUI();
 
   const { data: games = [], isLoading: gamesLoading } = useGetGamesQuery();
   const { data: allEntries = [] } = useGetListEntriesQuery(currentUser?.id ?? '', {
     skip: !currentUser,
   });
+  const [removeFromList] = useRemoveFromListMutation();
+  const [removingId, setRemovingId] = useState<string | null>(null);
 
-  const entries = status ? allEntries.filter((e) => e.status === status) : allEntries;
+  const filteredGames = useSelector((state: RootState) =>
+    selectFilteredGames(state, games, allEntries, status),
+  );
 
-  const filteredGames = games.filter((game) => {
-    if (status) {
-      const entry = entries.find((e) => e.gameId === game.id && e.status === status);
-      if (!entry) return false;
+  const handleRemoveFromList = async (gameId: string) => {
+    const entry = allEntries.find((e) => e.gameId === gameId && (!status || e.status === status));
+    if (!entry || removingId) return;
+    if (!window.confirm('Remove this game from your list?')) return;
+    setRemovingId(entry.id);
+    try {
+      await removeFromList(entry.id).unwrap();
+      showToast('Removed from your list.', 'success');
+    } catch {
+      showToast('Failed to remove. Try again.', 'error');
+    } finally {
+      setRemovingId(null);
     }
-
-    if (filters.searchQuery && !game.name.toLowerCase().includes(filters.searchQuery.toLowerCase())) {
-      return false;
-    }
-    if (filters.genre !== 'All' && !game.genre.includes(filters.genre)) {
-      return false;
-    }
-    if (filters.platform !== 'All' && !game.platforms.some(p => p.includes(filters.platform))) {
-      return false;
-    }
-    if (filters.year !== 'All') {
-      if (filters.year === '≤2022') {
-        if (game.releaseYear > 2022) return false;
-      } else if (game.releaseYear.toString() !== filters.year) {
-        return false;
-      }
-    }
-    if (game.rating < filters.minRating) {
-      return false;
-    }
-
-    return true;
-  });
+  };
 
   const displayStatus = status ? status.charAt(0).toUpperCase() + status.slice(1) : 'Library';
 
@@ -74,7 +70,13 @@ const ListPage: FC = () => {
 
       <div className={styles.gridContainer}>
         {filteredGames.map(game => (
-          <GameCard key={game.id} game={game} status={displayStatus} />
+          <GameCard
+            key={game.id}
+            game={game}
+            status={displayStatus}
+            onRemove={status ? () => handleRemoveFromList(game.id) : undefined}
+            removing={status ? removingId === allEntries.find(e => e.gameId === game.id && e.status === status)?.id : false}
+          />
         ))}
       </div>
     </div>

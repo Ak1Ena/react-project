@@ -1,12 +1,14 @@
-import { type FC } from 'react';
+import { type FC, type MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
-import { Star } from 'lucide-react';
+import { Loader2, Star, Trash2 } from 'lucide-react';
 import type { Game } from '../../features/games/gamesAPI';
 import styles from './GameCard.module.css';
 
 interface GameCardProps {
   game: Game;
   status?: string;
+  onRemove?: () => void;
+  removing?: boolean;
 }
 
 const getGradientClass = (name: string) => {
@@ -25,8 +27,14 @@ const getGradientClass = (name: string) => {
   return gradients[Math.abs(hash) % gradients.length];
 };
 
-const GameCard: FC<GameCardProps> = ({ game, status = 'Playing' }) => {
+const GameCard: FC<GameCardProps> = ({ game, status = 'Playing', onRemove, removing }) => {
   const gradientClass = getGradientClass(game.name);
+
+  const handleRemoveClick = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onRemove?.();
+  };
 
   return (
     <div className={styles.gameCard}>
@@ -34,6 +42,18 @@ const GameCard: FC<GameCardProps> = ({ game, status = 'Playing' }) => {
         <div className={styles.statusBadge}>
           {status}
         </div>
+
+        {onRemove && (
+          <button
+            type="button"
+            className={styles.removeBtn}
+            onClick={handleRemoveClick}
+            disabled={removing}
+            title="Remove from list"
+          >
+            {removing ? <Loader2 size={14} className={styles.removeSpin} /> : <Trash2 size={14} />}
+          </button>
+        )}
 
         {game.image && <img src={game.image} alt={game.name} className={styles.cardImage} />}
         <div className={styles.patternOverlay}></div>

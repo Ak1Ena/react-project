@@ -58,6 +58,40 @@
   z-index: 2;
 }
 
+.removeBtn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 3;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.removeBtn:hover:not(:disabled) {
+  background-color: var(--accent-red);
+}
+
+.removeBtn:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.removeSpin {
+  animation: card-spin 0.9s linear infinite;
+}
+
+@keyframes card-spin {
+  to { transform: rotate(360deg); }
+}
+
 .cardTitleOver {
   margin-top: auto;
   font-size: 24px;
