@@ -1,7 +1,7 @@
 import { useState, type FC, type ChangeEvent, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { ArrowLeft, Save, Sparkles, Image as ImageIcon, Upload } from 'lucide-react';
+import { ArrowLeft, Save, Sparkles, Image as ImageIcon, Upload, Loader2 } from 'lucide-react';
 import type { AppDispatch } from '../app/store';
 import { createGame } from '../features/games/gamesSlice';
 import { useUI } from '../context/UIContext';
@@ -220,7 +220,7 @@ const AddGamePage: FC = () => {
                 Cancel
               </button>
               <button type="submit" disabled={loading || !formData.image} className={styles.saveBtn}>
-                <Save size={18} />
+                {loading ? <Loader2 size={18} className={styles.spin} /> : <Save size={18} />}
                 <span>{loading ? 'Saving...' : 'Save Game'}</span>
               </button>
             </div>

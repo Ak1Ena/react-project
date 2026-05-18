@@ -382,6 +382,21 @@
   color: white;
 }
 
+.spin {
+  animation: spin 0.9s linear infinite;
+}
+
+.spinInline {
+  animation: spin 0.9s linear infinite;
+  margin-left: 8px;
+  vertical-align: middle;
+  color: var(--primary);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 .commentYouBadge {
   display: inline-flex;
   align-items: center;

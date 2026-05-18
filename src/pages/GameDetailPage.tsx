@@ -2,7 +2,7 @@ import { useEffect, useState, type FC } from 'react';
 import type { ReactNode } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Star, ArrowLeft, Check, Gamepad2, Clock, Send } from 'lucide-react';
+import { Star, ArrowLeft, Check, Gamepad2, Clock, Send, Loader2 } from 'lucide-react';
 import { useUI } from '../context/UIContext';
 import type { RootState, AppDispatch } from '../app/store';
 import { fetchGameById, clearSelectedGame } from '../features/games/gamesSlice';
@@ -34,6 +34,9 @@ const GameDetailPage: FC = () => {
 
   const displayRating = existingEntry?.personalRating || 0;
   const [localReview, setLocalReview] = useState('');
+  const [reviewSending, setReviewSending] = useState(false);
+  const [pendingStatus, setPendingStatus] = useState<ListStatus | null>(null);
+  const [pendingRating, setPendingRating] = useState<number | null>(null);
 
   useEffect(() => {
     if (id) {
@@ -57,31 +60,57 @@ const GameDetailPage: FC = () => {
     return <div className={styles.loading}>Loading...</div>;
   }
 
-  const handleStatusChange = (newStatus: ListStatus) => {
-    if (!currentUser) return;
-    if (existingEntry) {
-      dispatch(updateListEntry({ id: existingEntry.id, entry: { status: newStatus } }));
-    } else {
-      dispatch(addToList({
-        gameId: game.id,
-        userId: currentUser.id,
-        status: newStatus,
-        notes: '',
-        review: '',
-        personalRating: 0,
-      }));
+  const handleStatusChange = async (newStatus: ListStatus) => {
+    if (!currentUser || pendingStatus) return;
+    setPendingStatus(newStatus);
+    try {
+      if (existingEntry) {
+        await dispatch(updateListEntry({ id: existingEntry.id, entry: { status: newStatus } })).unwrap();
+      } else {
+        await dispatch(addToList({
+          gameId: game.id,
+          userId: currentUser.id,
+          status: newStatus,
+          notes: '',
+          review: '',
+          personalRating: 0,
+        })).unwrap();
+      }
+    } catch {
+      showToast('Failed to update status. Try again.', 'error');
+    } finally {
+      setPendingStatus(null);
     }
   };
 
-  const handleSaveReview = () => {
-    if (!existingEntry) return;
+  const handleRatingChange = async (rating: number) => {
+    if (!existingEntry || pendingRating !== null) return;
+    setPendingRating(rating);
+    try {
+      await dispatch(updateListEntry({ id: existingEntry.id, entry: { personalRating: rating } })).unwrap();
+    } catch {
+      showToast('Failed to save rating. Try again.', 'error');
+    } finally {
+      setPendingRating(null);
+    }
+  };
+
+  const handleSaveReview = async () => {
+    if (!existingEntry || reviewSending) return;
     const trimmed = localReview.trim();
     if (!trimmed) {
       showToast('Please write something before sending your review.', 'error');
       return;
     }
-    dispatch(updateListEntry({ id: existingEntry.id, entry: { review: trimmed } }));
-    showToast('Review sent!', 'success');
+    setReviewSending(true);
+    try {
+      await dispatch(updateListEntry({ id: existingEntry.id, entry: { review: trimmed } })).unwrap();
+      showToast('Review sent!', 'success');
+    } catch {
+      showToast('Failed to send review. Try again.', 'error');
+    } finally {
+      setReviewSending(false);
+    }
   };
 
   const reviewDirty = !!existingEntry && localReview.trim() !== (existingEntry.review || '').trim();
@@ -126,17 +155,26 @@ const GameDetailPage: FC = () => {
           <div className={styles.trackSection}>
             <h3 className={styles.sectionTitle}>TRACK IN</h3>
             <div className={styles.statusList}>
-              {statuses.map(s => (
-                <button 
-                  key={s.id} 
-                  className={existingEntry?.status === s.id ? `${styles.statusItem} ${styles.active}` : styles.statusItem}
-                  onClick={() => handleStatusChange(s.id)}
-                >
-                  {s.icon}
-                  <span>{s.label}</span>
-                  {existingEntry?.status === s.id && <Check size={14} className={styles.checkIcon} />}
-                </button>
-              ))}
+              {statuses.map(s => {
+                const isActive = existingEntry?.status === s.id;
+                const isPending = pendingStatus === s.id;
+                return (
+                  <button
+                    key={s.id}
+                    className={isActive ? `${styles.statusItem} ${styles.active}` : styles.statusItem}
+                    onClick={() => handleStatusChange(s.id)}
+                    disabled={pendingStatus !== null}
+                  >
+                    {s.icon}
+                    <span>{s.label}</span>
+                    {isPending ? (
+                      <Loader2 size={14} className={`${styles.checkIcon} ${styles.spin}`} />
+                    ) : (
+                      isActive && <Check size={14} className={styles.checkIcon} />
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -180,18 +218,24 @@ const GameDetailPage: FC = () => {
           {existingEntry ? (
             <>
               <div className={styles.ratingSection}>
-                <h3 className={styles.inputLabel}>YOUR RATING</h3>
+                <h3 className={styles.inputLabel}>
+                  YOUR RATING
+                  {pendingRating !== null && (
+                    <Loader2 size={12} className={styles.spinInline} />
+                  )}
+                </h3>
                 <div className={styles.stars}>
                   {[1, 2, 3, 4, 5].map(s => (
-                    <Star 
-                      key={s} 
-                      size={20} 
-                      fill={displayRating >= s ? "var(--primary)" : "none"} 
+                    <Star
+                      key={s}
+                      size={20}
+                      fill={displayRating >= s ? "var(--primary)" : "none"}
                       color={displayRating >= s ? "var(--primary)" : "var(--text-muted)"}
-                      onClick={() => {
-                        dispatch(updateListEntry({ id: existingEntry.id, entry: { personalRating: s } }));
+                      onClick={() => handleRatingChange(s)}
+                      style={{
+                        cursor: pendingRating !== null ? 'wait' : 'pointer',
+                        opacity: pendingRating !== null ? 0.6 : 1,
                       }}
-                      style={{ cursor: 'pointer' }}
                     />
                   ))}
                 </div>
@@ -210,10 +254,18 @@ const GameDetailPage: FC = () => {
                     type="button"
                     className={styles.saveReviewBtn}
                     onClick={handleSaveReview}
-                    disabled={!reviewDirty || !localReview.trim()}
+                    disabled={reviewSending || !reviewDirty || !localReview.trim()}
                   >
-                    <Send size={14} />
-                    <span>{existingEntry.review ? 'Update Review' : 'Send Review'}</span>
+                    {reviewSending ? (
+                      <Loader2 size={14} className={styles.spin} />
+                    ) : (
+                      <Send size={14} />
+                    )}
+                    <span>
+                      {reviewSending
+                        ? 'Sending...'
+                        : existingEntry.review ? 'Update Review' : 'Send Review'}
+                    </span>
                   </button>
                 </div>
               </div>
