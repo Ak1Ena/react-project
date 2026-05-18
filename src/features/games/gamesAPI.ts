@@ -97,9 +97,11 @@ export interface SteamUser {
   profileUrl?: string;
 }
 
-export const fetchSteamLibraryForMe = async (): Promise<SteamLibraryResponse> => {
+export const fetchSteamLibrary = async (
+  steamid: string
+): Promise<SteamLibraryResponse> => {
   const response = await steamCatalogApi.get<SteamLibraryResponse>(
-    '/api/v1/steam/library/me'
+    `/api/v1/steam/library/${steamid}`
   );
   return response.data;
 };
@@ -118,8 +120,10 @@ export const signOutSteam = async (): Promise<void> => {
   await steamCatalogApi.post('/auth/logout');
 };
 
-export const steamSignInUrl = (): string =>
-  `${STEAM_CATALOG_BASE_URL}/auth/steam`;
+export const steamSignInUrl = (returnTo = '/'): string => {
+  const base = `${STEAM_CATALOG_BASE_URL}/auth/steam`;
+  return returnTo === '/' ? base : `${base}?returnTo=${encodeURIComponent(returnTo)}`;
+};
 
 export const createGame = async (game: Omit<Game, 'id'>) => {
   const response = await gameMockApi.post<Game>('/api/v1/games', game);

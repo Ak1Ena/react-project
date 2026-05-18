@@ -32,3 +32,42 @@
 .authFooter a:hover {
   text-decoration: underline;
 }
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 22px 0 16px;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border, #2a2f3a);
+}
+
+.steamSignInBtn {
+  display: flex;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  width: 100%;
+}
+
+.steamSignInBtn img {
+  height: 35px;
+  width: auto;
+}
+
+.steamSignInBtn:hover img {
+  filter: brightness(1.1);
+}
+

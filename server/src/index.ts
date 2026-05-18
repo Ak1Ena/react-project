@@ -95,15 +95,29 @@ function requireSteam(req: Request, res: Response, next: NextFunction) {
   next();
 }
 
-app.get('/auth/steam', passport.authenticate('steam'));
+function safeReturnTo(raw: unknown): string {
+  if (typeof raw !== 'string' || !raw.startsWith('/')) return '/';
+  // Reject protocol-relative URLs like //evil.com to avoid open redirects.
+  if (raw.startsWith('//')) return '/';
+  return raw;
+}
+
+app.get('/auth/steam', (req: Request, res: Response, next: NextFunction) => {
+  const returnTo = safeReturnTo(req.query.returnTo);
+  (req.session as any).postAuthReturnTo = returnTo;
+  passport.authenticate('steam')(req, res, next);
+});
 
 app.get(
   '/auth/steam/return',
   passport.authenticate('steam', {
-    failureRedirect: `${FRONTEND_URL}/my-list/playing?steam=error`,
+    failureRedirect: `${FRONTEND_URL}/login?steam=error`,
   }),
-  (_req: Request, res: Response) => {
-    res.redirect(`${FRONTEND_URL}/my-list/playing?steam=ok`);
+  (req: Request, res: Response) => {
+    const returnTo = safeReturnTo((req.session as any).postAuthReturnTo);
+    delete (req.session as any).postAuthReturnTo;
+    const sep = returnTo.includes('?') ? '&' : '?';
+    res.redirect(`${FRONTEND_URL}${returnTo}${sep}steam=ok`);
   }
 );
 
@@ -170,6 +184,28 @@ app.get('/api/v1/steam/library/me', requireSteam, async (req: Request, res: Resp
     res.json({ steamid, count: games.length, games });
   } catch (e: any) {
     res.status(500).json({ error: e.message });
+  }
+});
+
+app.get('/api/v1/steam/library/:steamid', async (req: Request, res: Response) => {
+  const steamid = req.params.steamid;
+  if (!/^\d{17}$/.test(steamid)) {
+    res.status(400).json({
+      error: 'steamid must be a 17-digit SteamID64',
+    });
+    return;
+  }
+  try {
+    const games = await fetchSteamLibrary(steamid);
+    res.json({ steamid, count: games.length, games });
+  } catch (e: any) {
+    const status = e.response?.status === 401 || e.response?.status === 403 ? 403 : 500;
+    res.status(status).json({
+      error:
+        status === 403
+          ? 'Steam profile is private or the API key is invalid'
+          : e.message,
+    });
   }
 });
 

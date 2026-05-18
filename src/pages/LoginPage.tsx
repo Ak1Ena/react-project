@@ -4,7 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { LogIn } from 'lucide-react';
 import type { AppDispatch } from '../app/store';
 import { login, selectAuthStatus, selectAuthError, clearError } from '../features/auth/authSlice';
+import { steamSignInUrl } from '../features/games/gamesAPI';
 import styles from './Auth.module.css';
+
+const STEAM_SIGN_IN_BUTTON =
+  'https://community.cloudflare.steamstatic.com/public/images/signinthroughsteam/sits_01.png';
 
 const LoginPage: FC = () => {
   const navigate = useNavigate();
@@ -33,9 +37,25 @@ const LoginPage: FC = () => {
     }
   };
 
+  const handleSteamSignIn = () => {
+    window.location.href = steamSignInUrl('/');
+  };
+
   return (
     <div className={styles.authContainer}>
       <h1>Login</h1>
+
+      <button
+        type="button"
+        onClick={handleSteamSignIn}
+        className={styles.steamSignInBtn}
+        aria-label="Sign in through Steam"
+      >
+        <img src={STEAM_SIGN_IN_BUTTON} alt="Sign in through Steam" />
+      </button>
+
+      <div className={styles.divider}>or</div>
+
       <form onSubmit={handleSubmit} className={styles.authForm}>
         <div className="form-group">
           <label htmlFor="username">Username</label>

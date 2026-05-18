@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import * as authAPI from './authAPI';
 import type { User } from './authAPI';
+import { fetchSteamMe, signOutSteam } from '../games/gamesAPI';
 import type { RootState } from '../../app/store';
 
 interface AuthState {
@@ -50,16 +51,61 @@ export const fetchAllUsers = createAsyncThunk(
   }
 );
 
+export const loginWithSteam = createAsyncThunk<User, void, { state: RootState }>(
+  'auth/loginWithSteam',
+  async (_, { getState, rejectWithValue }) => {
+    const steamMe = await fetchSteamMe();
+    if (!steamMe) {
+      return rejectWithValue('Steam session not found. Please sign in again.');
+    }
+    const { steamid, displayName, avatar } = steamMe;
+
+    let user = await authAPI.findUserBySteamId(steamid);
+    const currentUser = getState().auth.user;
+
+    if (!user && currentUser && !currentUser.steamid) {
+      user = await authAPI.updateUser(currentUser.id, {
+        steamid,
+        displayName: currentUser.displayName || displayName,
+        avatar: currentUser.avatar || avatar,
+      });
+    }
+
+    if (!user) {
+      const baseUsername = displayName || `steam_${steamid}`;
+      const allUsers = await authAPI.fetchUsers();
+      const collision = allUsers.some((u) => u.username === baseUsername);
+      const username = collision
+        ? `${baseUsername}_${steamid.slice(-4)}`
+        : baseUsername;
+      user = await authAPI.registerUser({
+        username,
+        email: `steam-${steamid}@gamelib.local`,
+        password: '',
+        steamid,
+        displayName,
+        avatar,
+      });
+    }
+
+    localStorage.setItem('user', JSON.stringify(user));
+    return user;
+  }
+);
+
+export const logout = createAsyncThunk('auth/logout', async () => {
+  try {
+    await signOutSteam();
+  } catch {
+    // Best effort — server session may already be gone.
+  }
+  localStorage.removeItem('user');
+});
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    logout: (state) => {
-      state.user = null;
-      state.status = 'idle';
-      state.error = null;
-      localStorage.removeItem('user');
-    },
     clearError: (state) => {
       state.error = null;
     },
@@ -90,13 +136,31 @@ const authSlice = createSlice({
         state.status = 'failed';
         state.error = action.error.message || 'Registration failed';
       })
+      .addCase(loginWithSteam.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(loginWithSteam.fulfilled, (state, action: PayloadAction<User>) => {
+        state.status = 'succeeded';
+        state.user = action.payload;
+      })
+      .addCase(loginWithSteam.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error =
+          (action.payload as string) || action.error.message || 'Steam login failed';
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.user = null;
+        state.status = 'idle';
+        state.error = null;
+      })
       .addCase(fetchAllUsers.fulfilled, (state, action: PayloadAction<User[]>) => {
         state.users = action.payload;
       });
   },
 });
 
-export const { logout, clearError } = authSlice.actions;
+export const { clearError } = authSlice.actions;
 export const selectCurrentUser = (state: RootState) => state.auth.user;
 export const selectAuthStatus = (state: RootState) => state.auth.status;
 export const selectAuthError = (state: RootState) => state.auth.error;

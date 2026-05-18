@@ -2,11 +2,12 @@ import { type FC } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Gamepad2, ListChecks, Home, LogIn, User, LogOut } from 'lucide-react';
+import type { AppDispatch } from '../../app/store';
 import { selectCurrentUser, logout } from '../../features/auth/authSlice';
 import styles from './Navbar.module.css';
 
 const Navbar: FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const user = useSelector(selectCurrentUser);
 
   return (
@@ -31,8 +32,16 @@ const Navbar: FC = () => {
           {user ? (
             <div className={styles.userMenu}>
               <div className={styles.userInfo}>
-                <User size={20} />
-                <span>{user.username}</span>
+                {user.avatar ? (
+                  <img
+                    src={user.avatar}
+                    alt=""
+                    style={{ width: 24, height: 24, borderRadius: '50%' }}
+                  />
+                ) : (
+                  <User size={20} />
+                )}
+                <span>{user.displayName || user.username}</span>
               </div>
               <button onClick={() => dispatch(logout())} className={styles.logoutBtn} title="Logout">
                 <LogOut size={20} />

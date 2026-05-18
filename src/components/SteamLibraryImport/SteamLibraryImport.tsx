@@ -1,18 +1,14 @@
-import { useEffect, useState, type FC } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useState, type FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Library, ChevronDown, ChevronUp, Download, LogOut } from 'lucide-react';
+import { Library, ChevronDown, ChevronUp, Download } from 'lucide-react';
 import type { AppDispatch } from '../../app/store';
 import { selectCurrentUser } from '../../features/auth/authSlice';
 import { addToList, selectListEntries } from '../../features/lists/listsSlice';
 import { showToast } from '../../features/ui/uiSlice';
 import {
-  fetchSteamLibraryForMe,
-  fetchSteamMe,
-  signOutSteam,
+  fetchSteamLibrary,
   steamSignInUrl,
   type SteamOwnedGame,
-  type SteamUser,
 } from '../../features/games/gamesAPI';
 import type { ListStatus } from '../../features/lists/listsAPI';
 import styles from './SteamLibraryImport.module.css';
@@ -24,12 +20,8 @@ const SteamLibraryImport: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const currentUser = useSelector(selectCurrentUser);
   const entries = useSelector(selectListEntries);
-  const location = useLocation();
-  const navigate = useNavigate();
 
   const [expanded, setExpanded] = useState(false);
-  const [steamUser, setSteamUser] = useState<SteamUser | null>(null);
-  const [loadingMe, setLoadingMe] = useState(true);
   const [loadingLib, setLoadingLib] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [library, setLibrary] = useState<SteamOwnedGame[] | null>(null);
@@ -39,63 +31,20 @@ const SteamLibraryImport: FC = () => {
   const [importProgress, setImportProgress] = useState<{ done: number; total: number } | null>(null);
 
   const alreadyOwnedAppids = new Set(entries.map((e) => e.gameId));
+  const steamid = currentUser?.steamid;
 
-  useEffect(() => {
-    let cancelled = false;
-    setLoadingMe(true);
-    fetchSteamMe()
-      .then((u) => {
-        if (!cancelled) setSteamUser(u);
-      })
-      .catch(() => {
-        if (!cancelled) setSteamUser(null);
-      })
-      .finally(() => {
-        if (!cancelled) setLoadingMe(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const steam = params.get('steam');
-    if (steam === 'ok') {
-      setExpanded(true);
-      dispatch(showToast({ message: 'Signed in with Steam.', type: 'success' }));
-      params.delete('steam');
-      navigate({ pathname: location.pathname, search: params.toString() }, { replace: true });
-    } else if (steam === 'error') {
-      dispatch(showToast({ message: 'Steam sign-in failed.', type: 'error' }));
-      params.delete('steam');
-      navigate({ pathname: location.pathname, search: params.toString() }, { replace: true });
-    }
-  }, [location.search, location.pathname, dispatch, navigate]);
-
-  const handleSignIn = () => {
-    window.location.href = steamSignInUrl();
-  };
-
-  const handleSignOut = async () => {
-    try {
-      await signOutSteam();
-      setSteamUser(null);
-      setLibrary(null);
-      setSelected(new Set());
-      dispatch(showToast({ message: 'Steam disconnected.', type: 'success' }));
-    } catch {
-      dispatch(showToast({ message: 'Failed to disconnect Steam.', type: 'error' }));
-    }
+  const handleLinkSteam = () => {
+    window.location.href = steamSignInUrl('/my-list/playing');
   };
 
   const handleFetchLibrary = async () => {
+    if (!steamid) return;
     setError(null);
     setLibrary(null);
     setSelected(new Set());
     setLoadingLib(true);
     try {
-      const res = await fetchSteamLibraryForMe();
+      const res = await fetchSteamLibrary(steamid);
       const sorted = [...res.games].sort(
         (a, b) => b.playtime_forever - a.playtime_forever
       );
@@ -181,35 +130,33 @@ const SteamLibraryImport: FC = () => {
         <div className={styles.title}>
           <Library size={20} />
           <span>Steam Library</span>
-          {steamUser && (
+          {currentUser?.steamid && (
             <span className={styles.identity}>
-              {steamUser.avatar && (
-                <img src={steamUser.avatar} alt="" className={styles.avatar} />
+              {currentUser.avatar && (
+                <img src={currentUser.avatar} alt="" className={styles.avatar} />
               )}
-              <span>{steamUser.displayName || steamUser.steamid}</span>
+              <span>{currentUser.displayName || currentUser.username}</span>
             </span>
           )}
         </div>
         <button className={styles.toggleBtn} onClick={() => setExpanded((v) => !v)}>
           {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-          {expanded ? 'Hide' : steamUser ? 'Manage' : 'Connect Steam'}
+          {expanded ? 'Hide' : steamid ? 'Import games' : 'Link Steam'}
         </button>
       </div>
 
       {expanded && (
         <div className={styles.body}>
-          {loadingMe ? (
-            <p className={styles.helpText}>Checking Steam sign-in…</p>
-          ) : !steamUser ? (
+          {!steamid ? (
             <>
               <p className={styles.helpText}>
-                Sign in with Steam to import your owned games. Your Steam profile and
-                game list must be set to <em>Public</em> for the import to work.
+                Link a Steam account to import your owned games. Your Steam profile and
+                game list must be set to <em>Public</em>.
               </p>
               <div className={styles.row}>
                 <button
                   className={styles.steamButton}
-                  onClick={handleSignIn}
+                  onClick={handleLinkSteam}
                   aria-label="Sign in through Steam"
                 >
                   <img src={SIGN_IN_BUTTON} alt="Sign in through Steam" />
@@ -225,14 +172,6 @@ const SteamLibraryImport: FC = () => {
                   disabled={loadingLib || importing}
                 >
                   {loadingLib ? 'Fetching…' : 'Fetch My Library'}
-                </button>
-                <button
-                  className={styles.secondaryBtn}
-                  onClick={handleSignOut}
-                  disabled={importing}
-                >
-                  <LogOut size={14} />
-                  Disconnect
                 </button>
               </div>
 
