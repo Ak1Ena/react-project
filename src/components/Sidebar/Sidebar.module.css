@@ -89,6 +89,28 @@
 .footer {
   padding: 0 12px;
   margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.themeToggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  justify-content: flex-start;
+  transition: var(--transition);
+}
+
+.themeToggle:hover {
+  background-color: var(--bg-input);
+  color: var(--text-primary);
 }
 
 .userProfile {

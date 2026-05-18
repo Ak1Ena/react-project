@@ -14,6 +14,7 @@ import {
 } from '../features/api/gameApi';
 import { useGetUsersQuery } from '../features/api/userApi';
 import type { ListStatus, ListEntry } from '../features/lists/listsAPI';
+import Spinner from '../components/Spinner/Spinner';
 import styles from './GameDetailPage.module.css';
 
 const GameDetailPage: FC = () => {
@@ -48,7 +49,7 @@ const GameDetailPage: FC = () => {
   }
 
   if (gameLoading) {
-    return <div className={styles.loading}>Loading...</div>;
+    return <Spinner fullPage label="Loading..." />;
   }
 
   if (gameNotFound || !game) {

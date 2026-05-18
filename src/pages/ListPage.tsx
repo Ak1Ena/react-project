@@ -5,6 +5,7 @@ import { useGetGamesQuery, useGetListEntriesQuery } from '../features/api/gameAp
 import type { RootState } from '../app/store';
 import FilterBar from '../components/FilterBar/FilterBar';
 import GameCard from '../components/GameCard/GameCard';
+import Spinner from '../components/Spinner/Spinner';
 import styles from './ListPage.module.css';
 
 const ListPage: FC = () => {
@@ -51,7 +52,11 @@ const ListPage: FC = () => {
   const displayStatus = status ? status.charAt(0).toUpperCase() + status.slice(1) : 'Library';
 
   if (gamesLoading) {
-    return <div className={styles.listPage}>Loading...</div>;
+    return (
+      <div className={styles.listPage}>
+        <Spinner fullPage label="Loading..." />
+      </div>
+    );
   }
 
   return (

@@ -1,20 +1,24 @@
 import { type FC } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { 
-  LayoutDashboard, 
-  Library, 
+import {
+  LayoutDashboard,
+  Library,
   Circle,
-  LogOut
+  LogOut,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { selectCurrentUser, logout } from '../../features/auth/authSlice';
 import { useGetListEntriesQuery } from '../../features/api/gameApi';
+import { useUI } from '../../context/useUI';
 import styles from './Sidebar.module.css';
 
 const Sidebar: FC = () => {
   const dispatch = useDispatch();
   const user = useSelector(selectCurrentUser);
   const { data: entries = [] } = useGetListEntriesQuery(user?.id ?? '', { skip: !user });
+  const { theme, toggleTheme } = useUI();
 
   const getCount = (status: string) => {
     return entries.filter(e => e.status === status).length;
@@ -74,8 +78,16 @@ const Sidebar: FC = () => {
         </div>
       </nav>
 
-      {user && (
-        <div className={styles.footer}>
+      <div className={styles.footer}>
+        <button
+          className={styles.themeToggle}
+          onClick={toggleTheme}
+          title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+        >
+          {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+          <span>{theme === 'dark' ? 'Light mode' : 'Dark mode'}</span>
+        </button>
+        {user && (
           <div className={styles.userProfile}>
             <div className={styles.avatar}>
               {user.username.substring(0, 2).toUpperCase()}
@@ -83,16 +95,16 @@ const Sidebar: FC = () => {
             <div className={styles.userInfo}>
               <span className={styles.userName}>{user.username}</span>
             </div>
-            <button 
-              className={styles.logoutBtn} 
+            <button
+              className={styles.logoutBtn}
               onClick={() => dispatch(logout())}
               title="Logout"
             >
               <LogOut size={16} />
             </button>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </aside>
   );
 };

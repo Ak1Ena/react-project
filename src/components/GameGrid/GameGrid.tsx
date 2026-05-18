@@ -1,5 +1,6 @@
 import { type FC } from 'react';
 import GameCard from '../GameCard/GameCard';
+import Spinner from '../Spinner/Spinner';
 import type { Game } from '../../features/games/gamesAPI';
 import styles from './GameGrid.module.css';
 
@@ -10,7 +11,7 @@ interface GameGridProps {
 
 const GameGrid: FC<GameGridProps> = ({ games, loading }) => {
   if (loading) {
-    return <div className={styles.loading}>Loading games...</div>;
+    return <Spinner label="Loading games..." />;
   }
 
   if (games.length === 0) {

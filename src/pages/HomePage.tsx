@@ -4,6 +4,7 @@ import { ChevronRight } from 'lucide-react';
 import type { RootState } from '../app/store';
 import { useGetGamesQuery, useGetListEntriesQuery } from '../features/api/gameApi';
 import GameCard from '../components/GameCard/GameCard';
+import Spinner from '../components/Spinner/Spinner';
 import styles from './HomePage.module.css';
 
 const HomePage: FC = () => {
@@ -14,7 +15,7 @@ const HomePage: FC = () => {
   });
 
   if (gamesLoading) {
-    return <div className={styles.loading}>Loading games...</div>;
+    return <Spinner fullPage label="Loading games..." />;
   }
 
   const playingGames = entries.length > 0

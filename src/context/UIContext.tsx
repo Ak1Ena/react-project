@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { FC, ReactNode } from 'react';
 import { UIContext } from './UIContextDef';
 import type { ModalData, Toast } from './UIContextDef';
@@ -8,7 +8,15 @@ export const UIProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [modalType, setModalType] = useState<string | null>(null);
   const [modalData, setModalData] = useState<ModalData>(null);
   const [toasts, setToasts] = useState<Toast[]>([]);
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    const stored = localStorage.getItem('theme');
+    return stored === 'light' || stored === 'dark' ? stored : 'dark';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
   const openModal = (type: string, data: ModalData = null) => {
     setModalOpen(true);

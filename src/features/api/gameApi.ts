@@ -2,11 +2,6 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { Game } from '../games/gamesAPI';
 import type { ListEntry } from '../lists/listsAPI';
 
-const ensureId = (g: Game): Game => ({
-  ...g,
-  id: g.id || g.appid?.toString(),
-});
-
 export const gameApi = createApi({
   reducerPath: 'gameApi',
   baseQuery: fetchBaseQuery({
@@ -17,22 +12,18 @@ export const gameApi = createApi({
   endpoints: (builder) => ({
     getGames: builder.query<Game[], void>({
       query: () => '/api/v1/games',
-      transformResponse: (response: Game[]) => response.map(ensureId),
       providesTags: ['Game'],
     }),
     getGameById: builder.query<Game, string>({
       query: (id) => `/api/v1/games/${id}`,
-      transformResponse: (response: Game) => ensureId(response),
       providesTags: (_result, _err, id) => [{ type: 'Game', id }],
     }),
     createGame: builder.mutation<Game, Omit<Game, 'id'>>({
       query: (game) => ({ url: '/api/v1/games', method: 'POST', body: game }),
-      transformResponse: (response: Game) => ensureId(response),
       invalidatesTags: ['Game'],
     }),
     updateGame: builder.mutation<Game, { id: string; game: Partial<Game> }>({
       query: ({ id, game }) => ({ url: `/api/v1/games/${id}`, method: 'PUT', body: game }),
-      transformResponse: (response: Game) => ensureId(response),
       invalidatesTags: ['Game'],
     }),
     deleteGame: builder.mutation<void, string>({

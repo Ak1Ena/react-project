@@ -64,11 +64,7 @@ const AddGamePage: FC = () => {
       return;
     }
     try {
-      const gameData = {
-        ...formData,
-        appid: Math.floor(Date.now() / 1000) + Math.floor(Math.random() * 1000),
-      };
-      await createGame(gameData).unwrap();
+      await createGame(formData).unwrap();
       showToast('Game added successfully to catalog!', 'success');
       navigate('/');
     } catch {
