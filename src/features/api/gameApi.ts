@@ -14,8 +14,9 @@ export const gameApi = createApi({
       query: () => '/api/v1/games',
       providesTags: ['Game'],
     }),
-    getGameById: builder.query<Game, string>({
-      query: (id) => `/api/v1/games/${id}`,
+    getGameById: builder.query<Game | undefined, string>({
+      query: (id) => `/api/v1/games?id=${id}`,
+      transformResponse: (rows: Game[]) => rows[0],
       providesTags: (_result, _err, id) => [{ type: 'Game', id }],
     }),
     createGame: builder.mutation<Game, Omit<Game, 'id'>>({
