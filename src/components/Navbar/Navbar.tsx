@@ -1,25 +1,19 @@
 import { type FC } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Search, Plus } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { setSearchQuery } from '../../features/filters/filtersSlice';
-import { selectCurrentUser } from '../../features/auth/authSlice';
-import { isAdminUser } from '../../features/auth/authAPI';
 import type { RootState } from '../../app/store';
 import styles from './Navbar.module.css';
 
 const Navbar: FC = () => {
-  const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
   const searchQuery = useSelector((state: RootState) => state.filters.searchQuery);
-  const user = useSelector(selectCurrentUser);
-  const isAdmin = isAdminUser(user);
 
   const isDashboard = location.pathname === '/';
   const isAddGame = location.pathname === '/add-game';
   const showSearch = !isDashboard && !isAddGame;
-  const showAddBtn = !isDashboard && !isAddGame && isAdmin;
 
   return (
     <header className={styles.navbar}>
@@ -43,15 +37,7 @@ const Navbar: FC = () => {
       )}
 
       <div className={styles.actions}>
-        {showAddBtn && (
-          <button
-            className={styles.addBtn}
-            onClick={() => navigate('/add-game')}
-          >
-            <Plus size={18} />
-            <span>Add game</span>
-          </button>
-        )}
+        {/* Actions removed - moved to Admin Dashboard */}
       </div>
     </header>
   );
