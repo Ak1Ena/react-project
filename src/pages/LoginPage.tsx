@@ -1,7 +1,7 @@
 import { useState, type FC, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { LogIn } from 'lucide-react';
+import { LogIn, Circle, Loader2 } from 'lucide-react';
 import { useLazyGetUsersQuery } from '../features/api/userApi';
 import { setUser, setAuthError, clearError, selectAuthError } from '../features/auth/authSlice';
 import styles from './Auth.module.css';
@@ -43,10 +43,21 @@ const LoginPage: FC = () => {
 
   return (
     <div className={styles.authContainer}>
-      <h1>Login</h1>
+      <div className={styles.authBrand}>
+        <div className={styles.authBrandIcon}>
+          <Circle size={18} fill="currentColor" stroke="currentColor" />
+        </div>
+        <span className={styles.authBrandText}>gamelibrary</span>
+      </div>
+
+      <div className={styles.authHeader}>
+        <h1 className={styles.authTitle}>Welcome back</h1>
+        <p className={styles.authSubtitle}>Sign in to keep tracking your library</p>
+      </div>
+
       <form onSubmit={handleSubmit} className={styles.authForm}>
-        <div className="form-group">
-          <label htmlFor="username">Username</label>
+        <div className={styles.formGroup}>
+          <label htmlFor="username" className={styles.label}>Username</label>
           <input
             type="text"
             id="username"
@@ -54,11 +65,14 @@ const LoginPage: FC = () => {
             required
             value={formData.username}
             onChange={handleChange}
-            placeholder="Enter your username"
+            placeholder="Your username"
+            className={styles.input}
+            autoComplete="username"
           />
         </div>
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
+
+        <div className={styles.formGroup}>
+          <label htmlFor="password" className={styles.label}>Password</label>
           <input
             type="password"
             id="password"
@@ -66,22 +80,22 @@ const LoginPage: FC = () => {
             required
             value={formData.password}
             onChange={handleChange}
-            placeholder="Enter your password"
+            placeholder="Your password"
+            className={styles.input}
+            autoComplete="current-password"
           />
         </div>
 
-        {error && <div className="error-message">{error}</div>}
+        {error && <div className={styles.errorBanner}>{error}</div>}
 
-        <button type="submit" disabled={isLoading} className="btn-primary">
-          <LogIn size={20} />
-          {isLoading ? 'Logging in...' : 'Login'}
+        <button type="submit" disabled={isLoading} className={styles.submitBtn}>
+          {isLoading ? <Loader2 size={18} className={styles.spin} /> : <LogIn size={18} />}
+          <span>{isLoading ? 'Logging in...' : 'Login'}</span>
         </button>
       </form>
 
       <div className={styles.authFooter}>
-        <p>
-          Don't have an account? <Link to="/register">Register here</Link>
-        </p>
+        Don't have an account?<Link to="/register">Register here</Link>
       </div>
     </div>
   );

@@ -291,3 +291,37 @@
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+.platformChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.platformChip {
+  padding: 8px 14px;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.platformChip:hover {
+  border-color: var(--text-secondary);
+  color: white;
+}
+
+.platformChipActive {
+  background-color: rgba(198, 255, 0, 0.12);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.platformChipActive:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}

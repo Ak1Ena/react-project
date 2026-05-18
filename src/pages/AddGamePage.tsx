@@ -21,19 +21,27 @@ const AddGamePage: FC = () => {
   });
 
   const genres = ['Action', 'RPG', 'FPS', 'Strategy', 'Adventure', 'Sports', 'Simulation'];
+  const availablePlatforms = ['PC', 'PS5', 'PS4', 'Xbox Series X', 'Xbox One', 'Switch', 'Mobile'];
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     if (name === 'genre') {
       setFormData((prev) => ({ ...prev, genre: [value] }));
-    } else if (name === 'platforms') {
-      setFormData((prev) => ({ ...prev, platforms: value.split(',').map(p => p.trim()).filter(Boolean) }));
     } else {
       setFormData((prev) => ({
         ...prev,
         [name]: name === 'releaseYear' || name === 'rating' ? Number(value) : value,
       }));
     }
+  };
+
+  const togglePlatform = (platform: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      platforms: prev.platforms.includes(platform)
+        ? prev.platforms.filter((p) => p !== platform)
+        : [...prev.platforms, platform],
+    }));
   };
 
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
@@ -54,6 +62,10 @@ const AddGamePage: FC = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (formData.platforms.length === 0) {
+      showToast('Pick at least one platform.', 'error');
+      return;
+    }
     try {
       const gameData = {
         ...formData,
@@ -137,16 +149,23 @@ const AddGamePage: FC = () => {
               </div>
 
               <div className={styles.formGroup}>
-                <label className={styles.label}>Platforms* (comma separated)</label>
-                <input
-                  type="text"
-                  name="platforms"
-                  required
-                  value={formData.platforms.join(', ')}
-                  onChange={handleChange}
-                  placeholder="e.g. PC, PS5, Xbox"
-                  className={styles.input}
-                />
+                <label className={styles.label}>Platforms*</label>
+                <div className={styles.platformChips}>
+                  {availablePlatforms.map((p) => {
+                    const selected = formData.platforms.includes(p);
+                    return (
+                      <button
+                        key={p}
+                        type="button"
+                        onClick={() => togglePlatform(p)}
+                        className={selected ? `${styles.platformChip} ${styles.platformChipActive}` : styles.platformChip}
+                        aria-pressed={selected}
+                      >
+                        {p}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
 
               <div className={styles.formGroup}>
@@ -212,7 +231,7 @@ const AddGamePage: FC = () => {
               <button type="button" onClick={() => navigate(-1)} className={styles.cancelBtn}>
                 Cancel
               </button>
-              <button type="submit" disabled={loading || !formData.image} className={styles.saveBtn}>
+              <button type="submit" disabled={loading || !formData.image || formData.platforms.length === 0} className={styles.saveBtn}>
                 {loading ? <Loader2 size={18} className={styles.spin} /> : <Save size={18} />}
                 <span>{loading ? 'Saving...' : 'Save Game'}</span>
               </button>

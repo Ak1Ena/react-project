@@ -15,7 +15,7 @@ const Navbar: FC = () => {
   const isDashboard = location.pathname === '/';
   const isAddGame = location.pathname === '/add-game';
   const showSearch = !isDashboard && !isAddGame;
-  const showAddBtn = !isAddGame;
+  const showAddBtn = !isDashboard && !isAddGame;
 
   return (
     <header className={styles.navbar}>
