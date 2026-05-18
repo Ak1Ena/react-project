@@ -66,6 +66,14 @@ const AppRoutes: FC = () => {
         }
       />
       <Route
+        path="/library"
+        element={
+          <ProtectedRoute>
+            <ListPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/my-list/:status"
         element={
           <ProtectedRoute>

@@ -1,26 +1,27 @@
 import { configureStore } from '@reduxjs/toolkit';
-import type { ThunkAction, Action } from '@reduxjs/toolkit';
-import gamesReducer from '../features/games/gamesSlice';
-import listsReducer from '../features/lists/listsSlice';
 import filtersReducer from '../features/filters/filtersSlice';
-import uiReducer from '../features/ui/uiSlice';
 import authReducer from '../features/auth/authSlice';
+import { gameApi } from '../features/api/gameApi';
+import { userApi } from '../features/api/userApi';
 
 export const store = configureStore({
   reducer: {
-    games: gamesReducer,
-    lists: listsReducer,
+    // Local UI / auth state
     filters: filtersReducer,
-    ui: uiReducer,
     auth: authReducer,
+    // RTK Query API caches (games + lists, users)
+    [gameApi.reducerPath]: gameApi.reducer,
+    [userApi.reducerPath]: userApi.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(gameApi.middleware, userApi.middleware),
 });
 
-export type AppDispatch = typeof store.dispatch;
+// The shape of the entire Redux state — use this in useSelector.
+//   useSelector((state: RootState) => state.auth.user)
 export type RootState = ReturnType<typeof store.getState>;
-export type AppThunk<ReturnType = void> = ThunkAction<
-  ReturnType,
-  RootState,
-  unknown,
-  Action<string>
->;
+
+// The dispatch function — use this with useDispatch so async thunks and
+// RTK Query mutations are typed.
+//   const dispatch = useDispatch<AppDispatch>();
+export type AppDispatch = typeof store.dispatch;

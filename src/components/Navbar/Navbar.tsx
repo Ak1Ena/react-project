@@ -1,56 +1,55 @@
 import { type FC } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Gamepad2, ListChecks, PlusCircle, Home, LogIn, User, LogOut } from 'lucide-react';
-import { selectCurrentUser, logout } from '../../features/auth/authSlice';
+import { Search, Plus } from 'lucide-react';
+import { setSearchQuery } from '../../features/filters/filtersSlice';
+import type { RootState } from '../../app/store';
 import styles from './Navbar.module.css';
 
 const Navbar: FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
-  const user = useSelector(selectCurrentUser);
+  const searchQuery = useSelector((state: RootState) => state.filters.searchQuery);
+
+  const isDashboard = location.pathname === '/';
+  const isAddGame = location.pathname === '/add-game';
+  const showSearch = !isDashboard && !isAddGame;
+  const showAddBtn = !isDashboard && !isAddGame;
 
   return (
-    <nav className={styles.navbar}>
-      <div className={styles.navContainer}>
-        <Link to="/" className={styles.navLogo}>
-          <Gamepad2 size={32} />
-          <span>GameLib</span>
-        </Link>
-        <div className={styles.navLinks}>
-          <NavLink to="/" end className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}>
-            <Home size={20} />
-            <span>Browse</span>
-          </NavLink>
-          <NavLink to="/my-list/playing" className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}>
-            <ListChecks size={20} />
-            <span>My Lists</span>
-          </NavLink>
-          <NavLink to="/add-game" className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}>
-            <PlusCircle size={20} />
-            <span>Add Game</span>
-          </NavLink>
-          
-          <div className={styles.navDivider}></div>
-
-          {user ? (
-            <div className={styles.userMenu}>
-              <div className={styles.userInfo}>
-                <User size={20} />
-                <span>{user.username}</span>
-              </div>
-              <button onClick={() => dispatch(logout())} className={styles.logoutBtn} title="Logout">
-                <LogOut size={20} />
-              </button>
-            </div>
-          ) : (
-            <NavLink to="/login" className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}>
-              <LogIn size={20} />
-              <span>Login</span>
-            </NavLink>
-          )}
+    <header className={styles.navbar}>
+      {showSearch ? (
+        <div className={styles.searchWrapper}>
+          <Search className={styles.searchIcon} size={18} />
+          <input
+            type="text"
+            placeholder="Search 50,000+ games, studios, genres..."
+            className={styles.searchInput}
+            value={searchQuery}
+            onChange={(e) => dispatch(setSearchQuery(e.target.value))}
+          />
+          <div className={styles.searchShortcut}>
+            <kbd>⌘</kbd>
+            <kbd>K</kbd>
+          </div>
         </div>
+      ) : (
+        <div />
+      )}
+
+      <div className={styles.actions}>
+        {showAddBtn && (
+          <button
+            className={styles.addBtn}
+            onClick={() => navigate('/add-game')}
+          >
+            <Plus size={18} />
+            <span>Add game</span>
+          </button>
+        )}
       </div>
-    </nav>
+    </header>
   );
 };
 

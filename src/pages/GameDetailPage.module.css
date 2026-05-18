@@ -1,248 +1,438 @@
-.gameDetailPage {
-  padding: 20px 0;
+.pageContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  animation: fadeIn 0.3s ease-out;
 }
 
-.backButton {
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.pageHeader {
   display: flex;
   align-items: center;
-  gap: 4px;
-  color: var(--text-secondary);
-  margin-bottom: 20px;
-  cursor: pointer;
 }
 
-.gameDetailContainer {
-  background-color: var(--card-bg);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
+.backBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-weight: 600;
+  transition: var(--transition);
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  margin-left: -12px;
+}
+
+.backBtn:hover {
+  color: white;
+  background-color: var(--bg-card);
+}
+
+.mainLayout {
+  display: flex;
+  gap: 40px;
+  background-color: var(--bg-card);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  min-height: 600px;
+}
+
+.leftCol {
+  width: 360px;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+}
+
+.heroCard {
+  height: 400px;
+  background: var(--bg-sidebar);
+  position: relative;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
   overflow: hidden;
 }
 
-.gameDetailHeader {
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: 32px;
-  padding: 32px;
-  border-bottom: 1px solid var(--border);
-}
-
-@media (max-width: 768px) {
-  .gameDetailHeader {
-    grid-template-columns: 1fr;
-  }
-}
-
-.gameDetailCover img {
+.heroImage {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
 }
 
-.gameDetailInfo h1 {
-  font-size: 2.5rem;
-  margin-bottom: 16px;
+.patternOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(transparent, rgba(0,0,0,0.8));
+  z-index: 2;
 }
 
-.gameDetailBadges {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 24px;
+.heroTitle {
+  font-size: 32px;
+  font-weight: 800;
+  color: white;
+  z-index: 3;
+  line-height: 1.1;
+  margin: 0;
 }
 
-.gameDetailMeta {
-  display: flex;
-  gap: 24px;
-  margin-bottom: 32px;
-  color: var(--text-secondary);
-}
-
-.metaItem {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.addToListControl {
-  display: flex;
-  gap: 12px;
-}
-
-.statusSelect {
-  padding: 8px 12px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background-color: var(--bg);
-}
-
-.alreadyInList {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--success);
-  font-weight: 600;
-}
-
-.gameDetailBody {
+.trackSection {
   padding: 32px;
+  flex: 1;
+  background-color: var(--bg-sidebar);
 }
 
-.gameDescription h2 {
+.sectionTitle {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
   margin-bottom: 16px;
+  letter-spacing: 1px;
 }
 
-.gameDescription p {
-  color: var(--text-secondary);
-  font-size: 1.1rem;
-  line-height: 1.6;
-}
-
-.gameReviews {
-  margin-top: 48px;
-  border-top: 1px solid var(--border);
-  padding-top: 32px;
-}
-
-.gameReviews h2 {
-  margin-bottom: 24px;
-}
-
-.reviewsList {
+.statusList {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 8px;
 }
 
-.reviewCard {
-  background-color: var(--bg);
-  padding: 20px;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-}
-
-.reviewHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-.reviewerName {
-  font-weight: 700;
-  color: var(--text);
-}
-
-.reviewerInfo {
+.statusItem {
   display: flex;
   align-items: center;
   gap: 12px;
-}
-
-.statusBadge {
-  font-size: 0.7rem;
-  padding: 2px 8px;
-  border-radius: 4px;
-  text-transform: uppercase;
-  font-weight: 700;
-}
-
-.statusPlaying {
-  background-color: #dcfce7;
-  color: #166534;
-}
-
-.statusCompleted {
-  background-color: #dbeafe;
-  color: #1e40af;
-}
-
-.statusBacklog {
-  background-color: #fef3c7;
-  color: #92400e;
-}
-
-.statusWishlist {
-  background-color: #fce7f3;
-  color: #9d174d;
-}
-
-.reviewerRating {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: #f59e0b;
+  padding: 12px 16px;
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 14px;
   font-weight: 600;
-  font-size: 0.875rem;
+  transition: var(--transition);
 }
 
-.reviewText {
-  color: var(--text-secondary);
-  line-height: 1.5;
-  margin-bottom: 12px;
-  white-space: pre-wrap;
+.statusItem:hover {
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
-.reviewDate {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  opacity: 0.8;
+.statusItem.active {
+  background-color: rgba(198, 255, 0, 0.1);
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
-.noReviews {
-  text-align: center;
-  padding: 32px;
-  background-color: var(--bg);
-  border-radius: var(--radius);
-  color: var(--text-secondary);
-  font-style: italic;
+.checkIcon {
+  margin-left: auto;
 }
 
-.badgeGenre {
-  background-color: #ede9fe;
-  color: #7c3aed;
-  padding: 2px 8px;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 600;
+.rightCol {
+  flex: 1;
+  padding: 48px;
+  overflow-y: auto;
 }
 
-.badgeRating {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: #f59e0b;
-  font-weight: 700;
+.detailHeader {
+  margin-bottom: 32px;
 }
 
-.btnPrimary {
-  background-color: var(--primary);
+.title {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 8px;
   color: white;
-  padding: 8px 16px;
-  border-radius: var(--radius);
-  font-weight: 600;
-  display: inline-flex;
+}
+
+.infoRow {
+  display: flex;
   align-items: center;
   gap: 8px;
-  transition: background-color 0.2s;
-}
-
-.btnPrimary:hover {
-  background-color: var(--primary-hover);
-}
-
-.btnLink {
-  color: var(--primary);
+  font-size: 13px;
+  color: var(--text-muted);
   font-weight: 600;
-  margin-left: 8px;
 }
 
-.btnLink:hover {
-  text-decoration: underline;
+.dot {
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
+.commRating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: white;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.statCard {
+  background-color: var(--bg-sidebar);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.statLabel {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.statValue {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.inputLabel {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.ratingSection {
+  margin-bottom: 24px;
+}
+
+.stars {
+  display: flex;
+  gap: 4px;
+}
+
+.reviewSection {
+  margin-bottom: 24px;
+}
+
+.reviewWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reviewArea {
+  width: 100%;
+  min-height: 120px;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  color: white;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.saveReviewBtn {
+  align-self: flex-end;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: var(--primary);
+  color: var(--bg-card);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 700;
+  transition: var(--transition);
+}
+
+.saveReviewBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+.saveReviewBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.trackPrompt {
+  background-color: var(--bg-sidebar);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 24px 0;
+}
+
+.platformsSection {
+  margin-top: 24px;
+}
+
+.platforms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.platformBadge {
+  display: inline-block;
+  padding: 4px 12px;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
 }
 
 .loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 400px;
+  color: var(--text-muted);
+}
+
+.commentsSection {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.commentCount {
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+.emptyComments {
+  background-color: var(--bg-sidebar);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
   text-align: center;
-  padding: 40px;
-  font-size: 1.2rem;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.commentsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.commentItem {
+  display: flex;
+  gap: 12px;
+  background-color: var(--bg-sidebar);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+}
+
+.commentAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--primary);
+  color: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.commentBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.commentHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.commentAuthor {
+  font-weight: 700;
+  font-size: 13px;
+  color: white;
+}
+
+.spin {
+  animation: spin 0.9s linear infinite;
+}
+
+.spinInline {
+  animation: spin 0.9s linear infinite;
+  margin-left: 8px;
+  vertical-align: middle;
+  color: var(--primary);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.commentYouBadge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--bg-card);
+  background-color: var(--primary);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.commentRating {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary);
+  background-color: rgba(198, 255, 0, 0.1);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.commentDate {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+.commentText {
+  font-size: 13px;
+  line-height: 1.6;
   color: var(--text-secondary);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin: 0;
 }

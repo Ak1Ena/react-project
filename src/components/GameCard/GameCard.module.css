@@ -1,67 +1,150 @@
 .gameCard {
-  background-color: var(--card-bg);
-  border-radius: var(--radius);
+  background-color: var(--bg-card);
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: var(--shadow);
-  transition: transform 0.2s;
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .gameCard:hover {
   transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
 
-.gameCardImageLink {
-  display: block;
+.cardTop {
   position: relative;
-  aspect-ratio: 16/9;
+  height: 280px;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  overflow: hidden;
+  text-decoration: none;
 }
 
-.gameCardImage {
+.cardImage {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  z-index: 1;
 }
 
-.gameCardRating {
+.patternOverlay {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  background-color: rgba(0, 0, 0, 0.7);
-  color: #f59e0b;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(45deg, rgba(0,0,0,0.2) 25%, transparent 25%, transparent 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2) 75%, transparent 75%, transparent);
+  background-size: 4px 4px;
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.statusBadge {
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary);
+  width: fit-content;
+  z-index: 2;
+}
+
+.cardTitleOver {
+  margin-top: auto;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.1;
+  color: white;
+  z-index: 2;
+}
+
+.cardContent {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gameName {
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.dot {
+  color: var(--text-muted);
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: white;
+}
+
+.platforms {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.platform {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  background-color: var(--bg-input);
   padding: 2px 6px;
   border-radius: 4px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.875rem;
-  font-weight: 700;
 }
 
-.gameCardContent {
-  padding: 16px;
+.bottomLine {
+  height: 3px;
+  width: 100%;
+  background-color: var(--primary);
+  border-radius: 2px;
+  margin-top: 8px;
+  opacity: 0.8;
 }
 
-.gameCardTitle {
-  font-size: 1.125rem;
-  margin-bottom: 8px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+/* Gradients */
+.gradientPurple {
+  background: linear-gradient(135deg, #4c1d95, #7c3aed);
 }
 
-.gameCardInfo {
-  margin-bottom: 12px;
+.gradientRed {
+  background: linear-gradient(135deg, #7f1d1d, #ef4444);
 }
 
-.gameCardDetails {
-  display: flex;
-  justify-content: space-between;
-  color: var(--text-secondary);
-  font-size: 0.875rem;
+.gradientOrange {
+  background: linear-gradient(135deg, #7c2d12, #f97316);
 }
 
-.gameCardDetail {
-  display: flex;
-  align-items: center;
-  gap: 4px;
+.gradientGreen {
+  background: linear-gradient(135deg, #064e3b, #10b981);
+}
+
+.gradientBlue {
+  background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+}
+
+.gradientTeal {
+  background: linear-gradient(135deg, #134e4a, #14b8a6);
 }

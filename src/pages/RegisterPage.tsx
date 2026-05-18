@@ -1,16 +1,16 @@
 import { useState, type FC, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { UserPlus } from 'lucide-react';
-import type { AppDispatch } from '../app/store';
-import { register, selectAuthStatus, selectAuthError, clearError } from '../features/auth/authSlice';
+import { UserPlus, Circle, Loader2 } from 'lucide-react';
+import { useRegisterUserMutation } from '../features/api/userApi';
+import { setUser, setAuthError, clearError, selectAuthError } from '../features/auth/authSlice';
 import styles from './Auth.module.css';
 
 const RegisterPage: FC = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
-  const status = useSelector(selectAuthStatus);
+  const dispatch = useDispatch();
   const error = useSelector(selectAuthError);
+  const [registerUser, { isLoading }] = useRegisterUserMutation();
 
   const [formData, setFormData] = useState({
     username: '',
@@ -35,24 +35,35 @@ const RegisterPage: FC = () => {
       return;
     }
     try {
-      const registerData = {
+      const user = await registerUser({
         username: formData.username,
         email: formData.email,
         password: formData.password,
-      };
-      await dispatch(register(registerData)).unwrap();
+      }).unwrap();
+      dispatch(setUser(user));
       navigate('/');
     } catch {
-      // Error is handled in the slice
+      dispatch(setAuthError('Registration failed. Please try again.'));
     }
   };
 
   return (
     <div className={styles.authContainer}>
-      <h1>Register</h1>
+      <div className={styles.authBrand}>
+        <div className={styles.authBrandIcon}>
+          <Circle size={18} fill="currentColor" stroke="currentColor" />
+        </div>
+        <span className={styles.authBrandText}>gamelibrary</span>
+      </div>
+
+      <div className={styles.authHeader}>
+        <h1 className={styles.authTitle}>Create your account</h1>
+        <p className={styles.authSubtitle}>Start curating your personal game library</p>
+      </div>
+
       <form onSubmit={handleSubmit} className={styles.authForm}>
-        <div className="form-group">
-          <label htmlFor="username">Username</label>
+        <div className={styles.formGroup}>
+          <label htmlFor="username" className={styles.label}>Username</label>
           <input
             type="text"
             id="username"
@@ -61,10 +72,13 @@ const RegisterPage: FC = () => {
             value={formData.username}
             onChange={handleChange}
             placeholder="Choose a username"
+            className={styles.input}
+            autoComplete="username"
           />
         </div>
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
+
+        <div className={styles.formGroup}>
+          <label htmlFor="email" className={styles.label}>Email</label>
           <input
             type="email"
             id="email"
@@ -72,11 +86,14 @@ const RegisterPage: FC = () => {
             required
             value={formData.email}
             onChange={handleChange}
-            placeholder="Enter your email"
+            placeholder="you@example.com"
+            className={styles.input}
+            autoComplete="email"
           />
         </div>
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
+
+        <div className={styles.formGroup}>
+          <label htmlFor="password" className={styles.label}>Password</label>
           <input
             type="password"
             id="password"
@@ -85,10 +102,13 @@ const RegisterPage: FC = () => {
             value={formData.password}
             onChange={handleChange}
             placeholder="Create a password"
+            className={styles.input}
+            autoComplete="new-password"
           />
         </div>
-        <div className="form-group">
-          <label htmlFor="confirmPassword">Confirm Password</label>
+
+        <div className={styles.formGroup}>
+          <label htmlFor="confirmPassword" className={styles.label}>Confirm password</label>
           <input
             type="password"
             id="confirmPassword"
@@ -96,24 +116,24 @@ const RegisterPage: FC = () => {
             required
             value={formData.confirmPassword}
             onChange={handleChange}
-            placeholder="Confirm your password"
+            placeholder="Type it again"
+            className={styles.input}
+            autoComplete="new-password"
           />
         </div>
 
         {(error || validationError) && (
-          <div className="error-message">{error || validationError}</div>
+          <div className={styles.errorBanner}>{error || validationError}</div>
         )}
 
-        <button type="submit" disabled={status === 'loading'} className="btn-primary">
-          <UserPlus size={20} />
-          {status === 'loading' ? 'Creating account...' : 'Register'}
+        <button type="submit" disabled={isLoading} className={styles.submitBtn}>
+          {isLoading ? <Loader2 size={18} className={styles.spin} /> : <UserPlus size={18} />}
+          <span>{isLoading ? 'Creating account...' : 'Create account'}</span>
         </button>
       </form>
 
       <div className={styles.authFooter}>
-        <p>
-          Already have an account? <Link to="/login">Login here</Link>
-        </p>
+        Already have an account?<Link to="/login">Login here</Link>
       </div>
     </div>
   );

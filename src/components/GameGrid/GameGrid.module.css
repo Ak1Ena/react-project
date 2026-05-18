@@ -1,13 +1,12 @@
 .gameGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 24px;
 }
 
-.loading,
-.emptyState {
+.loading, .emptyState {
+  padding: 48px;
   text-align: center;
-  padding: 40px;
-  font-size: 1.2rem;
-  color: var(--text-secondary);
+  color: var(--text-muted);
+  font-size: 14px;
 }
