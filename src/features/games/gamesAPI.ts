@@ -1,4 +1,8 @@
-import { gameMockApi, steamCatalogApi } from '../../api/mockApi';
+import {
+  gameMockApi,
+  steamCatalogApi,
+  STEAM_CATALOG_BASE_URL,
+} from '../../api/mockApi';
 
 export interface Game {
   id: string;
@@ -86,14 +90,36 @@ export interface SteamLibraryResponse {
   games: SteamOwnedGame[];
 }
 
-export const fetchSteamLibrary = async (
-  steamid: string
-): Promise<SteamLibraryResponse> => {
+export interface SteamUser {
+  steamid: string;
+  displayName?: string;
+  avatar?: string;
+  profileUrl?: string;
+}
+
+export const fetchSteamLibraryForMe = async (): Promise<SteamLibraryResponse> => {
   const response = await steamCatalogApi.get<SteamLibraryResponse>(
-    `/api/v1/steam/library/${steamid}`
+    '/api/v1/steam/library/me'
   );
   return response.data;
 };
+
+export const fetchSteamMe = async (): Promise<SteamUser | null> => {
+  try {
+    const response = await steamCatalogApi.get<SteamUser>('/auth/me');
+    return response.data;
+  } catch (e: any) {
+    if (e.response?.status === 401) return null;
+    throw e;
+  }
+};
+
+export const signOutSteam = async (): Promise<void> => {
+  await steamCatalogApi.post('/auth/logout');
+};
+
+export const steamSignInUrl = (): string =>
+  `${STEAM_CATALOG_BASE_URL}/auth/steam`;
 
 export const createGame = async (game: Omit<Game, 'id'>) => {
   const response = await gameMockApi.post<Game>('/api/v1/games', game);

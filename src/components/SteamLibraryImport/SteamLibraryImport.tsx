@@ -1,29 +1,36 @@
-import { useState, type FC } from 'react';
+import { useEffect, useState, type FC } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Library, ChevronDown, ChevronUp, Download } from 'lucide-react';
+import { Library, ChevronDown, ChevronUp, Download, LogOut } from 'lucide-react';
 import type { AppDispatch } from '../../app/store';
 import { selectCurrentUser } from '../../features/auth/authSlice';
 import { addToList, selectListEntries } from '../../features/lists/listsSlice';
 import { showToast } from '../../features/ui/uiSlice';
 import {
-  fetchSteamLibrary,
+  fetchSteamLibraryForMe,
+  fetchSteamMe,
+  signOutSteam,
+  steamSignInUrl,
   type SteamOwnedGame,
+  type SteamUser,
 } from '../../features/games/gamesAPI';
 import type { ListStatus } from '../../features/lists/listsAPI';
 import styles from './SteamLibraryImport.module.css';
 
-const STEAMID_STORAGE_KEY = 'steamid64';
+const SIGN_IN_BUTTON =
+  'https://community.cloudflare.steamstatic.com/public/images/signinthroughsteam/sits_01.png';
 
 const SteamLibraryImport: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const currentUser = useSelector(selectCurrentUser);
   const entries = useSelector(selectListEntries);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const [expanded, setExpanded] = useState(false);
-  const [steamid, setSteamid] = useState<string>(
-    () => localStorage.getItem(STEAMID_STORAGE_KEY) || ''
-  );
-  const [loading, setLoading] = useState(false);
+  const [steamUser, setSteamUser] = useState<SteamUser | null>(null);
+  const [loadingMe, setLoadingMe] = useState(true);
+  const [loadingLib, setLoadingLib] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [library, setLibrary] = useState<SteamOwnedGame[] | null>(null);
   const [selected, setSelected] = useState<Set<number>>(new Set());
@@ -33,19 +40,62 @@ const SteamLibraryImport: FC = () => {
 
   const alreadyOwnedAppids = new Set(entries.map((e) => e.gameId));
 
-  const handleFetch = async () => {
+  useEffect(() => {
+    let cancelled = false;
+    setLoadingMe(true);
+    fetchSteamMe()
+      .then((u) => {
+        if (!cancelled) setSteamUser(u);
+      })
+      .catch(() => {
+        if (!cancelled) setSteamUser(null);
+      })
+      .finally(() => {
+        if (!cancelled) setLoadingMe(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const steam = params.get('steam');
+    if (steam === 'ok') {
+      setExpanded(true);
+      dispatch(showToast({ message: 'Signed in with Steam.', type: 'success' }));
+      params.delete('steam');
+      navigate({ pathname: location.pathname, search: params.toString() }, { replace: true });
+    } else if (steam === 'error') {
+      dispatch(showToast({ message: 'Steam sign-in failed.', type: 'error' }));
+      params.delete('steam');
+      navigate({ pathname: location.pathname, search: params.toString() }, { replace: true });
+    }
+  }, [location.search, location.pathname, dispatch, navigate]);
+
+  const handleSignIn = () => {
+    window.location.href = steamSignInUrl();
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOutSteam();
+      setSteamUser(null);
+      setLibrary(null);
+      setSelected(new Set());
+      dispatch(showToast({ message: 'Steam disconnected.', type: 'success' }));
+    } catch {
+      dispatch(showToast({ message: 'Failed to disconnect Steam.', type: 'error' }));
+    }
+  };
+
+  const handleFetchLibrary = async () => {
     setError(null);
     setLibrary(null);
     setSelected(new Set());
-    const cleaned = steamid.trim();
-    if (!/^\d{17}$/.test(cleaned)) {
-      setError('SteamID64 must be a 17-digit number.');
-      return;
-    }
-    setLoading(true);
+    setLoadingLib(true);
     try {
-      const res = await fetchSteamLibrary(cleaned);
-      localStorage.setItem(STEAMID_STORAGE_KEY, cleaned);
+      const res = await fetchSteamLibraryForMe();
       const sorted = [...res.games].sort(
         (a, b) => b.playtime_forever - a.playtime_forever
       );
@@ -60,7 +110,7 @@ const SteamLibraryImport: FC = () => {
       const msg = e.response?.data?.error || e.message || 'Failed to fetch library';
       setError(msg);
     } finally {
-      setLoading(false);
+      setLoadingLib(false);
     }
   };
 
@@ -130,96 +180,117 @@ const SteamLibraryImport: FC = () => {
       <div className={styles.header}>
         <div className={styles.title}>
           <Library size={20} />
-          <span>Link Steam Library</span>
+          <span>Steam Library</span>
+          {steamUser && (
+            <span className={styles.identity}>
+              {steamUser.avatar && (
+                <img src={steamUser.avatar} alt="" className={styles.avatar} />
+              )}
+              <span>{steamUser.displayName || steamUser.steamid}</span>
+            </span>
+          )}
         </div>
         <button className={styles.toggleBtn} onClick={() => setExpanded((v) => !v)}>
           {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-          {expanded ? 'Hide' : 'Import from Steam'}
+          {expanded ? 'Hide' : steamUser ? 'Manage' : 'Connect Steam'}
         </button>
       </div>
 
       {expanded && (
         <div className={styles.body}>
-          <p className={styles.helpText}>
-            Paste your <strong>SteamID64</strong> (17-digit number) to import your owned games.
-            Find yours at{' '}
-            <a href="https://steamid.io" target="_blank" rel="noreferrer">
-              steamid.io
-            </a>
-            . Your Steam profile must be set to <em>Public</em>.
-          </p>
-
-          <div className={styles.row}>
-            <input
-              className={styles.input}
-              type="text"
-              placeholder="76561198000000000"
-              value={steamid}
-              onChange={(e) => setSteamid(e.target.value)}
-              disabled={loading || importing}
-            />
-            <button
-              className={styles.primaryBtn}
-              onClick={handleFetch}
-              disabled={loading || importing}
-            >
-              {loading ? 'Fetching…' : 'Fetch Library'}
-            </button>
-          </div>
-
-          {error && <div className={styles.error}>{error}</div>}
-
-          {library && (
+          {loadingMe ? (
+            <p className={styles.helpText}>Checking Steam sign-in…</p>
+          ) : !steamUser ? (
+            <>
+              <p className={styles.helpText}>
+                Sign in with Steam to import your owned games. Your Steam profile and
+                game list must be set to <em>Public</em> for the import to work.
+              </p>
+              <div className={styles.row}>
+                <button
+                  className={styles.steamButton}
+                  onClick={handleSignIn}
+                  aria-label="Sign in through Steam"
+                >
+                  <img src={SIGN_IN_BUTTON} alt="Sign in through Steam" />
+                </button>
+              </div>
+            </>
+          ) : (
             <>
               <div className={styles.row}>
-                <span className={styles.summary}>
-                  {library.length} games — {selected.size} selected
-                </span>
-                <button className={styles.secondaryBtn} onClick={selectAll}>All</button>
-                <button className={styles.secondaryBtn} onClick={selectNone}>None</button>
-                <select
-                  className={styles.select}
-                  value={targetStatus}
-                  onChange={(e) => setTargetStatus(e.target.value as ListStatus)}
-                >
-                  <option value="backlog">Add to Backlog</option>
-                  <option value="playing">Add to Playing</option>
-                  <option value="completed">Add to Completed</option>
-                  <option value="wishlist">Add to Wishlist</option>
-                </select>
                 <button
                   className={styles.primaryBtn}
-                  onClick={handleImport}
-                  disabled={importing || selected.size === 0}
+                  onClick={handleFetchLibrary}
+                  disabled={loadingLib || importing}
                 >
-                  <Download size={16} />
-                  {importing
-                    ? `Importing ${importProgress?.done}/${importProgress?.total}…`
-                    : `Import ${selected.size}`}
+                  {loadingLib ? 'Fetching…' : 'Fetch My Library'}
+                </button>
+                <button
+                  className={styles.secondaryBtn}
+                  onClick={handleSignOut}
+                  disabled={importing}
+                >
+                  <LogOut size={14} />
+                  Disconnect
                 </button>
               </div>
 
-              <div className={styles.libraryList}>
-                {library.map((g) => {
-                  const owned = alreadyOwnedAppids.has(String(g.appid));
-                  const hours = (g.playtime_forever / 60).toFixed(1);
-                  return (
-                    <label key={g.appid} className={styles.libraryItem}>
-                      <input
-                        type="checkbox"
-                        checked={selected.has(g.appid)}
-                        onChange={() => toggle(g.appid)}
-                        disabled={importing}
-                      />
-                      <span className={styles.libraryName}>
-                        {g.name}
-                        {owned && <em> — already in your list</em>}
-                      </span>
-                      <span className={styles.libraryPlaytime}>{hours}h</span>
-                    </label>
-                  );
-                })}
-              </div>
+              {error && <div className={styles.error}>{error}</div>}
+
+              {library && (
+                <>
+                  <div className={styles.row}>
+                    <span className={styles.summary}>
+                      {library.length} games — {selected.size} selected
+                    </span>
+                    <button className={styles.secondaryBtn} onClick={selectAll}>All</button>
+                    <button className={styles.secondaryBtn} onClick={selectNone}>None</button>
+                    <select
+                      className={styles.select}
+                      value={targetStatus}
+                      onChange={(e) => setTargetStatus(e.target.value as ListStatus)}
+                    >
+                      <option value="backlog">Add to Backlog</option>
+                      <option value="playing">Add to Playing</option>
+                      <option value="completed">Add to Completed</option>
+                      <option value="wishlist">Add to Wishlist</option>
+                    </select>
+                    <button
+                      className={styles.primaryBtn}
+                      onClick={handleImport}
+                      disabled={importing || selected.size === 0}
+                    >
+                      <Download size={16} />
+                      {importing
+                        ? `Importing ${importProgress?.done}/${importProgress?.total}…`
+                        : `Import ${selected.size}`}
+                    </button>
+                  </div>
+
+                  <div className={styles.libraryList}>
+                    {library.map((g) => {
+                      const owned = alreadyOwnedAppids.has(String(g.appid));
+                      const hours = (g.playtime_forever / 60).toFixed(1);
+                      return (
+                        <label key={g.appid} className={styles.libraryItem}>
+                          <input
+                            type="checkbox"
+                            checked={selected.has(g.appid)}
+                            onChange={() => toggle(g.appid)}
+                            disabled={importing}
+                          />
+                          <span className={styles.libraryName}>
+                            {g.name}
+                            {owned && <em> — already in your list</em>}
+                          </span>
+                          <span className={styles.libraryPlaytime}>{hours}h</span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
             </>
           )}
         </div>

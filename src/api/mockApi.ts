@@ -21,9 +21,12 @@ export const gameMockApi = axios.create({
 
 export const steamCatalogApi = axios.create({
   baseURL: STEAM_CATALOG_URL,
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },
 });
+
+export const STEAM_CATALOG_BASE_URL = STEAM_CATALOG_URL;
 
 export default gameMockApi;
