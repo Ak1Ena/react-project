@@ -14,6 +14,7 @@ export interface Game {
   negative?: number;
   image: string;
   description: string;
+  source?: 'steam' | 'mockapi';
 }
 
 export interface SteamOwnedGame {
@@ -29,8 +30,17 @@ export interface SteamLibraryResponse {
   games: SteamOwnedGame[];
 }
 
-export const fetchGames = async () => {
-  const response = await axios.get<Game[]>(`${BACKEND_BASE}/featured`);
+export interface GamesResponse {
+  items: Game[];
+  total: number;
+  limit: number;
+  offset: number;
+}
+
+export const fetchGames = async (limit: number = 24, offset: number = 0): Promise<GamesResponse> => {
+  const response = await axios.get<GamesResponse>(`${BACKEND_BASE}/featured`, {
+    params: { limit, offset }
+  });
   return response.data;
 };
 

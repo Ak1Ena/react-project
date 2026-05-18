@@ -1,30 +1,43 @@
 import { createSlice, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import * as gamesAPI from './gamesAPI';
-import type { Game } from './gamesAPI';
+import type { Game, GamesResponse } from './gamesAPI';
 import type { RootState } from '../../app/store';
 
 interface GamesState {
-  items: Game[];
+  catalogItems: Game[];
+  searchResults: Game[];
   byId: Record<string, Game>;
   selectedGame: Game | null;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
-  isSearching: boolean;
+  searchStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
+  totalCatalog: number;
+  catalogLimit: number;
+  catalogOffset: number;
+  hasMoreCatalog: boolean;
   error: string | null;
 }
 
 const initialState: GamesState = {
-  items: [],
+  catalogItems: [],
+  searchResults: [],
   byId: {},
   selectedGame: null,
   status: 'idle',
-  isSearching: false,
+  searchStatus: 'idle',
+  totalCatalog: 0,
+  catalogLimit: 24,
+  catalogOffset: 0,
+  hasMoreCatalog: true,
   error: null,
 };
 
-export const fetchGames = createAsyncThunk('games/fetchGames', async () => {
-  return await gamesAPI.fetchGames();
-});
+export const fetchGames = createAsyncThunk(
+  'games/fetchGames',
+  async ({ limit, offset }: { limit?: number; offset?: number } = {}) => {
+    return await gamesAPI.fetchGames(limit, offset);
+  }
+);
 
 export const fetchGameById = createAsyncThunk('games/fetchGameById', async (id: string) => {
   return await gamesAPI.fetchGameById(id);
@@ -61,17 +74,33 @@ const gamesSlice = createSlice({
     clearSelectedGame: (state) => {
       state.selectedGame = null;
     },
+    resetCatalog: (state) => {
+      state.catalogItems = [];
+      state.catalogOffset = 0;
+      state.hasMoreCatalog = true;
+    },
+    clearSearch: (state) => {
+      state.searchResults = [];
+      state.searchStatus = 'idle';
+    }
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchGames.pending, (state) => {
         state.status = 'loading';
-        state.isSearching = false;
       })
-      .addCase(fetchGames.fulfilled, (state, action: PayloadAction<Game[]>) => {
+      .addCase(fetchGames.fulfilled, (state, action: PayloadAction<GamesResponse>) => {
         state.status = 'succeeded';
-        state.items = action.payload;
-        action.payload.forEach(game => {
+        // Infinite scroll: append items
+        const newItems = action.payload.items.filter(
+          item => !state.catalogItems.some(existing => existing.id === item.id)
+        );
+        state.catalogItems = [...state.catalogItems, ...newItems];
+        state.totalCatalog = action.payload.total;
+        state.catalogOffset = action.payload.offset + action.payload.items.length;
+        state.hasMoreCatalog = state.catalogItems.length < action.payload.total;
+        
+        action.payload.items.forEach(game => {
           state.byId[game.id] = game;
         });
       })
@@ -105,29 +134,27 @@ const gamesSlice = createSlice({
         state.error = action.error.message || 'Failed to fetch games by IDs';
       })
       .addCase(searchGames.pending, (state) => {
-        state.status = 'loading';
-        state.isSearching = true;
+        state.searchStatus = 'loading';
       })
       .addCase(searchGames.fulfilled, (state, action: PayloadAction<Game[]>) => {
-        state.status = 'succeeded';
-        state.items = action.payload;
+        state.searchStatus = 'succeeded';
+        state.searchResults = action.payload;
         action.payload.forEach(game => {
           state.byId[game.id] = game;
         });
       })
       .addCase(searchGames.rejected, (state, action) => {
-        state.status = 'failed';
-        state.isSearching = false;
+        state.searchStatus = 'failed';
         state.error = action.error.message || 'Search failed';
       })
       .addCase(createGame.fulfilled, (state, action: PayloadAction<Game>) => {
-        state.items.push(action.payload);
+        state.catalogItems.unshift(action.payload);
         state.byId[action.payload.id] = action.payload;
       })
       .addCase(updateGame.fulfilled, (state, action: PayloadAction<Game>) => {
-        const index = state.items.findIndex((item) => item.id === action.payload.id);
+        const index = state.catalogItems.findIndex((item) => item.id === action.payload.id);
         if (index !== -1) {
-          state.items[index] = action.payload;
+          state.catalogItems[index] = action.payload;
         }
         state.byId[action.payload.id] = action.payload;
         if (state.selectedGame?.id === action.payload.id) {
@@ -135,33 +162,22 @@ const gamesSlice = createSlice({
         }
       })
       .addCase(deleteGame.fulfilled, (state, action: PayloadAction<string>) => {
-        state.items = state.items.filter((item) => item.id !== action.payload);
+        state.catalogItems = state.catalogItems.filter((item) => item.id !== action.payload);
         delete state.byId[action.payload];
       });
   },
 });
 
-export const { clearSelectedGame } = gamesSlice.actions;
+export const { clearSelectedGame, resetCatalog, clearSearch } = gamesSlice.actions;
 
-export const selectGames = (state: RootState) => state.games.items;
+export const selectCatalog = (state: RootState) => state.games.catalogItems;
+export const selectSearchResults = (state: RootState) => state.games.searchResults;
 export const selectGamesById = (state: RootState) => state.games.byId;
 export const selectFilters = (state: RootState) => state.filters;
 
-export const selectFilteredGames = createSelector(
-  [selectGames, selectFilters],
+export const selectFilteredCatalog = createSelector(
+  [selectCatalog, selectFilters],
   (games, filters) => {
-    const isSearching = filters.searchQuery.trim().length > 2;
-    
-    // If there is a meaningful search query, we display the results from Steam directly.
-    if (isSearching) {
-      return [...games].sort((a, b) => {
-        if (filters.sortBy === 'title-asc') return a.name.localeCompare(b.name);
-        if (filters.sortBy === 'title-desc') return b.name.localeCompare(a.name);
-        return 0;
-      });
-    }
-
-    // Default: local filtering on the curated/featured catalog
     return games
       .filter((game) => {
         const matchesSearch = !filters.searchQuery.trim() || 
@@ -187,7 +203,26 @@ export const selectFilteredGames = createSelector(
   }
 );
 
+export const selectMockApiGames = createSelector(
+  [selectFilteredCatalog],
+  (games) => games.filter(g => g.source === 'mockapi')
+);
+
+export const selectSteamFeaturedGames = createSelector(
+  [selectFilteredCatalog],
+  (games) => games.filter(g => g.source === 'steam')
+);
+
+
+
 export const selectGamesStatus = (state: RootState) => state.games.status;
+export const selectSearchStatus = (state: RootState) => state.games.searchStatus;
 export const selectGamesError = (state: RootState) => state.games.error;
+export const selectCatalogPagination = (state: RootState) => ({
+  total: state.games.totalCatalog,
+  limit: state.games.catalogLimit,
+  offset: state.games.catalogOffset,
+  hasMore: state.games.hasMoreCatalog
+});
 
 export default gamesSlice.reducer;

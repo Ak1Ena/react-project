@@ -1,47 +1,64 @@
-import { useEffect, useState, type FC } from 'react';
+import { useEffect, useRef, useCallback, type FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { RootState, AppDispatch } from '../app/store';
-import { fetchGames, selectFilteredGames, searchGames } from '../features/games/gamesSlice';
+import { 
+  fetchGames, 
+  searchGames, 
+  selectSearchResults,
+  selectMockApiGames,
+  selectSteamFeaturedGames,
+  selectCatalogPagination,
+  selectSearchStatus,
+  clearSearch
+} from '../features/games/gamesSlice';
 import GameGrid from '../components/GameGrid/GameGrid';
 import FilterBar from '../components/FilterBar/FilterBar';
 import styles from './HomePage.module.css';
 
 const HomePage: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { status, error, items } = useSelector((state: RootState) => state.games);
+  const searchResults = useSelector(selectSearchResults);
+  const mockApiGames = useSelector(selectMockApiGames);
+  const steamFeaturedGames = useSelector(selectSteamFeaturedGames);
+  
+  const status = useSelector((state: RootState) => state.games.status);
+  const searchStatus = useSelector(selectSearchStatus);
+  const error = useSelector((state: RootState) => state.games.error);
   const { searchQuery } = useSelector((state: RootState) => state.filters);
-  const filteredGames = useSelector(selectFilteredGames);
+  const { limit, offset, hasMore } = useSelector(selectCatalogPagination);
 
-  // Pagination state
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 24;
+  const observer = useRef<IntersectionObserver | null>(null);
+  const lastElementRef = useCallback((node: HTMLDivElement | null) => {
+    if (status === 'loading') return;
+    if (observer.current) observer.current.disconnect();
+    
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        dispatch(fetchGames({ limit, offset }));
+      }
+    });
+    
+    if (node) observer.current.observe(node);
+  }, [status, hasMore, dispatch, limit, offset]);
 
+  // Initial fetch
   useEffect(() => {
-    setCurrentPage(1); // Reset to page 1 on new search
+    if (mockApiGames.length === 0 && steamFeaturedGames.length === 0 && status === 'idle') {
+      dispatch(fetchGames({ limit: 48, offset: 0 }));
+    }
+  }, [dispatch, mockApiGames.length, steamFeaturedGames.length, status]);
+
+  // Handle search
+  useEffect(() => {
     if (searchQuery.trim().length > 2) {
       const delayDebounceFn = setTimeout(() => {
-        // Fetch a larger batch from Steam (50) to make pagination meaningful
         dispatch(searchGames(searchQuery));
       }, 500);
       return () => clearTimeout(delayDebounceFn);
-    } else if (searchQuery.trim().length === 0) {
-      dispatch(fetchGames());
+    } else if (searchResults.length > 0) {
+      dispatch(clearSearch());
     }
-  }, [dispatch, searchQuery]);
-
-  // Pagination logic
-  const totalGames = filteredGames.length;
-  const totalPages = Math.ceil(totalGames / itemsPerPage);
-  const paginatedGames = filteredGames.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  }, [dispatch, searchQuery, searchResults.length]);
 
   return (
     <div className={styles.homePage}>
@@ -52,42 +69,45 @@ const HomePage: FC = () => {
       
       <FilterBar />
       
-      {status === 'failed' && <div className={styles.errorMessage}>{error}</div>}
+      {error && <div className={styles.errorMessage}>{error}</div>}
       
       <div className={styles.catalogContent}>
-        <GameGrid games={paginatedGames} loading={status === 'loading'} />
-        
-        {totalPages > 1 && !status.includes('loading') && (
-          <div className={styles.pagination}>
-            <button 
-              onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
-              disabled={currentPage === 1}
-              className={styles.pageBtn}
-            >
-              <ChevronLeft size={20} />
-            </button>
-            
-            <div className={styles.pageNumbers}>
-              {[...Array(totalPages)].map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => handlePageChange(i + 1)}
-                  className={`${styles.pageNumber} ${currentPage === i + 1 ? styles.active : ''}`}
-                >
-                  {i + 1}
-                </button>
-              ))}
-            </div>
-
-            <button 
-              onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
-              disabled={currentPage === totalPages}
-              className={styles.pageBtn}
-            >
-              <ChevronRight size={20} />
-            </button>
-          </div>
+        {/* 1. Search Results Section */}
+        {searchQuery.trim().length > 2 && (
+          <section className={styles.section}>
+            <h2>Steam Search Results</h2>
+            <GameGrid games={searchResults} loading={searchStatus === 'loading'} />
+            {searchStatus === 'succeeded' && searchResults.length === 0 && (
+              <p className={styles.noResults}>No games found on Steam matching "{searchQuery}".</p>
+            )}
+            <hr className={styles.separator} />
+          </section>
         )}
+
+        {/* 2. MockAPI / Curated Collection Section */}
+        {mockApiGames.length > 0 && (
+          <section className={styles.section}>
+            <h2>Curated Collection</h2>
+            <GameGrid games={mockApiGames} />
+            <hr className={styles.separator} />
+          </section>
+        )}
+
+        {/* 3. Steam Featured Catalog Section */}
+        <section className={styles.section}>
+          <h2>Featured on Steam</h2>
+          <GameGrid games={steamFeaturedGames} loading={status === 'loading' && steamFeaturedGames.length === 0} />
+          
+          {/* Intersection Observer Target */}
+          <div ref={lastElementRef} className={styles.loaderTarget}>
+            {status === 'loading' && (
+              <div className={styles.loadingMore}>Loading more Steam games...</div>
+            )}
+            {!hasMore && steamFeaturedGames.length > 0 && (
+              <div className={styles.endOfCatalog}>You've reached the end of the Steam featured list.</div>
+            )}
+          </div>
+        </section>
       </div>
     </div>
   );

@@ -11,13 +11,13 @@ import {
   setSortBy,
   resetFilters,
 } from '../../features/filters/filtersSlice';
-import { selectGames } from '../../features/games/gamesSlice';
+import { selectCatalog } from '../../features/games/gamesSlice';
 import styles from './FilterBar.module.css';
 
 const FilterBar: FC = () => {
   const dispatch = useDispatch();
   const filters = useSelector((state: RootState) => state.filters);
-  const games = useSelector(selectGames);
+  const games = useSelector(selectCatalog);
 
   const genresList = useMemo(() => {
     const allGenres = games.flatMap(g => g.genre || []);

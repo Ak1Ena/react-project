@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, type FC } from 'react';
+import { useEffect, useState, useMemo, useRef, useCallback, type FC } from 'react';
 import { useParams, NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState, AppDispatch } from '../app/store';
@@ -6,7 +6,6 @@ import { fetchListEntries, selectEntriesByStatus } from '../features/lists/lists
 import { fetchGames, fetchGamesByIds, selectGamesById } from '../features/games/gamesSlice';
 import ListEntryCard from '../components/ListEntryCard/ListEntryCard';
 import SteamLibraryImport from '../components/SteamLibraryImport/SteamLibraryImport';
-import Pagination from '../components/Pagination/Pagination';
 import styles from './ListPage.module.css';
 
 const ListPage: FC = () => {
@@ -18,8 +17,8 @@ const ListPage: FC = () => {
   const { status: gamesStatus } = useSelector((state: RootState) => state.games);
   const gamesById = useSelector(selectGamesById);
 
-  // Pagination state
-  const [currentPage, setCurrentPage] = useState(1);
+  // Infinite scroll state for local filtering
+  const [displayLimit, setDisplayLimit] = useState(12);
   const pageSize = 12;
 
   useEffect(() => {
@@ -50,18 +49,28 @@ const ListPage: FC = () => {
     }
   }, [missingIds, dispatch]);
 
-  // Reset to page 1 when category changes
+  // Reset display limit when category changes
   useEffect(() => {
-    setCurrentPage(1);
+    setDisplayLimit(pageSize);
   }, [currentStatus]);
+
+  const observer = useRef<IntersectionObserver | null>(null);
+  const lastElementRef = useCallback((node: HTMLDivElement | null) => {
+    if (listStatus === 'loading') return;
+    if (observer.current) observer.current.disconnect();
+    
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && displayLimit < filteredEntries.length) {
+        setDisplayLimit(prev => prev + pageSize);
+      }
+    });
+    
+    if (node) observer.current.observe(node);
+  }, [listStatus, displayLimit, filteredEntries.length]);
 
   const getGame = (gameId: string) => gamesById[gameId];
 
-  // Pagination logic
-  const paginatedEntries = filteredEntries.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
+  const visibleEntries = filteredEntries.slice(0, displayLimit);
 
   return (
     <div className={styles.listPage}>
@@ -86,16 +95,16 @@ const ListPage: FC = () => {
       {listStatus === 'loading' ? (
         <div className={styles.loading}>Loading your list...</div>
       ) : (
-        <>
-          <div className={styles.listContainer}>
-            {filteredEntries.length === 0 ? (
-              <div className={styles.emptyState}>
-                <p>No games in your {currentStatus ? currentStatus.charAt(0).toUpperCase() + currentStatus.slice(1) : ''} list yet.</p>
-                <NavLink to="/" className={styles.btnPrimary}>Browse Games</NavLink>
-              </div>
-            ) : (
+        <div className={styles.listContainer}>
+          {filteredEntries.length === 0 ? (
+            <div className={styles.emptyState}>
+              <p>No games in your {currentStatus ? currentStatus.charAt(0).toUpperCase() + currentStatus.slice(1) : ''} list yet.</p>
+              <NavLink to="/" className={styles.btnPrimary}>Browse Games</NavLink>
+            </div>
+          ) : (
+            <>
               <div className={styles.listGrid}>
-                {paginatedEntries.map((entry) => {
+                {visibleEntries.map((entry) => {
                   const game = getGame(entry.gameId);
                   return (
                     <ListEntryCard 
@@ -106,18 +115,15 @@ const ListPage: FC = () => {
                   );
                 })}
               </div>
-            )}
-          </div>
-
-          <div className={styles.paginationWrapper}>
-            <Pagination
-              currentPage={currentPage}
-              total={filteredEntries.length}
-              pageSize={pageSize}
-              onPageChange={setCurrentPage}
-            />
-          </div>
-        </>
+              
+              <div ref={lastElementRef} className={styles.loaderTarget}>
+                {displayLimit < filteredEntries.length && (
+                  <div className={styles.loadingMore}>Loading more...</div>
+                )}
+              </div>
+            </>
+          )}
+        </div>
       )}
     </div>
   );
