@@ -1,6 +1,6 @@
 import { useState, type FC, type ChangeEvent, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Save, Sparkles, Image as ImageIcon, Upload, Loader2 } from 'lucide-react';
+import { ArrowLeft, Save, Sparkles, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { useCreateGameMutation } from '../features/api/gameApi';
 import { useUI } from '../context/useUI';
 import styles from './AddGamePage.module.css';
@@ -44,42 +44,12 @@ const AddGamePage: FC = () => {
     }));
   };
 
-  // Resize + re-encode to keep the base64 payload under MockAPI's request
-  // size cap (~1MB). 800px wide JPEG @ 0.8 is plenty for a cover image.
-  const compressImage = (file: File, maxWidth = 800, quality = 0.8): Promise<string> =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onerror = () => reject(new Error('Failed to read file'));
-      reader.onloadend = () => {
-        const img = new Image();
-        img.onerror = () => reject(new Error('Failed to load image'));
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const ratio = Math.min(1, maxWidth / img.width);
-          canvas.width = Math.round(img.width * ratio);
-          canvas.height = Math.round(img.height * ratio);
-          const ctx = canvas.getContext('2d');
-          if (!ctx) return reject(new Error('Canvas context unavailable'));
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          resolve(canvas.toDataURL('image/jpeg', quality));
-        };
-        img.src = reader.result as string;
-      };
-      reader.readAsDataURL(file);
-    });
-
-  const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    if (file.size > 5 * 1024 * 1024) {
-      showToast('Image is too large. Please select a file under 5MB.', 'error');
-      return;
-    }
+  const isValidUrl = (value: string) => {
     try {
-      const compressed = await compressImage(file);
-      setFormData((prev) => ({ ...prev, image: compressed }));
+      const u = new URL(value);
+      return u.protocol === 'http:' || u.protocol === 'https:';
     } catch {
-      showToast('Could not process that image. Try a different one.', 'error');
+      return false;
     }
   };
 
@@ -87,6 +57,10 @@ const AddGamePage: FC = () => {
     e.preventDefault();
     if (formData.platforms.length === 0) {
       showToast('Pick at least one platform.', 'error');
+      return;
+    }
+    if (!isValidUrl(formData.image)) {
+      showToast('Please paste a valid http(s) image URL.', 'error');
       return;
     }
     try {
@@ -159,9 +133,9 @@ const AddGamePage: FC = () => {
 
               <div className={styles.formGroup}>
                 <label className={styles.label}>Genre*</label>
-                <select 
-                  name="genre" 
-                  value={formData.genre[0]} 
+                <select
+                  name="genre"
+                  value={formData.genre[0]}
                   onChange={handleChange}
                   className={styles.select}
                 >
@@ -220,21 +194,16 @@ const AddGamePage: FC = () => {
               </div>
 
               <div className={styles.formGroup}>
-                <label className={styles.label}>Cover Image*</label>
-                <div className={styles.uploadWrapper}>
-                  <label htmlFor="image-upload" className={styles.uploadLabel}>
-                    <Upload size={16} />
-                    <span>{formData.image ? 'Change Image' : 'Upload Image'}</span>
-                  </label>
-                  <input
-                    id="image-upload"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className={styles.fileInput}
-                  />
-                  {formData.image && <span className={styles.fileName}>Image selected ✅</span>}
-                </div>
+                <label className={styles.label}>Cover Image URL*</label>
+                <input
+                  type="url"
+                  name="image"
+                  required
+                  value={formData.image}
+                  onChange={handleChange}
+                  placeholder="https://example.com/cover.jpg"
+                  className={styles.input}
+                />
               </div>
             </div>
 
@@ -254,7 +223,11 @@ const AddGamePage: FC = () => {
               <button type="button" onClick={() => navigate(-1)} className={styles.cancelBtn}>
                 Cancel
               </button>
-              <button type="submit" disabled={loading || !formData.image || formData.platforms.length === 0} className={styles.saveBtn}>
+              <button
+                type="submit"
+                disabled={loading || !formData.image || formData.platforms.length === 0}
+                className={styles.saveBtn}
+              >
                 {loading ? <Loader2 size={18} className={styles.spin} /> : <Save size={18} />}
                 <span>{loading ? 'Saving...' : 'Save Game'}</span>
               </button>
