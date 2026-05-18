@@ -21,7 +21,7 @@ const AddGamePage: FC = () => {
   });
 
   const genres = ['Action', 'RPG', 'FPS', 'Strategy', 'Adventure', 'Sports', 'Simulation'];
-  const availablePlatforms = ['PC', 'PS5', 'PS4', 'Xbox Series X', 'Xbox One', 'Switch', 'Mobile'];
+  const availablePlatforms = ['Windows', 'Mac', 'Linux', 'PS5', 'PS4', 'Xbox Series X', 'Xbox One', 'Switch', 'Mobile'];
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
