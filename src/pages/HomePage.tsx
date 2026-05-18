@@ -1,6 +1,6 @@
 import { useEffect, type FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ChevronRight, Clock, Trophy, Flame, CheckCircle2 } from 'lucide-react';
+import { ChevronRight, Trophy, Flame, CheckCircle2 } from 'lucide-react';
 import type { RootState, AppDispatch } from '../app/store';
 import { fetchGames, selectGames } from '../features/games/gamesSlice';
 import { fetchListEntries } from '../features/lists/listsSlice';
@@ -24,16 +24,18 @@ const HomePage: FC = () => {
   const heroGame = playingGames[0] || games[0];
 
   const activities = [
-    { id: 1, type: 'log', user: 'H', action: 'logged 2.5h in', target: 'Hollow Drift', time: '2h ago', color: 'var(--accent-purple)' },
-    { id: 2, type: 'complete', user: 'P', action: 'completed Act 3 of', target: 'Petalfall', time: 'Today', color: 'var(--accent-red)' },
-    { id: 3, type: 'wishlist', user: 'H', action: 'added Wishlist to', target: 'Hollow Drift: Echoes', time: 'Yesterday', color: 'var(--text-muted)' },
-    { id: 4, type: 'rate', user: 'T', action: 'rated 4 ★', target: 'Tinkerfen', time: 'Yesterday', color: 'var(--accent-green)' },
+    { id: 1, type: 'log', user: 'H', action: 'logged 2.5h in', target: games[0]?.name || 'Hollow Drift', time: '2h ago', color: 'var(--accent-purple)' },
+    { id: 2, type: 'complete', user: 'P', action: 'completed Act 3 of', target: games[1]?.name || 'Petalfall', time: 'Today', color: 'var(--accent-red)' },
+    { id: 3, type: 'wishlist', user: 'H', action: 'added Wishlist to', target: games[2]?.name || 'Hollow Drift: Echoes', time: 'Yesterday', color: 'var(--text-muted)' },
+    { id: 4, type: 'rate', user: 'T', action: 'rated 4 ★', target: games[3]?.name || 'Tinkerfen', time: 'Yesterday', color: 'var(--accent-green)' },
   ];
+
+  const completedCount = entries.filter(e => e.status === 'completed').length;
 
   const achievements = [
     { id: 1, title: 'First Hundred', desc: 'Tracked 100 hours', icon: <Trophy size={16} />, color: 'var(--accent-orange)' },
     { id: 2, title: 'On Fire', desc: '4-day streak', icon: <Flame size={16} />, color: 'var(--accent-red)' },
-    { id: 3, title: 'Closer', desc: '5 games completed', icon: <CheckCircle2 size={16} />, color: 'var(--accent-purple)' },
+    { id: 3, title: 'Closer', desc: `${completedCount} games completed`, icon: <CheckCircle2 size={16} />, color: 'var(--accent-purple)' },
   ];
 
   return (

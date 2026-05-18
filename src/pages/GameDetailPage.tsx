@@ -1,12 +1,11 @@
-import { useEffect, useState, type FC } from 'react';
+import { useEffect, type FC, type JSX } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Star, X, Check, Gamepad2, Clock, BarChart2, Calendar } from 'lucide-react';
+import { Star, X, Check, Gamepad2, Clock } from 'lucide-react';
 import type { RootState, AppDispatch } from '../app/store';
 import { fetchGameById, clearSelectedGame } from '../features/games/gamesSlice';
 import { addToList, fetchListEntries, updateListEntry } from '../features/lists/listsSlice';
 import type { ListStatus } from '../features/lists/listsAPI';
-import { showToast } from '../features/ui/uiSlice';
 import styles from './GameDetailPage.module.css';
 
 const GameDetailPage: FC = () => {
@@ -17,9 +16,11 @@ const GameDetailPage: FC = () => {
   const { entries } = useSelector((state: RootState) => state.lists);
   const currentUser = useSelector((state: RootState) => state.auth.user);
   
-  const [rating, setRating] = useState(0);
-  const [review, setReview] = useState('');
-  const [progress, setProgress] = useState(23);
+  const existingEntry = entries.find((e) => e.gameId === game?.id);
+
+  // Use the Redux state as the source of truth
+  const displayRating = existingEntry?.personalRating || 0;
+  const displayReview = existingEntry?.review || '';
 
   useEffect(() => {
     if (id) {
@@ -31,14 +32,7 @@ const GameDetailPage: FC = () => {
     };
   }, [id, dispatch]);
 
-  const existingEntry = entries.find((e) => e.gameId === game?.id);
-
-  useEffect(() => {
-    if (existingEntry) {
-      setRating(existingEntry.personalRating || 0);
-      setReview(existingEntry.review || '');
-    }
-  }, [existingEntry]);
+  const progress = 23;
 
   if (status === 'loading' || !game) {
     return <div className={styles.loading}>Loading...</div>;
@@ -60,7 +54,7 @@ const GameDetailPage: FC = () => {
     }
   };
 
-  const statuses: { id: ListStatus; label: string; icon: any }[] = [
+  const statuses: { id: ListStatus; label: string; icon: JSX.Element }[] = [
     { id: 'playing', label: 'Playing', icon: <Gamepad2 size={16} /> },
     { id: 'completed', label: 'Completed', icon: <Check size={16} /> },
     { id: 'backlog', label: 'Backlog', icon: <Clock size={16} /> },
@@ -152,9 +146,13 @@ const GameDetailPage: FC = () => {
                 <Star 
                   key={s} 
                   size={20} 
-                  fill={rating >= s ? "var(--primary)" : "none"} 
-                  color={rating >= s ? "var(--primary)" : "var(--text-muted)"}
-                  onClick={() => setRating(s)}
+                  fill={displayRating >= s ? "var(--primary)" : "none"} 
+                  color={displayRating >= s ? "var(--primary)" : "var(--text-muted)"}
+                  onClick={() => {
+                    if (existingEntry) {
+                      dispatch(updateListEntry({ id: existingEntry.id, entry: { personalRating: s } }));
+                    }
+                  }}
                   style={{ cursor: 'pointer' }}
                 />
               ))}
@@ -166,8 +164,12 @@ const GameDetailPage: FC = () => {
             <textarea 
               className={styles.reviewArea}
               placeholder="Jot down a thought about this one..."
-              value={review}
-              onChange={(e) => setReview(e.target.value)}
+              value={displayReview}
+              onChange={(e) => {
+                if (existingEntry) {
+                  dispatch(updateListEntry({ id: existingEntry.id, entry: { review: e.target.value } }));
+                }
+              }}
             />
           </div>
 

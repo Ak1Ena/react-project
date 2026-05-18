@@ -1,4 +1,4 @@
-import { useMemo, type FC } from 'react';
+import { type FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { LayoutGrid, List } from 'lucide-react';
 import type { RootState } from '../../app/store';
@@ -9,13 +9,11 @@ import {
   setMinRating,
   setSortBy,
 } from '../../features/filters/filtersSlice';
-import { selectGames } from '../../features/games/gamesSlice';
 import styles from './FilterBar.module.css';
 
 const FilterBar: FC<{ totalResults: number }> = ({ totalResults }) => {
   const dispatch = useDispatch();
   const filters = useSelector((state: RootState) => state.filters);
-  const games = useSelector(selectGames);
 
   const genres = ['Action', 'RPG', 'Roguelike', 'Strategy', 'Indie', 'Adventure'];
   const platforms = ['PC', 'PS5', 'Xbox', 'Switch'];
