@@ -214,6 +214,13 @@
   font-weight: 700;
 }
 
+.reviewCounts {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 400;
+  margin-left: 4px;
+}
+
 .btnPrimary {
   background-color: var(--primary);
   color: white;

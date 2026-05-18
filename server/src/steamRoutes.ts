@@ -51,19 +51,25 @@ router.get('/owned-games/:steamId', async (req, res) => {
   }
 });
 
-// 3. Get Game Details
+// 3. Get Game Details (with review counts)
 router.get('/game-details/:appId', async (req, res) => {
   try {
     const { appId } = req.params;
-    const response = await axios.get(`${STORE_BASE}/appdetails`, {
-      params: {
-        appids: appId,
-      },
-    });
+    const [detailsResponse, reviewsResponse] = await Promise.all([
+      axios.get(`${STORE_BASE}/appdetails`, { params: { appids: appId } }),
+      axios.get(`https://store.steampowered.com/appreviews/${appId}?json=1&language=all&purchase_type=all`)
+    ]);
 
-    const data = response.data[appId];
+    const data = detailsResponse.data[appId];
     if (data.success) {
-      return res.json(data.data);
+      const details = data.data;
+      const reviewSummary = reviewsResponse.data.query_summary || {};
+      
+      return res.json({
+        ...details,
+        total_positive: reviewSummary.total_positive,
+        total_negative: reviewSummary.total_negative
+      });
     }
     res.status(404).json({ message: 'Game details not found' });
   } catch (error) {
@@ -137,8 +143,10 @@ router.get('/featured', async (_req, res) => {
 
     // Transform to our Game interface
     const games = uniqueItems.map((item: any) => {
-      // Stable mock rating based on ID for demo purposes
-      const mockRating = (7.0 + (item.id % 30) / 10).toFixed(1);
+      // Stable mock reviews based on ID
+      const positive = (item.id % 5000) + 1000;
+      const negative = (item.id % 1000) + 100;
+      const rating = parseFloat(((positive / (positive + negative)) * 10).toFixed(1));
       
       return {
         id: item.id.toString(),
@@ -151,7 +159,9 @@ router.get('/featured', async (_req, res) => {
           item.linux_available ? 'Linux' : ''
         ].filter(Boolean),
         releaseYear: 0,
-        rating: parseFloat(mockRating),
+        rating,
+        positive,
+        negative,
         image: item.large_capsule_image || item.header_image,
         description: item.headline || 'Featured on Steam.'
       };
@@ -180,8 +190,10 @@ router.get('/search', async (req, res) => {
     });
 
     const games = (response.data.items || []).map((item: any) => {
-      // Stable mock rating based on ID for demo purposes
-      const mockRating = (7.0 + (item.id % 30) / 10).toFixed(1);
+      // Stable mock reviews based on ID
+      const positive = (item.id % 5000) + 1000;
+      const negative = (item.id % 1000) + 100;
+      const rating = parseFloat(((positive / (positive + negative)) * 10).toFixed(1));
 
       return {
         id: item.id.toString(),
@@ -194,7 +206,9 @@ router.get('/search', async (req, res) => {
           item.platforms?.linux ? 'Linux' : ''
         ].filter(Boolean),
         releaseYear: 0,
-        rating: parseFloat(mockRating),
+        rating,
+        positive,
+        negative,
         image: item.tiny_image ? item.tiny_image.replace('capsule_184x69', 'header') : '',
         description: `Steam search result for ${item.name}`
       };

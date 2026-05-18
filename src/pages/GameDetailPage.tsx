@@ -83,6 +83,11 @@ const GameDetailPage: FC = () => {
               <div className={styles.badgeRating}>
                 <Star size={16} fill="currentColor" />
                 <span>{game.rating}</span>
+                {game.positive !== undefined && (
+                  <span className={styles.reviewCounts}>
+                    ({game.positive.toLocaleString()} 👍 / {game.negative?.toLocaleString()} 👎)
+                  </span>
+                )}
               </div>
             </div>
             

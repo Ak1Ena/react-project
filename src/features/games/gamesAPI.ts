@@ -10,6 +10,8 @@ export interface Game {
   platforms: string[];
   releaseYear: number;
   rating: number;
+  positive?: number;
+  negative?: number;
   image: string;
   description: string;
 }
@@ -38,6 +40,16 @@ export const fetchGameById = async (id: string): Promise<Game> => {
   // Steam API returns a success wrapper
   const gameData = response.data;
   
+  const positive = gameData.total_positive || 0;
+  const negative = gameData.total_negative || 0;
+  
+  // Calculate rating: (positive / total) * 10
+  // Fallback to Metacritic if available, otherwise use our calculation
+  let rating = (gameData.metacritic?.score / 10) || 0;
+  if (rating === 0 && (positive + negative) > 0) {
+    rating = parseFloat(((positive / (positive + negative)) * 10).toFixed(1));
+  }
+
   return {
     id: (gameData.steam_appid || id).toString(),
     appid: gameData.steam_appid || parseInt(id),
@@ -45,7 +57,9 @@ export const fetchGameById = async (id: string): Promise<Game> => {
     genre: gameData.genres?.map((g: any) => g.description) || [],
     platforms: Object.keys(gameData.platforms || {}).filter(p => gameData.platforms[p]),
     releaseYear: parseInt(gameData.release_date?.date?.split(',').pop()?.trim()) || 0,
-    rating: (gameData.metacritic?.score / 10) || 0,
+    rating,
+    positive,
+    negative,
     image: gameData.header_image,
     description: gameData.short_description || gameData.about_the_game
   } as Game;
