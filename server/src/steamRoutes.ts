@@ -162,26 +162,31 @@ router.get('/featured', async (_req, res) => {
 // 7. Search Steam Store
 router.get('/search', async (req, res) => {
   try {
-    const { q } = req.query;
-    // Steam doesn't have a clean JSON search API for the store, 
-    // so we use the search suggestion API which is cleaner for small results
+    const { q, limit = '24' } = req.query;
+    // Steam's storesearch API is limited but supports simple keyword matching.
+    // We use cc=US and l=english for consistent metadata mapping.
     const response = await axios.get(`https://store.steampowered.com/api/storesearch`, {
       params: {
         term: q,
         l: 'english',
-        cc: 'US'
+        cc: 'US',
+        count: limit // Maximum 50 per Steam API docs
       }
     });
 
-    const games = response.data.items.map((item: any) => ({
+    const games = (response.data.items || []).map((item: any) => ({
       id: item.id.toString(),
       appid: item.id,
       name: item.name,
       genre: item.genres || [],
-      platforms: [item.platforms?.windows ? 'Windows' : 'Other'],
+      platforms: [
+        item.platforms?.windows ? 'Windows' : '',
+        item.platforms?.mac ? 'Mac' : '',
+        item.platforms?.linux ? 'Linux' : ''
+      ].filter(Boolean),
       releaseYear: 0,
       rating: 0,
-      image: item.tiny_image.replace('capsule_184x69', 'header'),
+      image: item.tiny_image ? item.tiny_image.replace('capsule_184x69', 'header') : '',
       description: `Steam search result for ${item.name}`
     }));
 

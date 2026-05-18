@@ -9,18 +9,19 @@ import styles from './HomePage.module.css';
 
 const HomePage: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { status, error } = useSelector((state: RootState) => state.games);
+  const { status, error, items } = useSelector((state: RootState) => state.games);
   const { searchQuery } = useSelector((state: RootState) => state.filters);
   const filteredGames = useSelector(selectFilteredGames);
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 12;
+  const itemsPerPage = 24;
 
   useEffect(() => {
     setCurrentPage(1); // Reset to page 1 on new search
     if (searchQuery.trim().length > 2) {
       const delayDebounceFn = setTimeout(() => {
+        // Fetch a larger batch from Steam (50) to make pagination meaningful
         dispatch(searchGames(searchQuery));
       }, 500);
       return () => clearTimeout(delayDebounceFn);
@@ -30,11 +31,17 @@ const HomePage: FC = () => {
   }, [dispatch, searchQuery]);
 
   // Pagination logic
-  const totalPages = Math.ceil(filteredGames.length / itemsPerPage);
+  const totalGames = filteredGames.length;
+  const totalPages = Math.ceil(totalGames / itemsPerPage);
   const paginatedGames = filteredGames.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <div className={styles.homePage}>
@@ -53,17 +60,27 @@ const HomePage: FC = () => {
         {totalPages > 1 && !status.includes('loading') && (
           <div className={styles.pagination}>
             <button 
-              onClick={() => { setCurrentPage(p => Math.max(1, p - 1)); window.scrollTo(0,0); }}
+              onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
               disabled={currentPage === 1}
               className={styles.pageBtn}
             >
               <ChevronLeft size={20} />
             </button>
             
-            <span className={styles.pageInfo}>Page {currentPage} of {totalPages}</span>
+            <div className={styles.pageNumbers}>
+              {[...Array(totalPages)].map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => handlePageChange(i + 1)}
+                  className={`${styles.pageNumber} ${currentPage === i + 1 ? styles.active : ''}`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
 
             <button 
-              onClick={() => { setCurrentPage(p => Math.min(totalPages, p + 1)); window.scrollTo(0,0); }}
+              onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
               disabled={currentPage === totalPages}
               className={styles.pageBtn}
             >

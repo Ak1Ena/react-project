@@ -9,6 +9,7 @@ interface GamesState {
   byId: Record<string, Game>;
   selectedGame: Game | null;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  isSearching: boolean;
   error: string | null;
 }
 
@@ -17,6 +18,7 @@ const initialState: GamesState = {
   byId: {},
   selectedGame: null,
   status: 'idle',
+  isSearching: false,
   error: null,
 };
 
@@ -64,6 +66,7 @@ const gamesSlice = createSlice({
     builder
       .addCase(fetchGames.pending, (state) => {
         state.status = 'loading';
+        state.isSearching = false;
       })
       .addCase(fetchGames.fulfilled, (state, action: PayloadAction<Game[]>) => {
         state.status = 'succeeded';
@@ -95,6 +98,7 @@ const gamesSlice = createSlice({
       })
       .addCase(searchGames.pending, (state) => {
         state.status = 'loading';
+        state.isSearching = true;
       })
       .addCase(searchGames.fulfilled, (state, action: PayloadAction<Game[]>) => {
         state.status = 'succeeded';
@@ -105,6 +109,7 @@ const gamesSlice = createSlice({
       })
       .addCase(searchGames.rejected, (state, action) => {
         state.status = 'failed';
+        state.isSearching = false;
         state.error = action.error.message || 'Search failed';
       })
       .addCase(createGame.fulfilled, (state, action: PayloadAction<Game>) => {
@@ -140,8 +145,6 @@ export const selectFilteredGames = createSelector(
     const isSearching = filters.searchQuery.trim().length > 2;
     
     // If there is a meaningful search query, we display the results from Steam directly.
-    // We don't re-filter by text because Steam already did that.
-    // We also don't filter by metadata because the Search API results lack it.
     if (isSearching) {
       return [...games].sort((a, b) => {
         if (filters.sortBy === 'title-asc') return a.name.localeCompare(b.name);
@@ -153,7 +156,6 @@ export const selectFilteredGames = createSelector(
     // Default: local filtering on the curated/featured catalog
     return games
       .filter((game) => {
-        // If query is short (1-2 chars), we still filter locally for immediate feedback
         const matchesSearch = !filters.searchQuery.trim() || 
           game.name.toLowerCase().includes(filters.searchQuery.toLowerCase());
           
