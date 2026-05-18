@@ -44,19 +44,42 @@ const AddGamePage: FC = () => {
     }));
   };
 
-  const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 2 * 1024 * 1024) {
-        showToast('Image is too large. Please select a file under 2MB.', 'error');
-        return;
-      }
-
+  // Resize + re-encode to keep the base64 payload under MockAPI's request
+  // size cap (~1MB). 800px wide JPEG @ 0.8 is plenty for a cover image.
+  const compressImage = (file: File, maxWidth = 800, quality = 0.8): Promise<string> =>
+    new Promise((resolve, reject) => {
       const reader = new FileReader();
+      reader.onerror = () => reject(new Error('Failed to read file'));
       reader.onloadend = () => {
-        setFormData((prev) => ({ ...prev, image: reader.result as string }));
+        const img = new Image();
+        img.onerror = () => reject(new Error('Failed to load image'));
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const ratio = Math.min(1, maxWidth / img.width);
+          canvas.width = Math.round(img.width * ratio);
+          canvas.height = Math.round(img.height * ratio);
+          const ctx = canvas.getContext('2d');
+          if (!ctx) return reject(new Error('Canvas context unavailable'));
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.src = reader.result as string;
       };
       reader.readAsDataURL(file);
+    });
+
+  const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      showToast('Image is too large. Please select a file under 5MB.', 'error');
+      return;
+    }
+    try {
+      const compressed = await compressImage(file);
+      setFormData((prev) => ({ ...prev, image: compressed }));
+    } catch {
+      showToast('Could not process that image. Try a different one.', 'error');
     }
   };
 
