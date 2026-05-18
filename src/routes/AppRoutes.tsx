@@ -2,12 +2,15 @@ import { type FC, type ReactNode } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAppSelector } from '../hooks/redux';
 import { selectCurrentUser } from '../features/auth/authSlice';
+import { isAdminUser } from '../features/auth/authAPI';
 import HomePage from '../pages/HomePage';
 import GameDetailPage from '../pages/GameDetailPage';
 import ListPage from '../pages/ListPage';
 import AddGamePage from '../pages/AddGamePage';
+import AdminPage from '../pages/AdminPage';
 import LoginPage from '../pages/LoginPage';
 import RegisterPage from '../pages/RegisterPage';
+import NotFoundPage from '../pages/NotFoundPage';
 
 interface RouteProps {
   children: ReactNode;
@@ -17,6 +20,17 @@ const ProtectedRoute: FC<RouteProps> = ({ children }) => {
   const user = useAppSelector(selectCurrentUser);
   if (!user) {
     return <Navigate to="/login" replace />;
+  }
+  return <>{children}</>;
+};
+
+const AdminRoute: FC<RouteProps> = ({ children }) => {
+  const user = useAppSelector(selectCurrentUser);
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  if (!isAdminUser(user)) {
+    return <NotFoundPage />;
   }
   return <>{children}</>;
 };
@@ -84,13 +98,21 @@ const AppRoutes: FC = () => {
       <Route
         path="/add-game"
         element={
-          <ProtectedRoute>
+          <AdminRoute>
             <AddGamePage />
-          </ProtectedRoute>
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin"
+        element={
+          <AdminRoute>
+            <AdminPage />
+          </AdminRoute>
         }
       />
 
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 };

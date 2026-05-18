@@ -15,6 +15,7 @@ import {
 import { useGetUsersQuery } from '../features/api/userApi';
 import type { ListStatus, ListEntry } from '../features/lists/listsAPI';
 import Spinner from '../components/Spinner/Spinner';
+import NotFoundPage from './NotFoundPage';
 import styles from './GameDetailPage.module.css';
 
 const GameDetailPage: FC = () => {
@@ -31,7 +32,7 @@ const GameDetailPage: FC = () => {
   const [addToList] = useAddToListMutation();
   const [updateListEntry] = useUpdateListEntryMutation();
 
-  const existingEntry = entries.find((e) => e.gameId === game?.id);
+  const existingEntry = entries.find((e) => game && e.gameId === String(game.id));
   const displayRating = existingEntry?.personalRating || 0;
 
   const [localReview, setLocalReview] = useState('');
@@ -53,19 +54,7 @@ const GameDetailPage: FC = () => {
   }
 
   if (gameNotFound || !game) {
-    return (
-      <div className={styles.pageContainer}>
-        <header className={styles.pageHeader}>
-          <button className={styles.backBtn} onClick={() => navigate(-1)}>
-            <ArrowLeft size={20} />
-            <span>Back to Library</span>
-          </button>
-        </header>
-        <div className={styles.loading}>
-          <p>We couldn't find that game. It may have been removed.</p>
-        </div>
-      </div>
-    );
+    return <NotFoundPage />;
   }
 
   const handleStatusChange = async (newStatus: ListStatus) => {
@@ -76,7 +65,7 @@ const GameDetailPage: FC = () => {
         await updateListEntry({ id: existingEntry.id, entry: { status: newStatus } }).unwrap();
       } else {
         await addToList({
-          gameId: game.id,
+          gameId: String(game.id),
           userId: currentUser.id,
           status: newStatus,
           notes: '',
@@ -140,7 +129,7 @@ const GameDetailPage: FC = () => {
   // over publicReviews when both reference the same id.
   const byId = new Map<string, ListEntry>();
   for (const r of publicReviews) byId.set(r.id, r);
-  for (const e of entries) if (e.gameId === game.id) byId.set(e.id, e);
+  for (const e of entries) if (e.gameId === String(game.id)) byId.set(e.id, e);
   const communityReviews = Array.from(byId.values())
     .filter((r) => (r.review || '').trim().length > 0)
     .sort((a, b) => new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime());

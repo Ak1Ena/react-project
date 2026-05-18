@@ -6,7 +6,7 @@ export interface Toast {
   type: 'success' | 'error' | 'info';
 }
 
-export type ModalData = Record<string, unknown> | null;
+export type ModalData = unknown;
 
 export interface UIContextType {
   modalOpen: boolean;
