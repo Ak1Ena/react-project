@@ -1,25 +1,45 @@
-import { useEffect, type FC } from 'react';
+import { useEffect, useMemo, type FC } from 'react';
 import { useParams, NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState, AppDispatch } from '../app/store';
 import { fetchListEntries, selectEntriesByStatus } from '../features/lists/listsSlice';
-import { fetchGames } from '../features/games/gamesSlice';
+import { fetchGamesByIds, selectGamesById } from '../features/games/gamesSlice';
 import ListEntryCard from '../components/ListEntryCard/ListEntryCard';
+import SteamLibraryImport from '../components/SteamLibraryImport/SteamLibraryImport';
 import styles from './ListPage.module.css';
 
 const ListPage: FC = () => {
   const { status: currentStatus } = useParams<{ status: string }>();
   const dispatch = useDispatch<AppDispatch>();
-  const filteredEntries = useSelector((state: RootState) => selectEntriesByStatus(state, currentStatus));
-  const { status: listStatus } = useSelector((state: RootState) => state.lists);
-  const { items: games, status: gamesStatus } = useSelector((state: RootState) => state.games);
+  const filteredEntries = useSelector((state: RootState) =>
+    selectEntriesByStatus(state, currentStatus)
+  );
+  const { status: listStatus, entries } = useSelector((state: RootState) => state.lists);
+  const gamesById = useSelector(selectGamesById);
 
   useEffect(() => {
     if (listStatus === 'idle') dispatch(fetchListEntries());
-    if (gamesStatus === 'idle') dispatch(fetchGames());
-  }, [listStatus, gamesStatus, dispatch]);
+  }, [listStatus, dispatch]);
 
-  const getGame = (gameId: string) => games.find((g) => g.id === gameId);
+  const missingIds = useMemo(() => {
+    const seen = new Set<string>();
+    const out: string[] = [];
+    for (const e of entries) {
+      if (!gamesById[e.gameId] && !seen.has(e.gameId)) {
+        seen.add(e.gameId);
+        out.push(e.gameId);
+      }
+    }
+    return out;
+  }, [entries, gamesById]);
+
+  useEffect(() => {
+    if (missingIds.length > 0) {
+      dispatch(fetchGamesByIds(missingIds));
+    }
+  }, [missingIds, dispatch]);
+
+  const getGame = (gameId: string) => gamesById[gameId];
 
   return (
     <div className={styles.listPage}>
@@ -33,11 +53,13 @@ const ListPage: FC = () => {
         </div>
       </header>
 
-      {(listStatus === 'failed' || gamesStatus === 'failed') && (
+      <SteamLibraryImport />
+
+      {listStatus === 'failed' && (
         <div className={styles.errorMessage}>Failed to load your list. Please try again.</div>
       )}
 
-      {(listStatus === 'loading' || gamesStatus === 'loading') ? (
+      {listStatus === 'loading' ? (
         <div className={styles.loading}>Loading your list...</div>
       ) : (
         <div className={styles.listContainer}>

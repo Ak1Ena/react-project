@@ -1,7 +1,7 @@
 import { type FC } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Gamepad2, ListChecks, PlusCircle, Home, LogIn, User, LogOut } from 'lucide-react';
+import { Gamepad2, ListChecks, Home, LogIn, User, LogOut } from 'lucide-react';
 import { selectCurrentUser, logout } from '../../features/auth/authSlice';
 import styles from './Navbar.module.css';
 
@@ -25,11 +25,7 @@ const Navbar: FC = () => {
             <ListChecks size={20} />
             <span>My Lists</span>
           </NavLink>
-          <NavLink to="/add-game" className={({ isActive }) => isActive ? `${styles.navLink} ${styles.active}` : styles.navLink}>
-            <PlusCircle size={20} />
-            <span>Add Game</span>
-          </NavLink>
-          
+
           <div className={styles.navDivider}></div>
 
           {user ? (

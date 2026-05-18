@@ -11,30 +11,20 @@ import {
   setSortBy,
   resetFilters,
 } from '../../features/filters/filtersSlice';
-import { selectGames } from '../../features/games/gamesSlice';
+import { selectFacets } from '../../features/games/gamesSlice';
 import styles from './FilterBar.module.css';
 
 const FilterBar: FC = () => {
   const dispatch = useDispatch();
   const filters = useSelector((state: RootState) => state.filters);
-  const games = useSelector(selectGames);
+  const facets = useSelector(selectFacets);
 
-  const genresList = useMemo(() => {
-    const allGenres = games.flatMap(g => g.genre || []);
-    const uniqueGenres = Array.from(new Set(allGenres));
-    return ['All', ...uniqueGenres.sort()];
-  }, [games]);
-
-  const platformsList = useMemo(() => {
-    const allPlatforms = games.flatMap(g => g.platforms || []);
-    const uniquePlatforms = Array.from(new Set(allPlatforms));
-    return ['All', ...uniquePlatforms.sort()];
-  }, [games]);
-  
-  const yearsList = useMemo(() => {
-    const uniqueYears = Array.from(new Set(games.map(g => g.releaseYear.toString())));
-    return ['All', ...uniqueYears.sort((a, b) => b.localeCompare(a))];
-  }, [games]);
+  const genresList = useMemo(() => ['All', ...facets.genres], [facets.genres]);
+  const platformsList = useMemo(() => ['All', ...facets.platforms], [facets.platforms]);
+  const yearsList = useMemo(
+    () => ['All', ...facets.years.map((y) => String(y))],
+    [facets.years]
+  );
 
   return (
     <div className={styles.filterBar}>
