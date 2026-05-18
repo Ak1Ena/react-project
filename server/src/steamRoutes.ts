@@ -136,21 +136,26 @@ router.get('/featured', async (_req, res) => {
     });
 
     // Transform to our Game interface
-    const games = uniqueItems.map((item: any) => ({
-      id: item.id.toString(),
-      appid: item.id,
-      name: item.name,
-      genre: ['Featured'], // Detailed genres require separate appdetails calls, we use placeholder
-      platforms: [
-        item.windows_available ? 'Windows' : '',
-        item.mac_available ? 'Mac' : '',
-        item.linux_available ? 'Linux' : ''
-      ].filter(Boolean),
-      releaseYear: 0,
-      rating: 0,
-      image: item.large_capsule_image || item.header_image,
-      description: item.headline || 'Featured on Steam.'
-    }));
+    const games = uniqueItems.map((item: any) => {
+      // Stable mock rating based on ID for demo purposes
+      const mockRating = (7.0 + (item.id % 30) / 10).toFixed(1);
+      
+      return {
+        id: item.id.toString(),
+        appid: item.id,
+        name: item.name,
+        genre: ['Featured'],
+        platforms: [
+          item.windows_available ? 'Windows' : '',
+          item.mac_available ? 'Mac' : '',
+          item.linux_available ? 'Linux' : ''
+        ].filter(Boolean),
+        releaseYear: 0,
+        rating: parseFloat(mockRating),
+        image: item.large_capsule_image || item.header_image,
+        description: item.headline || 'Featured on Steam.'
+      };
+    });
 
     res.json(games);
   } catch (error) {
@@ -174,21 +179,26 @@ router.get('/search', async (req, res) => {
       }
     });
 
-    const games = (response.data.items || []).map((item: any) => ({
-      id: item.id.toString(),
-      appid: item.id,
-      name: item.name,
-      genre: item.genres || [],
-      platforms: [
-        item.platforms?.windows ? 'Windows' : '',
-        item.platforms?.mac ? 'Mac' : '',
-        item.platforms?.linux ? 'Linux' : ''
-      ].filter(Boolean),
-      releaseYear: 0,
-      rating: 0,
-      image: item.tiny_image ? item.tiny_image.replace('capsule_184x69', 'header') : '',
-      description: `Steam search result for ${item.name}`
-    }));
+    const games = (response.data.items || []).map((item: any) => {
+      // Stable mock rating based on ID for demo purposes
+      const mockRating = (7.0 + (item.id % 30) / 10).toFixed(1);
+
+      return {
+        id: item.id.toString(),
+        appid: item.id,
+        name: item.name,
+        genre: item.genres || [],
+        platforms: [
+          item.platforms?.windows ? 'Windows' : '',
+          item.platforms?.mac ? 'Mac' : '',
+          item.platforms?.linux ? 'Linux' : ''
+        ].filter(Boolean),
+        releaseYear: 0,
+        rating: parseFloat(mockRating),
+        image: item.tiny_image ? item.tiny_image.replace('capsule_184x69', 'header') : '',
+        description: `Steam search result for ${item.name}`
+      };
+    });
 
     res.json(games);
   } catch (error) {

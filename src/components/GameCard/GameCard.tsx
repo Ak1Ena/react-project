@@ -14,8 +14,8 @@ const GameCard: FC<GameCardProps> = ({ game }) => {
       <Link to={`/games/${game.id}`} className={styles.gameCardImageLink}>
         <img src={game.image} alt={game.name} className={styles.gameCardImage} />
         <div className={styles.gameCardRating}>
-          <Star size={16} fill="currentColor" />
-          <span>{game.rating}</span>
+          <Star size={14} fill="#f59e0b" color="#f59e0b" />
+          <span>{game.rating > 0 ? game.rating : 'N/A'}</span>
         </div>
       </Link>
       <div className={styles.gameCardContent}>

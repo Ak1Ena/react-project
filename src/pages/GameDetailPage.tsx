@@ -139,7 +139,7 @@ const GameDetailPage: FC = () => {
             {reviewsWithText.length > 0 ? (
               <div className={styles.reviewsList}>
                 {reviewsWithText.map((review) => {
-                  const reviewer = users.find(u => u.id === review.userId);
+                  const reviewer = users.find(u => u.id === review.userId) || (currentUser?.id === review.userId ? currentUser : null);
                   return (
                     <div key={review.id} className={styles.reviewCard}>
                       <div className={styles.reviewHeader}>
