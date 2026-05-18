@@ -89,10 +89,23 @@ const GameDetailPage: FC = () => {
     return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
   };
 
-  const communityReviews = publicReviews
-    .filter((r) => r.gameId === game.id && (r.review || '').trim().length > 0)
-    .filter((r) => !currentUser || r.userId !== currentUser.id)
-    .sort((a, b) => new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime());
+  const communityReviewsBase = publicReviews
+    .filter((r) => r.gameId === game.id && (r.review || '').trim().length > 0);
+
+  // Merge in the current user's latest review so it shows up immediately
+  // after sending (publicReviews is only refreshed on page load).
+  const merged = [...communityReviewsBase];
+  if (
+    existingEntry &&
+    (existingEntry.review || '').trim().length > 0 &&
+    !merged.some((r) => r.id === existingEntry.id)
+  ) {
+    merged.push(existingEntry);
+  }
+
+  const communityReviews = merged.sort(
+    (a, b) => new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime()
+  );
 
   const statuses: { id: ListStatus; label: string; icon: ReactNode }[] = [
     { id: 'playing', label: 'Playing', icon: <Gamepad2 size={16} /> },
@@ -241,12 +254,14 @@ const GameDetailPage: FC = () => {
                 {communityReviews.map((c) => {
                   const username = usernameById(c.userId);
                   const initials = username.substring(0, 2).toUpperCase();
+                  const isMine = !!currentUser && c.userId === currentUser.id;
                   return (
                     <li key={c.id} className={styles.commentItem}>
                       <div className={styles.commentAvatar}>{initials}</div>
                       <div className={styles.commentBody}>
                         <div className={styles.commentHeader}>
                           <span className={styles.commentAuthor}>{username}</span>
+                          {isMine && <span className={styles.commentYouBadge}>You</span>}
                           {c.personalRating > 0 && (
                             <span className={styles.commentRating}>
                               <Star size={12} fill="var(--primary)" color="var(--primary)" />

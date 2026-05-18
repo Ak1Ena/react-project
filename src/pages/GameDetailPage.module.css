@@ -382,6 +382,19 @@
   color: white;
 }
 
+.commentYouBadge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--bg-card);
+  background-color: var(--primary);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
 .commentRating {
   display: inline-flex;
   align-items: center;
