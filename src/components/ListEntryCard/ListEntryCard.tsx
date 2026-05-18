@@ -4,6 +4,7 @@ import { Star, Trash2, Edit3, MoveRight, Save, Trophy, Clock, Calendar } from 'l
 import type { Game } from '../../features/games/gamesAPI';
 import type { ListEntry, ListStatus } from '../../features/lists/listsAPI';
 import { removeFromList, updateListEntry } from '../../features/lists/listsSlice';
+import { selectGamesStatus } from '../../features/games/gamesSlice';
 import type { AppDispatch, RootState } from '../../app/store';
 import { openModal } from '../../features/ui/uiSlice';
 import styles from './ListEntryCard.module.css';
@@ -62,6 +63,8 @@ const ListEntryCard: FC<ListEntryCardProps> = memo(({ entry, game }) => {
     }
   };
 
+  const gamesStatus = useSelector(selectGamesStatus);
+
   useEffect(() => {
     // Only fetch if we have a steamId and haven't fetched these achievements yet
     if (steamId && (game?.id || entry.gameId) && !achievements) {
@@ -70,6 +73,17 @@ const ListEntryCard: FC<ListEntryCardProps> = memo(({ entry, game }) => {
   }, [steamId, game?.id, entry.gameId, achievements, dispatch]);
 
   if (!game) {
+    if (gamesStatus === 'loading') {
+      return (
+        <div className={`${styles.listEntryCard} ${styles.loading}`}>
+          <div className={styles.listEntryContent}>
+            <h3>Loading game info...</h3>
+            <div className={styles.skeletonText}></div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className={styles.listEntryCard}>
         <div className={styles.listEntryContent}>

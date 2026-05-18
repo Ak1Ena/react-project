@@ -91,10 +91,18 @@ const gamesSlice = createSlice({
         state.status = 'failed';
         state.error = action.error.message || 'Failed to fetch game details';
       })
+      .addCase(fetchGamesByIds.pending, (state) => {
+        state.status = 'loading';
+      })
       .addCase(fetchGamesByIds.fulfilled, (state, action: PayloadAction<Game[]>) => {
+        state.status = 'succeeded';
         action.payload.forEach(game => {
           state.byId[game.id] = game;
         });
+      })
+      .addCase(fetchGamesByIds.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message || 'Failed to fetch games by IDs';
       })
       .addCase(searchGames.pending, (state) => {
         state.status = 'loading';

@@ -276,3 +276,22 @@
   color: var(--text-secondary);
   margin-top: auto;
 }
+
+.loading {
+  opacity: 0.7;
+}
+
+.skeletonText {
+  height: 16px;
+  background: linear-gradient(90deg, var(--bg) 25%, var(--border) 50%, var(--bg) 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 4px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
