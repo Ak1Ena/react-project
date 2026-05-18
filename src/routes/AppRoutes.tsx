@@ -8,6 +8,7 @@ import ListPage from '../pages/ListPage';
 import AddGamePage from '../pages/AddGamePage';
 import LoginPage from '../pages/LoginPage';
 import RegisterPage from '../pages/RegisterPage';
+import StatsPage from '../pages/StatsPage';
 
 interface RouteProps {
   children: ReactNode;
@@ -70,6 +71,14 @@ const AppRoutes: FC = () => {
         element={
           <ProtectedRoute>
             <ListPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/stats"
+        element={
+          <ProtectedRoute>
+            <StatsPage />
           </ProtectedRoute>
         }
       />

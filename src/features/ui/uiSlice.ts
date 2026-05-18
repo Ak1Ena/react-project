@@ -15,12 +15,14 @@ interface UIState {
   theme: 'light' | 'dark';
 }
 
+const savedTheme = (localStorage.getItem('theme') as 'light' | 'dark') || 'dark';
+
 const initialState: UIState = {
   modalOpen: false,
   modalType: null,
   modalData: null,
   toasts: [],
-  theme: 'light',
+  theme: savedTheme,
 };
 
 const uiSlice = createSlice({
@@ -48,6 +50,7 @@ const uiSlice = createSlice({
     },
     toggleTheme: (state) => {
       state.theme = state.theme === 'light' ? 'dark' : 'light';
+      localStorage.setItem('theme', state.theme);
     },
   },
 });

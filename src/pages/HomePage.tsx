@@ -20,7 +20,7 @@ const HomePage: FC = () => {
   return (
     <div className={styles.homePage}>
       <header className={styles.pageHeader}>
-        <h1>Explore Games</h1>
+        <h1>Explore <span>Games</span></h1>
         <p>Discover your next favorite game and add it to your collection.</p>
       </header>
       

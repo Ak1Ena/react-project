@@ -5,6 +5,7 @@ import { ChevronLeft, Save } from 'lucide-react';
 import type { AppDispatch } from '../app/store';
 import { createGame } from '../features/games/gamesSlice';
 import { showToast } from '../features/ui/uiSlice';
+import styles from './AddGamePage.module.css';
 
 const AddGamePage: FC = () => {
   const navigate = useNavigate();
@@ -57,18 +58,18 @@ const AddGamePage: FC = () => {
   };
 
   return (
-    <div className="add-game-page">
-      <button onClick={() => navigate(-1)} className="back-button">
+    <div className={styles.addGamePage}>
+      <button onClick={() => navigate(-1)} className={styles.backButton}>
         <ChevronLeft size={20} />
         Back
       </button>
 
-      <div className="form-container">
+      <div className={styles.formContainer}>
         <h1>Add New Game to Catalog</h1>
-        <form onSubmit={handleSubmit} className="add-game-form">
-          <div className="form-grid">
-            <div className="form-group">
-              <label htmlFor="name">Game Title*</label>
+        <form onSubmit={handleSubmit}>
+          <div className={styles.formGrid}>
+            <div className={styles.formGroup}>
+              <label htmlFor="name">Game Title *</label>
               <input
                 type="text"
                 id="name"
@@ -80,8 +81,8 @@ const AddGamePage: FC = () => {
               />
             </div>
 
-            <div className="form-group">
-              <label htmlFor="genre">Genre*</label>
+            <div className={styles.formGroup}>
+              <label htmlFor="genre">Genre *</label>
               <select id="genre" name="genre" value={formData.genre[0]} onChange={handleChange}>
                 {genres.map((g) => (
                   <option key={g} value={g}>{g}</option>
@@ -89,8 +90,8 @@ const AddGamePage: FC = () => {
               </select>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="platforms">Platforms* (comma separated)</label>
+            <div className={styles.formGroup}>
+              <label htmlFor="platforms">Platforms * (comma separated)</label>
               <input
                 type="text"
                 id="platforms"
@@ -102,8 +103,8 @@ const AddGamePage: FC = () => {
               />
             </div>
 
-            <div className="form-group">
-              <label htmlFor="releaseYear">Release Year*</label>
+            <div className={styles.formGroup}>
+              <label htmlFor="releaseYear">Release Year *</label>
               <input
                 type="number"
                 id="releaseYear"
@@ -116,8 +117,8 @@ const AddGamePage: FC = () => {
               />
             </div>
 
-            <div className="form-group">
-              <label htmlFor="rating">Base Rating (0-10)</label>
+            <div className={styles.formGroup}>
+              <label htmlFor="rating">Base Rating (0–10)</label>
               <input
                 type="number"
                 id="rating"
@@ -130,8 +131,8 @@ const AddGamePage: FC = () => {
               />
             </div>
 
-            <div className="form-group">
-              <label htmlFor="image">Cover Image URL*</label>
+            <div className={styles.formGroup}>
+              <label htmlFor="image">Cover Image URL *</label>
               <input
                 type="url"
                 id="image"
@@ -144,7 +145,7 @@ const AddGamePage: FC = () => {
             </div>
           </div>
 
-          <div className="form-group full-width">
+          <div className={`${styles.formGroup} ${styles.fullWidth}`}>
             <label htmlFor="description">Description</label>
             <textarea
               id="description"
@@ -156,12 +157,12 @@ const AddGamePage: FC = () => {
             />
           </div>
 
-          <div className="form-actions">
-            <button type="button" onClick={() => navigate(-1)} className="btn-secondary">
+          <div className={styles.formActions}>
+            <button type="button" onClick={() => navigate(-1)} className={styles.btnSecondary}>
               Cancel
             </button>
-            <button type="submit" disabled={loading} className="btn-primary">
-              <Save size={20} />
+            <button type="submit" disabled={loading} className={styles.btnPrimary}>
+              <Save size={18} />
               {loading ? 'Saving...' : 'Save Game'}
             </button>
           </div>

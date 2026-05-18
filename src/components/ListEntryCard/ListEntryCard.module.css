@@ -1,19 +1,44 @@
 .listEntryCard {
-  background-color: var(--card-bg);
+  background: var(--card-bg);
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow);
   display: flex;
   overflow: hidden;
+  transition: var(--transition-slow);
+}
+
+.listEntryCard:hover {
+  border-color: var(--card-border-hover);
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
 }
 
 .listEntryImage {
-  width: 180px;
+  width: 150px;
+  flex-shrink: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.listEntryImage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, transparent 60%, var(--card-bg));
+  pointer-events: none;
 }
 
 .listEntryImage img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.4s ease;
+  display: block;
+}
+
+.listEntryCard:hover .listEntryImage img {
+  transform: scale(1.04);
 }
 
 .listEntryContent {
@@ -21,67 +46,92 @@
   padding: 16px;
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .listEntryHeader {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
+  gap: 8px;
 }
 
 .listEntryHeader h3 {
-  font-size: 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.01em;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  color: var(--text-primary);
 }
 
 .listEntryActions {
   display: flex;
-  gap: 8px;
+  gap: 2px;
+  flex-shrink: 0;
 }
 
 .listEntryActions button {
-  color: var(--text-secondary);
-  transition: color 0.2s;
+  color: var(--text-muted);
+  padding: 5px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  background: none;
+  border: none;
 }
 
 .listEntryActions button:hover {
   color: var(--primary);
+  background: var(--primary-light);
 }
 
 .removeBtn:hover {
-  color: var(--error);
+  color: var(--error) !important;
+  background: var(--error-light) !important;
 }
 
 .listEntryMeta {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: 10px;
+  margin-bottom: 12px;
 }
 
+/* ── Status select ── */
 .listEntryStatusSelect {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 4px;
-  font-size: 0.875rem;
-  background-color: var(--bg);
-  padding: 4px 12px;
-  border-radius: 9999px;
+  gap: 6px;
+  font-size: 0.78rem;
+  background: var(--primary-light);
+  border: 1px solid var(--primary-mid);
+  padding: 4px 11px;
+  border-radius: var(--radius-full);
   width: fit-content;
+  color: var(--text-secondary);
 }
 
 .listEntryStatusSelect select {
   border: none;
   background: none;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--primary);
-  padding: 2px 4px;
+  font-size: 0.78rem;
+  padding: 0 2px;
+  cursor: pointer;
 }
 
+/* ── Star rating ── */
 .listEntryStarRating {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 1px;
 }
 
 .starButton {
@@ -89,77 +139,97 @@
   transition: transform 0.1s;
   display: flex;
   align-items: center;
+  cursor: pointer;
+  background: none;
+  border: none;
 }
 
-.starButton:hover {
-  transform: scale(1.2);
-}
-
-.saveBtn:hover {
-  color: var(--success) !important;
-}
-
-.cancelBtn:hover {
-  color: var(--error) !important;
-}
+.starButton:hover { transform: scale(1.25); }
 
 .ratingText {
-  font-size: 0.875rem;
-  color: #f59e0b;
+  font-size: 0.78rem;
+  color: var(--warning);
   font-weight: 700;
-  margin-left: 8px;
+  margin-left: 6px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
 }
 
 .listEntryDetails {
-  margin-bottom: 12px;
+  flex: 1;
+  margin-bottom: 8px;
 }
 
-.listEntryReviewSection {
-  margin-top: 12px;
+/* ── Notes / review ── */
+.listEntryNotes {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  background: var(--bg-tertiary);
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  font-style: italic;
+  border-left: 3px solid var(--primary-mid);
+  line-height: 1.5;
 }
+
+.listEntryReviewSection { margin-top: 8px; }
 
 .reviewInputWrapper {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  background-color: var(--bg);
-  padding: 12px;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
+  background: var(--bg-tertiary);
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--card-border);
 }
 
 .inlineReviewTextarea {
-  padding: 8px;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  background-color: var(--card-bg);
+  padding: 8px 10px;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm);
+  background: var(--card-bg);
   color: var(--text-primary);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   width: 100%;
   resize: vertical;
-  min-height: 80px;
+  min-height: 72px;
+  transition: var(--transition);
+}
+
+.inlineReviewTextarea::placeholder { color: var(--text-muted); }
+
+.inlineReviewTextarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-glow);
+  outline: none;
 }
 
 .postReviewBtn {
   align-self: flex-end;
-  background-color: var(--primary);
-  color: white;
+  background: var(--primary);
+  color: #0b0c14;
   padding: 6px 12px;
-  border-radius: 4px;
-  font-size: 0.8rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
   font-weight: 700;
   display: flex;
   align-items: center;
-  gap: 6px;
-  transition: background-color 0.2s;
+  gap: 5px;
+  transition: var(--transition);
+  box-shadow: 0 2px 10px var(--primary-glow);
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
 }
 
 .postReviewBtn:hover:not(:disabled) {
-  background-color: var(--primary-hover);
+  background: var(--primary-hover);
+  transform: translateY(-1px);
 }
 
 .postReviewBtn:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
@@ -170,46 +240,73 @@
   margin-bottom: 4px;
 }
 
-.editReviewInlineBtn {
+.listEntryReview {
+  font-size: 0.85rem;
   color: var(--text-secondary);
+  background: var(--bg-tertiary);
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--info);
+  line-height: 1.5;
+}
+
+.listEntryReview h4 {
+  font-size: 0.68rem;
+  margin-bottom: 5px;
+  color: var(--info);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+
+.editReviewInlineBtn {
+  color: var(--text-muted);
   padding: 4px;
   border-radius: 4px;
-  transition: all 0.2s;
+  transition: var(--transition);
+  display: flex;
+  cursor: pointer;
+  background: none;
+  border: none;
 }
 
 .editReviewInlineBtn:hover {
   color: var(--primary);
-  background-color: var(--bg);
-}
-
-.listEntryNotes {
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  background-color: var(--bg);
-  padding: 8px;
-  border-radius: 4px;
-  margin-bottom: 8px;
-  font-style: italic;
-}
-
-.listEntryReview {
-  font-size: 0.9rem;
-  color: var(--text);
-  background-color: var(--bg);
-  padding: 8px;
-  border-radius: 4px;
-  margin-bottom: 12px;
-}
-
-.listEntryReview h4 {
-  font-size: 0.8rem;
-  margin-bottom: 4px;
-  color: var(--text-secondary);
-  text-transform: uppercase;
+  background: var(--primary-light);
 }
 
 .listEntryDate {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
+  font-size: 0.7rem;
+  color: var(--text-muted);
   margin-top: auto;
+  padding-top: 8px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* ── Light mode ── */
+[data-theme='light'] .listEntryNotes {
+  background: #f8fafc;
+  border-left-color: #c7d2fe;
+}
+
+[data-theme='light'] .reviewInputWrapper {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+[data-theme='light'] .inlineReviewTextarea {
+  background: #fff;
+  border-color: #e2e8f0;
+}
+
+[data-theme='light'] .listEntryReview {
+  background: #f8fafc;
+}
+
+[data-theme='light'] .postReviewBtn {
+  color: #fff;
+}
+
+@media (max-width: 500px) {
+  .listEntryImage { width: 100px; }
 }
