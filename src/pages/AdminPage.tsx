@@ -1,6 +1,6 @@
 import { useState, type FC } from 'react';
 import { Link } from 'react-router-dom';
-import { Pencil, Trash2, Loader2, Search, Star } from 'lucide-react';
+import { Pencil, Trash2, Loader2, Search, Star, Plus } from 'lucide-react';
 import {
   useGetGamesQuery,
   useDeleteGameMutation,
@@ -43,6 +43,10 @@ const AdminPage: FC = () => {
           <h1 className={styles.title}>Admin · Catalog</h1>
           <p className={styles.subtitle}>{filtered.length} of {games.length} games</p>
         </div>
+        <Link to="/add-game" className={styles.addGameBtn}>
+          <Plus size={18} />
+          <span>Add New Game</span>
+        </Link>
       </header>
 
       <div className={styles.searchRow}>
