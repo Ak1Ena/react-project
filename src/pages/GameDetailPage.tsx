@@ -62,7 +62,14 @@ const GameDetailPage: FC = () => {
     setPendingStatus(newStatus);
     try {
       if (existingEntry) {
-        await updateListEntry({ id: existingEntry.id, entry: { status: newStatus } }).unwrap();
+        const patch: Partial<ListEntry> = { status: newStatus };
+        // Backfill: a review already exists but pre-dates the snapshot
+        // field. Freeze the soon-to-be-overwritten status now so the
+        // badge on the review never moves with later track-in changes.
+        if (existingEntry.review && !existingEntry.reviewStatus) {
+          patch.reviewStatus = existingEntry.status;
+        }
+        await updateListEntry({ id: existingEntry.id, entry: patch }).unwrap();
       } else {
         await addToList({
           gameId: String(game.id),
