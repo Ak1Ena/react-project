@@ -101,7 +101,13 @@ const GameDetailPage: FC = () => {
     }
     setReviewSending(true);
     try {
-      await updateListEntry({ id: existingEntry.id, entry: { review: trimmed } }).unwrap();
+      const patch: Partial<ListEntry> = { review: trimmed };
+      // Lock the status on the FIRST review; later status changes must not
+      // rewrite the badge shown on an already-posted comment.
+      if (!existingEntry.reviewStatus) {
+        patch.reviewStatus = existingEntry.status;
+      }
+      await updateListEntry({ id: existingEntry.id, entry: patch }).unwrap();
       showToast('Review sent!', 'success');
     } catch {
       showToast('Failed to send review. Try again.', 'error');
@@ -312,11 +318,18 @@ const GameDetailPage: FC = () => {
                         <div className={styles.commentHeader}>
                           <span className={styles.commentAuthor}>{username}</span>
                           {isMine && <span className={styles.commentYouBadge}>You</span>}
-                          {c.status && (
-                            <span className={`${styles.commentStatus} ${styles[`status_${c.status}`]}`}>
-                              {c.status.charAt(0).toUpperCase() + c.status.slice(1)}
-                            </span>
-                          )}
+                          {(() => {
+                            // Prefer the locked-in snapshot; fall back to the
+                            // live status for legacy reviews that pre-date
+                            // the snapshot field.
+                            const badgeStatus = c.reviewStatus ?? c.status;
+                            if (!badgeStatus) return null;
+                            return (
+                              <span className={`${styles.commentStatus} ${styles[`status_${badgeStatus}`]}`}>
+                                {badgeStatus.charAt(0).toUpperCase() + badgeStatus.slice(1)}
+                              </span>
+                            );
+                          })()}
                           <span className={styles.commentDate}>{formatDate(c.dateAdded)}</span>
                         </div>
                         <p className={styles.commentText}>{c.review}</p>
