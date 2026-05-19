@@ -312,10 +312,9 @@ const GameDetailPage: FC = () => {
                         <div className={styles.commentHeader}>
                           <span className={styles.commentAuthor}>{username}</span>
                           {isMine && <span className={styles.commentYouBadge}>You</span>}
-                          {c.personalRating > 0 && (
-                            <span className={styles.commentRating}>
-                              <Star size={12} fill="var(--primary)" color="var(--primary)" />
-                              {c.personalRating}/5
+                          {c.status && (
+                            <span className={`${styles.commentStatus} ${styles[`status_${c.status}`]}`}>
+                              {c.status.charAt(0).toUpperCase() + c.status.slice(1)}
                             </span>
                           )}
                           <span className={styles.commentDate}>{formatDate(c.dateAdded)}</span>
