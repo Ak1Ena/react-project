@@ -108,12 +108,13 @@ const GameDetailPage: FC = () => {
     }
     setReviewSending(true);
     try {
-      const patch: Partial<ListEntry> = { review: trimmed };
-      // Lock the status on the FIRST review; later status changes must not
-      // rewrite the badge shown on an already-posted comment.
-      if (!existingEntry.reviewStatus) {
-        patch.reviewStatus = existingEntry.status;
-      }
+      // Snapshot the current track-in status every time the review is
+      // sent or re-sent, so the badge reflects the user's progress at
+      // the moment they last submitted the review.
+      const patch: Partial<ListEntry> = {
+        review: trimmed,
+        reviewStatus: existingEntry.status,
+      };
       await updateListEntry({ id: existingEntry.id, entry: patch }).unwrap();
       showToast('Review sent!', 'success');
     } catch {
