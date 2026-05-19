@@ -62,7 +62,14 @@ const GameDetailPage: FC = () => {
     setPendingStatus(newStatus);
     try {
       if (existingEntry) {
-        await updateListEntry({ id: existingEntry.id, entry: { status: newStatus } }).unwrap();
+        const patch: Partial<ListEntry> = { status: newStatus };
+        // Backfill: a review already exists but pre-dates the snapshot
+        // field. Freeze the soon-to-be-overwritten status now so the
+        // badge on the review never moves with later track-in changes.
+        if (existingEntry.review && !existingEntry.reviewStatus) {
+          patch.reviewStatus = existingEntry.status;
+        }
+        await updateListEntry({ id: existingEntry.id, entry: patch }).unwrap();
       } else {
         await addToList({
           gameId: String(game.id),
@@ -101,7 +108,14 @@ const GameDetailPage: FC = () => {
     }
     setReviewSending(true);
     try {
-      await updateListEntry({ id: existingEntry.id, entry: { review: trimmed } }).unwrap();
+      // Snapshot the current track-in status every time the review is
+      // sent or re-sent, so the badge reflects the user's progress at
+      // the moment they last submitted the review.
+      const patch: Partial<ListEntry> = {
+        review: trimmed,
+        reviewStatus: existingEntry.status,
+      };
+      await updateListEntry({ id: existingEntry.id, entry: patch }).unwrap();
       showToast('Review sent!', 'success');
     } catch {
       showToast('Failed to send review. Try again.', 'error');
@@ -312,12 +326,18 @@ const GameDetailPage: FC = () => {
                         <div className={styles.commentHeader}>
                           <span className={styles.commentAuthor}>{username}</span>
                           {isMine && <span className={styles.commentYouBadge}>You</span>}
-                          {c.personalRating > 0 && (
-                            <span className={styles.commentRating}>
-                              <Star size={12} fill="var(--primary)" color="var(--primary)" />
-                              {c.personalRating}/5
-                            </span>
-                          )}
+                          {(() => {
+                            // Prefer the locked-in snapshot; fall back to the
+                            // live status for legacy reviews that pre-date
+                            // the snapshot field.
+                            const badgeStatus = c.reviewStatus ?? c.status;
+                            if (!badgeStatus) return null;
+                            return (
+                              <span className={`${styles.commentStatus} ${styles[`status_${badgeStatus}`]}`}>
+                                {badgeStatus.charAt(0).toUpperCase() + badgeStatus.slice(1)}
+                              </span>
+                            );
+                          })()}
                           <span className={styles.commentDate}>{formatDate(c.dateAdded)}</span>
                         </div>
                         <p className={styles.commentText}>{c.review}</p>
