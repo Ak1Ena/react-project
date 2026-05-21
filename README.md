@@ -275,11 +275,6 @@ By building this project, you will practice:
 - Form handling and validation
 - Containerized deployment with Docker + Nginx
 
-## 👤 Author
-
-**Ak1Ena**
-- GitHub: [@Ak1Ena](https://github.com/Ak1Ena)
-
 ## 📄 License
 
 This project is licensed under the MIT License.
